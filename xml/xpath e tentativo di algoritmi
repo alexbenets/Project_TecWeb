@@ -1,0 +1,38 @@
+Registrazione
+1)utente compila form -> controllo che abbia inserito tutti i dati (altrimenti segnala gli errori)
+					  -> controllo che la mail non sia già presente nell'xml: /database/tabUtenteRegistrato/utenteRegistrato/mail
+					  		-> se è prensente c'è un erroere da segnalare(l'utente è registrato e ha scordato la password)
+					  		-> altrimenti è tutto corretto
+2)inserisco i dati in un nuovo nodo ed eseguisco un login automatico con i dati inseriti
+
+Login
+1)utente compila form -> controllo che abbia inserito tutti i dati (altrimenti segnala gli errori)
+2)controllo che la mail sia presente nell'xml: /database/tabUtenteRegistrato/utenteRegistrato/mail
+					  		-> se è presente devo controllare che la password inserita sia corretta
+					  		->ricerco la password del'utente registrato con quella mail:/database/tabUtenteRegistrato/utenteRegistrato/[mail=segnaposto]
+					  				->se è corretta ok 
+					  				->altrimenti password errata (max 3 tentativi?)
+
+Prenota
+1) utente compila prima form: ottengo la città di partenza e arrivo, il # di passeggeri, se si vuole eseguire prenotazioni anche per il volo di ritorno e la data(?)
+					->controllo che le città inserite siano presenti nel db a database/tabLuogo/luogo[nome=parametro da/a]
+							->se esistono devo trovare i possibili aereoporti di transito da database/tabAeroporto/aeroporto[idFKL=parametro portato da passo precedente]
+									-> trovati gli aeroporti devo trovare le tratte tra questi (NB solo le tratte che vanno da 1 possibile ap di partenza ed 1 possibile ap di arrivo!!!, in entrambe le direzioni se selezionato flag andata e ritorno) con database/tabTratta/tratta[idFKAeroportoPartenza= idPKAp (par da_) && database/tabTratta/tratta[idFKAeroportoArrivo= idPKAp (parametro a_)]
+											->se esistono tratte devo trovare i voli con #di posti disp>= al # di posti richiesti (?), ordinandoli per prezzo crescente da database/tabVolo/volo[idFKT= idPKT trovata]
+													->sotto ogni volo trovato bisogna inserire il VOTO complessivo dato dagli utenti !!! cerco si database/tabcommento/commento[idFKV=idPKV cercato]/voto(????)
+													->se non è stato inserito nessun voto...?
+											->altrimenti errore
+									->se non esistono gli aeroporti errore!(possibile?) 
+							->altrimenti errore da segnalare
+					->atrimenti bisogna segnalare che non si effettuano voli tra quelle località
+					->devo creare x=#passeggeri*(2*(flag_andataeritorno)) nodi di prenotazione (database/tabPrenotazione/prenotazione) sapendo a questo punto l'utente autore(non i passeggeri)(=idFKUR), e la data,   
+2) visualizzo i voli con i relativi prezzi in una nuova pagina (somma del prezzo base(database/tabVolo/volo[idPKV=idPKV trovato]/prezzo) x il # passeggeri), l'utente seleziona uno dei disponibili
+					->entro in una nuova pagina contentente: -form da compilare x inserire i dati dei passeggeri e (per ciascuno?) i possibili servizi aggiuntivi (database/tabServizio/servizio)
+					->utente inserisce i dati dei passeggieri e i servizi aggiuntivi che desidera vanno inseriti nell'xml: creo le prenotazioni e aggiorno i servizi prenotati
+3) se l'utente è registrato chiedo conferma, salvo e chiudo altrimenti chiedo login/registrazione
+3) se flag ritorno è presente devo ripetere il processo con parametri da_ a_ scambiati
+
+Manipola(per utente)
+1) untente entra in una pagina contenente le sue prenotazioni (identificate dalla tratta e dalla data(?)) e 
+			A)ne seleziona una, se la data, è passata può esprimere un commento sul volo (dalla prenotazione recupero idFKV e lo uso come valore x creare un nodo commento con quel valore su idFKV di commento), o modificare i commenti già inseriti sullo stesso
+			B) fino a x giorni prima può cancellare la prenotazione: aumenta il # di posti disp sul volo (database/tabVolo/volo[idPKV=idFKV della prenotazione]) e vengono eliminati i nodi corrisponenti su prenotazione (database/tabPrenotazione/prenotazione[idPKP=idPKP selezionata per ogni prenotazione])
