@@ -1,0 +1,408 @@
+
+/* SEZIONE GENERALE*/
+
+* {
+	margin: 0;
+	padding: 0;
+	font:"Arial", Helvetica, Sans-serif;
+}
+.clearer {
+	clear:both;
+}
+/*SEZIONE HEADER*/
+#header {
+	width: 100%; /* layout fluido*/
+	background-color:#f7fcff;
+}
+#banner {
+	/*background-color:#dddddd;*/
+	height: 10em;
+}
+#banner h1 {
+	text-align:center;
+	color:#00a000;
+}
+#banner h2 {
+	text-align: center;
+	color:#a00000;
+}
+/*FINE SEZIONE HEADER*/
+
+/*SEZIONE MENU'*/
+#menu {
+	height:3em;
+	/*background-color:#C0FFEE;*/
+	padding:0.1em 0.3em 0.4em 0.3em;
+}
+#menu a {
+	/*sezione per il pseudo contenitore*/
+	height:100%;
+	display:block;
+	float:left;
+	margin-left: 0.1em;
+	background-color:#dcddde;	
+	border: 1px solid #000;
+	padding:0 1em 0 1em;
+	/*sezione per il testo interno*/
+	text-decoration:none;
+	color:#000;
+	text-align:center;
+	text-transform:uppercase;
+	font-size:1.2em;
+	line-height:2.4em;
+}
+#menu a:hover {
+	background-color:#e4edf2;
+}
+#menu .selected {
+	/*Indico all'utente quale pagina e' aperta*/
+	background-color:#d2e7f4;
+}
+/*FINE SEZIONE MENU'*/
+
+/*SEZIONE DOVE SEI*/
+#path {
+	height:2em;
+	/*background-color:#3CF;*/
+	padding-left: 0.5em;
+}
+
+
+#path * {
+	/*per tutti i contenuti del div path*/
+	font-size:1em;
+	line-height:1.9em;
+}
+
+#path .separatore_path {
+	/* questo span contiene &gt;, separa le varie sezioni del path*/
+}
+
+#path a {
+	text-decoration:none;
+	color:#000;
+}
+#path a:hover {
+	text-decoration:underline;
+	color:#810808;
+}
+/*FINE SEZIONE DOVE SEI*/
+
+/*INIZIO SEZIONE CONTENUTO PRINCIPALE*/
+#main {
+	
+}
+
+/*INIZIO SEZIONE CASELLA "PRENOTA"*/
+#prenota {
+	width: 77%;
+	margin: 0 auto;
+	/*background-color:#3cf;*/
+	margin-bottom:0.5em;
+	margin-top:0.5%;
+}
+#prenota form fieldset {
+	padding-top:0.3em;
+	background-color:#92D4FF;
+	padding-bottom:0.44em;
+}
+#prenota form .casella_form {
+	float:left;
+	display:block;
+	min-width:35%;
+	max-width:98%;
+	/*background-color:#3cf;*/
+	margin-left:0.5%;
+}
+#prenota form .button_form {
+	float:left;
+	display:block;
+	min-width:25%;
+	max-width:99%;
+}
+#prenota form label {
+	height:3.5em;
+	min-width:49%;
+	max-width:99%;
+	
+	/*sezione text*/
+	color:#000;
+	line-height:2.5em;
+	font-size:1.5em;
+	font-weight: bold;
+	text-transform:uppercase;
+}
+#prenota form input[type="text"]{
+	height: 3em;
+	min-width:50%;
+	max-width:99%;
+	background-color:#fff;
+	/*sezione text*/
+	color:#000000;
+	font-size:1.1em;
+}
+#prenota form input[type="text"]:hover {
+	border-color:#FF0;
+	background-color:#FFC;
+}
+
+#prenota form .casella_AR {
+	display:block;
+	margin-left:0.5%;
+}
+
+#prenota form input[type="checkbox"]{
+	width:2em;
+	height:2em;
+	border:1px solid #000;
+	background-color:#000;
+}
+
+#prenota form button, #prenota form button * {
+
+	background-color:#FFE;
+}
+#prenota form button[type="submit"]{
+	margin-top:0.5%;
+	padding-bottom:0.1em;
+	font-size:1em;
+	height: 3.8em;
+	width:99%;
+}
+
+#prenota form button[type="submit"]:hover, #prenota form button[type="submit"]:hover *{
+	cursor:pointer;
+	background-color:#e4edf2;
+}
+#prenota form button[type="submit"] span {
+	/*sezione text*/
+	text-transform:uppercase;
+	font-size:3em;
+	line-height:1em;
+	font-weight: bold;
+}
+
+/*FINE SEZIONE CASELLA "PRENOTA"*/
+
+/*INIZIO SEZIONE CONTENUTO*/
+
+#contenuto {
+	width:100%;
+	background-color:#f7fcff;
+}
+
+/*INIZIO SEZIONE SECONDO MENU'*/
+#secondo_menu{
+	float:left;
+	width:15%;
+	display:block;
+	background-color:#ddd;
+}
+#secondo_menu a{
+	text-decoration: none;
+}
+#secondo_menu ul {
+	list-style:none;
+}
+#secondo_menu ul li {
+}
+#secondo_menu ul li a {
+	display:block;
+	height:2em;
+	/*sezione testo*/
+	text-align:center;
+	font-size:1em;
+	line-height:2em;
+}
+#secondo_menu ul li a:hover {
+	background-color:#e4edf2;
+}
+/*FINE SEZIONE SECONDO MENU'*/
+
+/*INIZIO SEZIONE "contenitore_sezioni" (CON SEZIONI...)*/
+#contenitore_sezioni {
+	float:left;
+	width:70%;
+	display:block;
+}
+
+/*link per tornare in alto*/
+#torna_su {
+	display:block;
+	position:fixed;
+	right:15.5%;
+	bottom:9.5em;
+	/*sezione testo*/
+	text-transform:uppercase;
+}
+#torna_su a{
+	text-decoration: none;
+}
+/*FINE SEZIONE "contenitore_sezioni"*/
+
+/*INIZIO "SEZIONE"*/
+.sezione {
+	margin-right:5em;
+	margin-left:5em;
+	margin-bottom:1em;
+}
+.sezione h3 {
+	width:100%;
+	text-align:center;
+}
+.sezione p {
+}
+/*FINE "SEZIONE"*/
+
+/*INIZIO SEZIONE FORM*/
+.sezione form {
+	margin-top:2em;
+	width:99%;
+	font-size:1em;
+	/*ho definito 1em per definire l'altezza relativa dei successivi contenitori*/
+	padding-left:1%;
+	margin-bottom:2em;
+}
+.sezione form fieldset {
+	width:70%;
+	margin:0 auto;
+	border:none;
+}
+.sezione form fieldset div {
+	display:block;
+	min-height:2em;
+	line-height:2em;
+	width:100%;
+}
+
+.sezione form fieldset div h3 {
+	margin-top:0.5em;
+	margin-bottom:0.5em;
+	/*sezione testo*/
+	font-size:2em;
+}
+
+.sezione form fieldset div label {
+	width:38%;
+	float:left;
+	display:block;
+	/*testo*/
+	font-size:1.5em;
+	text-transform:uppercase;
+}
+
+.sezione form fieldset div input {
+	width:61%;
+	height:2em;
+	float:left;
+	display:block;
+	font-size:1.5em;
+}
+
+.sezione form fieldset div button {
+	height:5em;
+	float:right;
+	background-color:#FFE;
+}
+.sezione form fieldset div button:hover, .sezione form fieldset div button *:hover {
+	cursor:pointer;
+	background-color:#e4edf2;
+}
+
+.sezione form fieldset div button span {
+	font-size:3em;
+	text-transform:uppercase;
+	margin:0.2em;
+}
+
+/*FINE SEZIONE FORM*/
+
+/*INIZIO SEZIONE NEWS*/
+#news {
+	float:left;
+	width:15%;
+	display:block;
+	background-color:#f7fcff;
+}
+#news ul {	list-style:none;
+
+}
+#news ul li {
+
+	background-color:#dcddde;
+}
+#news ul li a {
+	width:100%;
+	text-decoration:none;
+	display:block;
+	/*sezione font*/
+	color:#000;
+}
+#news ul li a:hover {
+	background-color:#e4edf2;
+}
+#news ul li a .riquadro_news {
+	display:block;
+	margin-bottom:0.3em;
+	padding-left:0.2em;
+	padding-top:0.2em;
+	border:1px solid #000;
+	/*inizio sezione font*/
+}
+#news ul li a .riquadro_news .titolo_news {
+	display:block;
+	margin-bottom:0.2em;
+	font-size:1.5em;
+}
+
+#news ul li a .riquadro_news .descrizione_news_breve{
+	display:block;
+	padding-left:1em;
+	padding-bottom:0.5em;
+}
+/*FINE SEZIONE NEWS*/
+
+
+/*FINE SEZIONE CONTENUTO*/
+
+/*FINE SEZIONE CONTENUTO PRINCIPALE*/
+
+/*INIZIO SEZIONE FOOTER*/
+#footer {
+	width:100%;
+	background-color:#996633;
+	position:absolute;
+}
+#sitemap {
+	position:absolute;
+	bottom:0.5em;
+	right:1em;
+}
+#sitemap a{
+	text-decoration: none;
+}
+#gruppo {
+	margin:0 auto;
+	width:20em;
+}
+#gruppo p {
+	text-align:center;
+}
+#dati_aziendali {
+	margin:0 auto;
+	width:20em;
+}
+#dati_aziendali p {
+	text-align:center;
+}
+#validazione {
+	width: 11em;
+	margin:0 auto;
+}
+#validazione .css_valido {
+	float:left;
+}
+#validazione .html_valido {
+	float:left;
+}
+/*FINE SEZIONE FOOTER*/
