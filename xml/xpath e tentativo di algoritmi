@@ -36,3 +36,12 @@ Manipola(per utente)
 1) untente entra in una pagina contenente le sue prenotazioni (identificate dalla tratta e dalla data(?)) e 
 			A)ne seleziona una, se la data, è passata può esprimere un commento sul volo (dalla prenotazione recupero idFKV e lo uso come valore x creare un nodo commento con quel valore su idFKV di commento), o modificare i commenti già inseriti sullo stesso
 			B) fino a x giorni prima può cancellare la prenotazione: aumenta il # di posti disp sul volo (database/tabVolo/volo[idPKV=idFKV della prenotazione]) e vengono eliminati i nodi corrisponenti su prenotazione (database/tabPrenotazione/prenotazione[idPKP=idPKP selezionata per ogni prenotazione])
+
+Manipola(per Amministratore)
+1) entra in una pagina contenente i vari argomenti (identificate per tipologia, argomento? ) e 
+			A)modifica un argomento dbel sito -> su database/tab"Argomento"/"argomento"[ condizione ] elimino/aggiungo/modifico
+			B)manipola un commento di un utente -> da database/tabVolo/Volo/idPKV ricavo il valore di idFKV dei commenti di un dato volo
+												-> display con database/tabCommento/commento[idFKV=idPKV], sort by database/tab"Argomento"/"argomento"/data
+												->posso rendere visibile o invisibile il commento(? servirebbe un flag sul db...)/ posso eliminarlo o lasciarlo visibile
+			C)manipolo un account: -RENDO AMMINISTRATORE ->prendo dati di utente registrato (database/tabUtenteRegistrato/utenteRegistrato) e li inserisco in una nuova entry di amministratore(database/tabAmministratore/amministratore), elimino la vecchia entry da utente registrato.
+								   -ELIMINO/RENDO INUTILIZZABILE un account (? serve flag...) 
