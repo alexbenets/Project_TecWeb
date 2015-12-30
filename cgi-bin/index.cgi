@@ -36,7 +36,11 @@ push @tmp, \@menu;
 my @menu=("Home2", "index2.html", "0");
 push @tmp, \@menu;
 my $ref=\@tmp;
-print scalar(@tmp);
+
+#funzionamento: la funzione riceve un riferimento ad un array di riferimenti di array.
+# esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
+#          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
+#
 print_header::setMenu(\@tmp);
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
