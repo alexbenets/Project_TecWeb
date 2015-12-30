@@ -9,9 +9,13 @@ our $VERSION   = 1.00;         # Version number
 
 ### Include your variables and functions here
 
-sub print { return "
+sub print { 
+		my ($testo)=@_;
+		$out="
 		<div id=\"contenuto\">
-				<div id=\"secondo_menu\">
+		";
+		if(!defined($testo)){
+			$out.="		<div id=\"secondo_menu\">
 					<ul>
 						<li><a href=\"#S1\">Paragrafo 1</a></li>
 						<li><a href=\"#S2\">Paragrafo 2</a></li>
@@ -105,11 +109,15 @@ sub print { return "
 					</ul>
 				</div>
 				<!-- chiudo news -->
-				<div class=\"clearer\"></div>
-			</div><!-- chiudo contenuto-->
+				<div class=\"clearer\"></div>";
+			}else{
+				$out.=$testo;
+			}
+			$out.="</div><!-- chiudo contenuto-->
 
-" }
+"; 
+			return $out;
+}
 
-$out = "";
 
 1;

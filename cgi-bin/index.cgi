@@ -28,24 +28,31 @@ print "
 	<body>
 ";
 
-my @tmp;
+my @menu_temp;
 my @menu=("Home", "index.html", "1");
-push @tmp, \@menu; 
+push @menu_temp, \@menu; 
 my @menu=("Home1", "index1.html", "0");
-push @tmp, \@menu;
+push @menu_temp, \@menu;
 my @menu=("Home2", "index2.html", "0");
-push @tmp, \@menu;
-my $ref=\@tmp;
+push @menu_temp, \@menu;
 
 #funzionamento: la funzione riceve un riferimento ad un array di riferimenti di array.
 # esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
-print_header::setMenu(\@tmp);
+print_header::setMenu(\@menu_temp);
+
+my @path_temp;
+my @path=("Home", "index.html");
+push @path_temp, \@path;
+my @path=("Pagina principale", "index.html");
+push @path_temp, \@path;
+print_header::setPath(\@path_temp);
+
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print print_search::print();
-print print_content::print();
+print print_content::print("ciao");
 print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>
