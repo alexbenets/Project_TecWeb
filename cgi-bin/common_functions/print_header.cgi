@@ -3,13 +3,19 @@ package print_header;
 require      Exporter;
 
 our @ISA       = qw(Exporter);
-our @EXPORT    = qw(camel);    # Symbols to be exported by default
-our @EXPORT_OK = qw($out);  # Symbols to be exported on request
 our $VERSION   = 1.00;         # Version number
 
-### Include your variables and functions here
+my $menu;
 
-sub print { return "
+#menu[x]: array (Titolo, pagina, selezionato)
+
+sub setMenu {#@m: array contenente i vari riferimenti ai menu
+	 my ($m) = @_;
+	$menu=$m;
+}
+
+sub print { 
+		$temp= "
 		<div id=\"header\">
 			<div id=\"banner\">
 				<h1>Vola con noi &copy;</h1>
@@ -17,10 +23,19 @@ sub print { return "
 			</div><!-- chiudo banner-->
 			
 			<div id=\"menu\">
-				<a href=\"index.html\" class=\"selected\"  >Home</a>
-				<a href=\"#\" >Pagina1</a>
-				<a href=\"#\" >Pagina2</a>
-			</div><!-- chiudo menu -->
+				";
+				
+				for( my $i=0; $i<scalar(@{$menu}); $i++){
+					my @arr_temp=@{$menu->[$i]};
+					$temp.="		<a href=\"".@arr_temp[1]."\"";
+						if(@arr_temp[2]>0){
+							$temp.=" class=\"selected\"";
+						}
+					$temp.="  >".@arr_temp[0]."</a>\n";
+				}
+				
+				
+			$temp.="</div><!-- chiudo menu -->
 			<div class=\"clearer\"></div>
 			
 			<div id=\"path\">
@@ -37,8 +52,9 @@ sub print { return "
 			</div><!-- chiudo path-->
 		</div><!-- chiudo header-->
 
-" }
+" ;
+	return $temp;
+}
 
-$out = "";
 
 1;
