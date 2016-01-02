@@ -11,7 +11,7 @@ our $VERSION   = 1.00;         # Version number
 
 sub print { return "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
-				<form action=\"#\" method=\"post\">
+				<form action=\"/cgi-bin/search.cgi\" method=\"post\">
 					<fieldset>
 						<div class=\"casella_form\">
 							<label for=\"partenza\">Partenza:</label>

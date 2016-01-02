@@ -51,7 +51,6 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_search::print();
 print print_content::print("ciao");
 print "		</div>"; #chiudo il div main
 print print_footer::print();
