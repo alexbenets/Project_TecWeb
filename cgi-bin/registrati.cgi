@@ -2,7 +2,10 @@
 
 
 package index_page;
+use DateTime;  #utilizzato per validare la data inserita
+use Time::Piece;
 
+use CGI::Carp qw(fatalsToBrowser);
 use strict;
 
 use CGI qw(:standard);
@@ -24,6 +27,45 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
+sub valida_data{
+	my ($data)=@_;
+	if(!defined $data){
+		return 0;
+	}
+	#$testo =~/(<!--)+([ ]*)(title=")+([ ]*)([A-Za-z0-9]+)([ ]*)/;
+	$data =~/([0-9]+)([\/]+)+([0-9]+)([\/]+)+([0-9]+)/;
+	my $giorno=$1;
+	if(!($2 eq '/')){#se la stringa è nel formato GG/MM/AAAA
+		return 0;
+	}
+	my $mese=$3;if(!($4 eq '/')){
+		return 0;
+	}
+	my $anno=$5;
+	
+	eval {
+		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
+	};
+	if($@){
+		return 0;#data non valida
+	}else{
+		my $today = Time::Piece->new();
+		my $oggi=$today->year."/".$today->mon."/".$today->mday;
+		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+		my $d = ($dt1 - $dt2)->years;
+		#controllo se l'utente è troppo giovane o troppo anziano
+		#sotto i 18 anni non può prenotare il volo.
+		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
+		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
+		if($d<18 | $d>150){
+			return 0;
+		}
+		return 1;
+	}
+}
+
 my $nome=$form{"Nome"};
 my $cognome=$form{"Cognome"};
 my $codice_fiscale=$form{"CF"};
@@ -34,6 +76,34 @@ my $password=$form{"password"};
 
 sub registrati {
 
+}
+
+my $errore= (($nome eq "" & defined ($nome))?1:0)+
+			(($cognome eq "" & defined ($cognome))?2:0)+
+			(($codice_fiscale eq "" & defined ($codice_fiscale))?4:0)+
+			(($nascita eq "" & defined ($nascita))?8:0)+
+			(($email eq "" & defined ($email))?16:0)+
+			(($password eq "" & defined ($password))?32:0);
+			
+
+if(defined ($nascita)){
+	if(valida_data($nascita)==0){
+		$errore|=8;
+	}
+}
+if(($errore==0) & defined ($nome)){#se il form è stato compilato correttamente
+	registrati();
+	print "Location: ../index.html\n\n";
+	exit;
+}
+
+if($errore==0){#se il campo non è ancora stato compilato...
+	$nome="Nome";
+	$cognome="Cognome";
+	$codice_fiscale="CODICE FISCALE";
+	$nascita="32/02/1920";
+	$email="info\@example.org";
+	$password="password";
 }
 
 my $titolo="Home";
@@ -71,20 +141,7 @@ my @path=("Pagina principale", "index.html");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
-my $errore= (($nome eq "" & defined ($nome))?1:0)+
-			(($cognome eq "" & defined ($cognome))?2:0)+
-			(($codice_fiscale eq "" & defined ($codice_fiscale))?4:0)+
-			(($nascita eq "" & defined ($nascita))?8:0)+
-			(($email eq "" & defined ($email))?16:0)+
-			(($password eq "" & defined ($password))?32:0);
-if($errore==0){#se il campo non è ancora stato compilato...
-	$nome="Nome";
-	$cognome="Cognome";
-	$codice_fiscale="CODICE FISCALE";
-	$nascita="32/02/1920";
-	$email="info\@example.org";
-	$password="password";
-}
+
 print print_header::print();
 print "	<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo="<div class=\"sezione\">
