@@ -15,6 +15,7 @@ require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 
+
 my %form;
 
 
@@ -29,6 +30,11 @@ my $codice_fiscale=$form{"CF"};
 my $nascita=$form{"nascita"};
 my $email=$form{"email"};
 my $password=$form{"password"};
+
+
+sub registrati {
+
+}
 
 my $titolo="Home";
 
@@ -65,42 +71,83 @@ my @path=("Pagina principale", "index.html");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
+my $errore= (($nome eq "" & defined ($nome))?1:0)+
+			(($cognome eq "" & defined ($cognome))?2:0)+
+			(($codice_fiscale eq "" & defined ($codice_fiscale))?4:0)+
+			(($nascita eq "" & defined ($nascita))?8:0)+
+			(($email eq "" & defined ($email))?16:0)+
+			(($password eq "" & defined ($password))?32:0);
+if($errore==0){#se il campo non è ancora stato compilato...
+	$nome="Nome";
+	$cognome="Cognome";
+	$codice_fiscale="CODICE FISCALE";
+	$nascita="32/02/1920";
+	$email="info\@example.org";
+	$password="password";
+}
 print print_header::print();
-print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print "	<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo="<div class=\"sezione\">
 					<form action=\"registrati.cgi\" method=\"post\">
-						<fieldset>
-							<div>
+						<fieldset>";
+if($errore>0){
+	$testo.="<p class=\"errore\">Errore: devi compilare correttamente tutti i campi!</p>";
+}						
+$testo.="							<div>
 								<h3>Per acquistare i biglietti, registrati inserendo i tuoi dati!</h3>
 							</div>
 							<div>
 								<label for=\"Nome\">Nome: </label>
-								<input type=\"text\" id=\"Nome\" name=\"Nome\" value=\"Nome\"></input>
+								<input type=\"text\" id=\"Nome\" name=\"Nome\" class=\"";
+if($errore & 1>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$nome\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
 								<label for=\"Cognome\">Cognome: </label>
-								<input type=\"text\" id=\"Cognome\" name=\"Cognome\" value=\"Cognome\"></input>
+								<input type=\"text\" id=\"Cognome\" name=\"Cognome\" class=\"";
+if($errore & 2>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$cognome\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
 								<label for=\"CF\">Codice Fiscale: </label>
-								<input type=\"text\" id=\"CF\" name=\"CF\" value=\"Codice Fiscale\"></input>
+								<input type=\"text\" id=\"CF\" name=\"CF\" class=\"";
+if($errore & 4>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$codice_fiscale\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
 								<label for=\"nascita\">Data di nascita: </label>
-								<input type=\"text\" id=\"nascita\" name=\"nascita\" value=\"1920-23-02\"></input>
+								<input type=\"text\" id=\"nascita\" name=\"nascita\" class=\"";
+if($errore & 8>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$nascita\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
 								<label for=\"email\">E-mail: </label>
-								<input type=\"text\" id=\"email\" name=\"email\" value=\"info\@example.org\"></input>
+								<input type=\"text\" id=\"email\" name=\"email\" class=\"";
+if($errore & 16>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$email\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
 								<label for=\"password\">Password: </label>
-								<input type=\"password\" id=\"password\" name=\"password\" value=\"password\"></input>
+								<input type=\"password\" id=\"password\" name=\"password\" class=\"";
+if($errore & 32>0){
+	$testo.="errore";
+}
+$testo.="\" value=\"$password\"></input>
 								<div class=\"clearer\"></div>
 							</div>
 							<div>
@@ -113,7 +160,7 @@ my $testo="<div class=\"sezione\">
 				</div>
 				<div class=\"clearer\"></div></div><!-- chiudo contenuto-->";
 print print_content::print($testo);
-print "		</div>"; #chiudo il div main
+print "		"; #chiudo il div main
 print print_footer::print();
 print "	</body>
 </html>";
