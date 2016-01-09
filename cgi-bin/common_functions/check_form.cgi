@@ -1,0 +1,134 @@
+#!/usr/bin/perl
+package check_form;
+require      Exporter;
+
+our @ISA       = qw(Exporter);
+our $VERSION   = 1.00;         # Version number
+
+### Include your variables and functions here
+# qui vengono dichiarati tutti i metodi per la validazione dei form
+# come verifica email, nome, data, ecc...
+#
+#
+
+use DateTime;  #utilizzato per validare la data inserita
+use Time::Piece;
+
+#estraggo i numeri dal select per selezionare i passeggeri
+sub leggi_numeri {
+	my ($numeri)=@_;
+	$numeri =~/([0-9]+)/;
+	return $1;
+}
+#estraggo la data dal form di ricerca: se la data non è valida (nel formato) e non è compresa tra "domani" e +1 anno, ritorno 0
+#se la data è valida e rispetta le condizioni di +1d..+365d, allora ritorno la data.
+sub leggi_data {
+	my ($data)=@_;
+	if(!defined $data){
+		return 0;
+	}
+	$data =~/([\d]{2})([\/]+)+([\d]{2})([\/]+)+([\d]{4})/;
+	my $giorno=$1;
+	if(!($2 eq '/')){#se la stringa è nel formato GG/MM/AAAA
+		return 0;
+	}
+	my $mese=$3;
+	if(!($4 eq '/')){
+		return 0;
+	}
+	my $anno=$5;
+	
+	eval {
+		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
+	};
+	if($@){
+		return 0;#data non valida
+	}else{
+		my $today = Time::Piece->new();
+		my $oggi=$today->year."/".$today->mon."/".$today->mday;
+		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+		my $d = ($dt2 - $dt1)->days;
+		#controllo se la data è troppo avanti o indietro nel tempo
+		
+		if($d<1 | $d>365){
+			return 0;
+		}
+	}
+	
+	return "$giorno/$mese/$anno";
+}
+
+#controllo se l'email è corretta.
+sub valida_email {
+	my ($email)=@_;
+	$email =~/^([\w\-\+\.]+)\@([\w\-\+\.]+)\.([\w\-\+\.]+)$/;
+	if ( "$1\@$2.$3" eq $email){
+		return 1; #email corretta secondo l'espressione regolare
+	}
+	return 0;
+}
+
+#controllo se il nominativo contiene solo lettere
+sub valida_nominativo {
+	my ($nome)=@_;
+	$nome =~/^([a-zA-Z\s]+)$/;
+	if ( "$1" eq $nome){
+		return 1; #nominativo corretto, non contiene caratteri differenti da lettere e spazi
+	}
+	return 0;
+}
+
+
+#controllo se il codice fiscale è nel formato corretto
+sub valida_codice_fiscale {
+	my ($codice_fiscale)=@_;
+	$codice_fiscale =~/^([a-zA-Z]{6}[\d]{2}[a-zA-Z]{1}[\d]{2}[a-zA-Z]{1}[\d]{3}[a-zA-Z]{1})$/;
+	#print "$1 $2 $3 $4 $5 $6 $7";
+	if( "$1$2$3$4$5$6$7" eq $codice_fiscale){
+		return 1;#è corretto
+	}
+	return 0;#non è corretto
+}
+
+#controllo se la data inserita è corretta e se l'utente è maggiorenne e non matusalemme.
+sub valida_data{
+	my ($data)=@_;
+	if(!defined $data){
+		return 0;
+	}
+	#$testo =~/(<!--)+([ ]*)(title=")+([ ]*)([A-Za-z0-9]+)([ ]*)/;
+	$data =~/([\d]{2})([\/]+)+([\d]{2})([\/]+)+([\d]{4})/;
+	my $giorno=$1;
+	if(!($2 eq '/')){#se la stringa è nel formato GG/MM/AAAA
+		return 0;
+	}
+	my $mese=$3;if(!($4 eq '/')){
+		return 0;
+	}
+	my $anno=$5;
+	
+	eval {
+		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
+	};
+	if($@){
+		return 0;#data non valida
+	}else{
+		my $today = Time::Piece->new();
+		my $oggi=$today->year."/".$today->mon."/".$today->mday;
+		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+		my $d = ($dt1 - $dt2)->years;
+		#controllo se l'utente è troppo giovane o troppo anziano
+		#sotto i 18 anni non può prenotare il volo.
+		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
+		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
+		if($d<18 | $d>150){
+			return 0;
+		}
+		return 1;
+	}
+}
+
+1;

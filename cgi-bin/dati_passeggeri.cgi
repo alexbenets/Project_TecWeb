@@ -25,12 +25,7 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
-my $andata_ritorno=$form{"AR"};
-my $select_partenza=$form{"partenza"};
-my $select_arrivo=$form{"arrivo"};
-my $data_partenza=check_form::leggi_data($form{"data_partenza"});
-my $data_ritorno=check_form::leggi_data($form{"data_ritorno"});
-my $select_passeggeri=check_form::leggi_numeri($form{"passeggeri"});
+my $passeggeri=4; #poi verrà letta dalla variabile di sessione apposita.
 
 my $andata=0; #booleana: se non è andata, allora è con ritorno.
 
