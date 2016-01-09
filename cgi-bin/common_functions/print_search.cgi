@@ -3,68 +3,155 @@ package print_search;
 require      Exporter;
 
 our @ISA       = qw(Exporter);
-our @EXPORT    = qw(camel);    # Symbols to be exported by default
-our @EXPORT_OK = qw($out);  # Symbols to be exported on request
 our $VERSION   = 1.00;         # Version number
 
 ### Include your variables and functions here
 
-sub print { return "
+
+sub list_partenze {
+	my %partenze;
+	#array di stringhe contenente i vari riferimenti alle città
+	#formato: PAESE - CITTÀ - AEREOPORTO
+	my @aereoporti_temp=("Linate", "Malpensa");
+	my %temp;
+	$temp{"Milano"}=\@aereoporti_temp;
+	my @aereoporti_temp=("Fiumicino");
+	$temp{"Roma"}=\@aereoporti_temp;
+	$partenze {"Italia"}=\%temp;
+	
+	return %partenze;
+	
+}
+
+sub list_arrivi {
+	my %arrivi;
+	#array di stringhe contenente i vari riferimenti alle città
+	#formato: PAESE - CITTÀ - AEREOPORTO
+	my @aereoporti_temp=("Linate", "Malpensa");
+	my %temp;
+	$temp{"Milano"}=\@aereoporti_temp;
+	my @aereoporti_temp=("Fiumicino");
+	$temp{"Roma"}=\@aereoporti_temp;
+	$arrivi {"Italia"}=\%temp;
+	
+	return %arrivi;
+}
+
+sub print { 
+	my ($errori, $andata, $partenza, $arrivo, $data_partenza, $data_ritorno, $passeggeri)=@_;
+	if(!defined $data_partenza | $data_partenza==0){
+		$data_partenza="Data partenza";
+	}
+	if(!defined $data_ritorno| $data_ritorno==0){
+		$data_ritorno="Data ritorno";
+	}
+	
+my $testo= "$ettori $AR
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
 				<form action=\"../cgi-bin/search.cgi\" method=\"post\">
 					<fieldset>
 						<div class=\"casella_AR\">
 							<label for=\"andata\">solo andata</label>
-							<input type=\"radio\" name=\"AR\" id=\"andata\" value=\"andata\"  checked=\"checked\"/>
+							<input type=\"radio\" name=\"AR\" id=\"andata\" value=\"andata\"  ";
+							if($andata==1){
+								$testo.="checked=\"checked\"";
+							}
+							$testo.="/>
 						</div>
 						<div class=\"casella_AR\">
 							<label for=\"ritorno\">andata e ritorno</label>
-							<input type=\"radio\" name=\"AR\" id=\"ritorno\" value=\"ritorno\"/>
+							<input type=\"radio\" name=\"AR\" id=\"ritorno\" value=\"ritorno\"  ";
+							if($andata==0){
+								$testo.="checked=\"checked\"";
+							}
+							$testo.="/>
 						</div>
-						<div class=\"clearer\"></div>
-
-						<div class=\"casella_partenza\">
+						<div class=\"clearer\"></div>";
+						
+						
+						$testo.="<div class=\"casella_partenza\">
 							<label for=\"partenza\">Partenza:</label>
-							<select name=\"partenza\" class=\"partenza\">
-								<optgroup label=\"ITALIA\">
-									<option>Milano - Malpensa</option>
-									<option>Milano - Linate</option>
-								</optgroup>
-							</select>
+							<select name=\"partenza\" class=\"partenza\">";
+						my %partenze=list_partenze();
+						while (($paese, $citta) = each(%partenze))
+						{
+							$testo.= "<optgroup label=\"$paese\">\n";
+							while (($nome_citta, $aereoporto) = each(%{$citta}))
+							{
+								while (($id, $nome_aereoporto) = each(@{$aereoporto}))
+								{
+									$testo.="<option";
+									if("$nome_citta - $nome_aereoporto" eq $partenza){
+										$testo.=" selected=\"selected\"";
+									}
+									$testo.=">$nome_citta - $nome_aereoporto</option>";
+								}
+							}
+							$testo.= "</optgroup>";
+						}
+							
+							$testo.="</select>
 						</div>
 						<div class=\"casella_arrivo\">					
 							<label for=\"arrivo\">Arrivo:</label>
-							<select name=\"arrivo\" class=\"arrivo\">
-								<optgroup label=\"ITALIA\">
-									<option>Milano - Malpensa</option>
-									<option>Milano - Linate</option>
-								</optgroup>
-							</select>
+							<select name=\"arrivo\" class=\"arrivo\">";
+						my %partenze=list_arrivi();
+						while (($paese, $citta) = each(%partenze))
+						{
+							$testo.= "<optgroup label=\"$paese\">\n";
+							while (($nome_citta, $aereoporto) = each(%{$citta}))
+							{
+								while (($id, $nome_aereoporto) = each(@{$aereoporto}))
+								{
+									$testo.="<option";
+									if("$nome_citta - $nome_aereoporto" eq $arrivo){
+										$testo.=" selected=\"selected\"";
+									}
+									$testo.=">$nome_citta - $nome_aereoporto</option>";
+								}
+							}
+							$testo.= "</optgroup>";
+						}
+							
+							$testo.="</select>
 						</div>
 						
 						<div class=\"casella_dataPartenza\">
 							<label for=\"data_partenza\">Data Partenza:</label>
-							<input type=\"text\" name=\"data_partenza\" id=\"data_partenza\" value=\"Data Partenza\"></input>
+							<input type=\"text\" name=\"data_partenza\" id=\"data_partenza\" value=\"$data_partenza\" class=\"";
+							if($errori & 1){
+								$testo.= "errore";
+							}
+							$testo.="\"></input>
 						</div>
 						<div class=\"casella_dataRitorno\">
 							<label for=\"data_ritorno\">Data Ritorno:</label>
-							<input type=\"text\" name=\"data_ritorno\" id=\"data_ritorno\" value=\"Data Ritorno\"></input>
+							<input type=\"text\" name=\"data_ritorno\" id=\"data_ritorno\" value=\"$data_ritorno\" class=\"";
+							if($errori & 2){
+								$testo.= "errore";
+							}
+							$testo.="\"></input>
 						</div>
 
 						<div class=\"casella_passeggeri\">
 							<label for=\"n_passeggeri\">numero Passeggeri:</label>
-							<select name=\"passeggeri\" class=\"passeggeri\">
-								<option>1 passeggero</option>
-								<option>2 passeggeri</option>
-								<option>3 passeggeri</option>
-								<option>4 passeggeri</option>
-								<option>5 passeggeri</option>
-								<option>6 passeggeri</option>
-								<option>7 passeggeri</option>
-								<option>8 passeggeri</option>
-								<option>9 passeggeri</option>
-								<option>10 passeggeri</option>
-							</select>
+							<select name=\"passeggeri\" class=\"passeggeri\">";
+							for(my $i=0; $i<=10; $i++){
+								if($i==0){
+									$testo.="<option";
+									if($passeggeri==$i){
+										$testo.=" checked=\"checked\"";
+									}
+									$testo.=">Nessun passeggero</option>";
+								}else{
+									$testo.="<option";
+									if($passeggeri==$i){
+										$testo.=" selected=\"selected\"";
+									}
+									$testo.=">$i passeggeri</option>";
+								}
+							}
+							$testo.="</select>
 						</div>
 
 						<div class=\"button_form\">									
@@ -77,8 +164,6 @@ sub print { return "
 				</form>
 			</div><!-- chiudo prenota -->
 
-" }
-
-$out = "";
-
-1;
+";
+return $testo;
+}

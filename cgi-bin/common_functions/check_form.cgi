@@ -15,10 +15,14 @@ use DateTime;  #utilizzato per validare la data inserita
 use Time::Piece;
 
 #estraggo i numeri dal select per selezionare i passeggeri
+#se non ci sono passeggeri, allora $1 non sarà definito e, quindi, riporto 0.
 sub leggi_numeri {
 	my ($numeri)=@_;
 	$numeri =~/([0-9]+)/;
-	return $1;
+	if(defined($1)){
+		return $1;
+	}
+	return 0;
 }
 
 #funzione per verificare se il formato della data è corretto; recupera il giorno, il mese e l'anno dalla data inserita.

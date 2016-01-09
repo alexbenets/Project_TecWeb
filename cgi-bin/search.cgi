@@ -37,6 +37,13 @@ my $andata=0; #booleana: se non è andata, allora è con ritorno.
 if($andata_ritorno eq "andata"){
 	$andata=1;
 }
+my $errori=0;
+if($data_partenza==0){
+	$errori=1;
+}
+if($data_ritorno==0){
+	$errori+=2;
+}
 
 my $titolo="Ricerca voli";
 
@@ -75,8 +82,11 @@ push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 print print_header::print();
+if($errori>0){
+	print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
+}
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_content::print("$andata_ritorno, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri");
+print print_content::print(" $errori $andata_ritorno, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri");
 print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>

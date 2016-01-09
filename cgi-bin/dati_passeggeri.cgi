@@ -111,7 +111,7 @@ print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o d
 my $messaggio="";
 if($errori>0){
 	$messaggio="<div>
-					<h3>Attenzione: alcuni dati non sono corretti!</h3>
+					<h3 class=\"errore\">Attenzione: alcuni dati non sono corretti!</h3>
 				</div>";
 }
 my $testo="
