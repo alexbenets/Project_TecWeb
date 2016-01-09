@@ -1,0 +1,154 @@
+				X-Path Functionality
+<<Functionality>>
+Registrazione
+
+utente compila form -> controllo che abbia inserito tutti i dati (altrimenti 
+						segnala gli errori)
+					-> controllo che la mail non sia giÃ  presente nell'xml: 		/database/tabUtenteRegistrato/utenteRegistrato/mail
+					  		-> se Ã¨ prensente c'Ã¨ un errore da segnalare(l'utente Ã¨ 
+					  		giÃ  registrato 
+					  		-> altrimenti Ã¨ tutto corretto
+
+<<Functionality>>
+Recupera Password
+utente segnala smarrimento password 	-> chiedo email all'utente 					$user = /database/tabUtenteRegistrato/utenteRegistrato[mail=<<
+																					input_mail>>]/utente/idPKU			
+utente inserisce email					-> chiedo domanda segreta					/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]/
+																					domandaSegreta	
+utente inserisce risposta a domanda		-> se la risposta Ã¨ corretta				/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]																						/rispostaSegreta
+											->creo una form di compilazione nuova 	/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]/password								   password
+										-> se la risposta Ã¨ sbagliata chiede di 
+											rinserire la risposta
+										-> altrimenti segnaliamo di inviare una 
+											email all'amministratore con l'email di 
+											registrazione che gli invia la risposta 
+											alla domanda segreta. 
+
+<<Functionality>>
+Login
+utente compila form 					
+	-> controllo che abbia inserito tutti i dati (altrimenti segnala 
+	gli errori "manca parametro")
+	-> controllo che la mail sia presente nell'xml: 								$user = /database/tabUtenteRegistrato/utenteRegistrato[mail=<<
+																					input_mail>>]/utente/idPKU	
+	-> ricerco la password del'utente registrato con quella mail:					$password=/database/tabUtenteRegistrato/utenteRegistrato[utente/
+		-> se Ã¨ corretta ok 														idPKU=$user]/password
+		-> altrimenti password errata (max 3 tentativi?)							$password=<<input_password>>	
+
+<<Functionality>>
+Prenota
+utente compila prima form
+	-> ottengo la cittÃ  di partenza e arrivo, il numero di di passeggeri, 
+	se si vuole eseguire prenotazioni anche per il volo di ritorno e la data(?)
+	
+	-> Caso 1)
+	Casella "Da" non selezionata e casella "A" non selezionata
+	
+	Trovo tutte le nazioni															@nazione_tab = /database/tabNazione/nazione
+																					$nazione = foreach <<element>> in @nazione_tab
+																						$nazione_nome = $nazione/nome
+																						$nazione_id = $nazione/idPKNazione
+																						<<ADD $nazione_nome in HTML>> 
+		Per ogni nazione trovo citta												@citta_tab = /database/tabCitta[citta/idFKNazione=$nazione_id]/citta
+																					$citta = foreach <<element>> in @citta_tab
+																						$citta_nome = $citta/nome
+																						$citta_id = $citta/idPKCitta 		
+																						<<ADD $citta_nome in HTML>> 
+			Per ogni citta trovo aereoporto											@aereoporto_tab = /database/tabAereoporto[aereoporto/
+																					idFKCitta=$citta_id]/aereoporto
+																					$aereoporto = foreach <<element>> in @aereoporto_tab
+																						$aereoporto_nome = $aereoporto/nome
+																						$aereoporto_id = $aereoporto/idPKCitta
+																						<<ADD $aereoporto_nome in HTML>>
+	-> Caso 2) 
+	Casella "Da" selezionata e casella "A" non selezionato
+
+	creo 3 array :
+		array_aereoporti															@aereoporti_id
+		trovo tutte gli aereoporti di arrivo con areoporto di partanza dato			@aereoporti_id=/database/tabTratta/tratta
+																					[idFKApPartenza=$aereoporto_id]/idFKApArrivo				
+		array_citta
+		trovo tutte le cittÃ  di arrivo con aereoporto di partenza dato				$aereoporto_id = foreach <<element>> in @aereoporto_id
+																						$citta_id=/database/tabAereporto/aereoporto
+																						[idPKAp=$aereoporto_id]/idFKCitta								
+																						$citta_id ADD in @citta_id  					
+		
+		array_nazione																															
+		trovo tutte le nazioni di arrivo con aereoporto di partenza dato			$citta_id = foreach <<element>> in @citta_id
+																						$nazione_id=/database/tabNazione/nazione
+																						[idPKNazione=$citta_id]/idFKNazione								
+																						$nazione_id ADD in @nazione_id  					
+		
+	Creo 2 array associativi Kay-values (aereoporto,citta), (citta,nazione) da 3 array	 
+
+	Per visualizzare il nome di
+	nazione dato $nazione_id														/database/tabNazione/nazione
+																						[idPKNazione=$nazione_id]/nome
+	citta dato $citta_id															/database/tabCitta/citta
+																						[idPKCitta=$citta_id]/nome
+	aereoporto dato $aereoporto_id													/database/tabAereoporto/aereoporto
+																						[idPKAp=$aereoporto_id]/nome
+	
+
+	-> Caso 3)
+	Casella "Da" non selezionata e casella "A" selezionata							/database/tabNazione/nazione
+																						[idPKNazione=$nazione_id]/nome
+	Speculare
+
+	-> Creazione tabella con voli disponibili
+
+	-> Ho $num_pren con il numero di posti che voglio prenotare
+	-> Visualizzare date voli disponibili rispetto alle date inserite 
+	-> $data_partenza $data_arrivo , data arrivo Ã¨ presente se $ritorno Ã¨ true
+	->
+	-> Uso di libreria datetime in perl per ricavare giorno settimanale dalla $data
+	-> Faccio un ciclo per tutti i 7 giorni settimana, per ogni giorno ho $data 
+	-> e $giorno con data rispettiva giorno e tipologia giorno settimanale(lun,mar,ecc.).
+	-> Trovo tutti i voli di quel giorno e li inserisco nel vettore @voli			@id_volo_per_data = /database/tabPrenotazione/prenotazione
+																						[data_volo=$data]/idFKVolo
+																					@voli = @id_volo_per_data senza doppioni							
+																					
+		-> Per ogni ID del volo in $volo 											$volo = foreach <<element>> in @voli
+			-> Ricavo prenotazioni del volo											@prenotazioni_per_volo = /database/tabPrenotazione/prenotazione
+																					/idFKVolo = $volo
+			-> Trovo il relativo aereo 												$aereo =/database/tabVolo/volo
+																						[idPKVolo=$volo]/idFKAereo
+				-> Trovo la tipologia dell'aereo 									$tipo =/database/tabAereo/Aereo
+																						[idPKAereo=$aereo]/idFKTipologiaAereo
+					->Trovo il numero di posti dell'aereo 							$num_posti = /database/tabTipologiaAereo/tipologiaAereo
+																						[idPKTipologiaAereo=$tipo]/n_posti
+		Aggiungo $volo in @volo_del_giorno se 										$num_posti-num_elem{@prenotazioni_per_volo}-$num_pren >=0
+		con il relativo prezzo $prezzo												$prezzo = /database/tabVolo/volo
+		mediante array assocciativo													[idPKVolo=$volo]/prezzo
+																					$PREZZO{$volo} = $prezzo
+		con il relativo ora_partenza $ora_partenza									$ora_partenza = /database/tabVolo/volo
+		mediante array assocciativo													[idPKVolo=$volo]/ora_partenza
+																					$ORA_PARTENZA{$volo} = $ora_partenza
+		con il relativo ora_arrivo $ora_arrivo										$ora_arrivo = /database/tabVolo/volo
+		mediante array assocciativo													[idPKVolo=$volo]/ora_arrivo
+																					$ORA_ARRIVO{$volo} = $ora_partenza		
+
+	-> L'utente sceglie il volo desiderato in variabile sessione $volo con l'ID del volo scelto
+	
+	-> Appaiono i commenti del volo relativo										@commenti =/database/tabCommento/commento
+																						[idFKVolo=$volo AND approvato="true"]																				
+
+
+	-> controllo che le cittÃ  inserite siano presenti nel db a database/tabLuogo/luogo[nome=parametro da/a]
+							->se esistono devo trovare i possibili aereoporti di transito da database/tabAeroporto/aeroporto[idFKL=parametro portato da passo precedente]
+									-> trovati gli aeroporti devo trovare le tratte tra questi (NB solo le tratte che vanno da 1 possibile ap di partenza ed 1 possibile ap di arrivo!!!) con database/tabTratta/tratta[idFKAeroportoPartenza= idPKAp (par da_) && database/tabTratta/tratta[idFKAeroportoArrivo= idPKAp (parametro a_)]
+											->se esistono tratte devo trovare i voli con numero di posti disp>= al numero di di posti richiesti (?), ordinandoli per prezzo crescente da database/tabVolo/volo[idFKT= idPKT trovata]
+													->sotto ogni volo trovato bisogna inserire il VOTO complessivo dato dagli utenti !!! cerco si database/tabcommento/commento[idFKV=idPKV cercato]/voto(????) per ogni commento disponibile, sommo ai precedenti e, quando ho esaurito i commenti divido la somma per il numero di di commenti
+													->se non Ã¨ stato inserito nessun voto...? segnalo nessun voto disponibile per il volo
+											->altrimenti errore non esistono voli (possibile?)
+									->se non esistono gli aeroporti errore!(possibile?) 
+							->altrimenti errore da segnalare
+					->atrimenti bisogna segnalare che non si effettuano voli tra quelle localitÃ 
+					->devo creare x=numero dipasseggeri, se Ã¨ selezionato flag andata e ritorno devo moltiplicare per 2 questa quantitÃ , nodi di prenotazione (database/tabPrenotazione/prenotazione) sapendo a questo punto potenzialmente l'utente autore(non i passeggeri)(=idFKUR), e la data (?)   
+2) visualizzo i voli con i relativi prezzi in una nuova pagina (somma del prezzo base(database/tabVolo/volo[idPKV=idPKV trovato]/prezzo) x il numero di passeggeri), l'utente seleziona uno dei voli disponibili (NB vanno segnati solo se numero di posti disponibili >= posti richiesti)
+					->entro in una nuova pagina contentente: -form da compilare x inserire i dati dei passeggeri e (per ciascuno?) i possibili servizi aggiuntivi (database/tabServizio/servizio)
+					->utente inserisce i dati dei passeggieri e i servizi aggiuntivi che desidera vanno inseriti nell'xml: creo le prenotazioni e aggiorno i servizi prenotati
+3) se l'utente Ã¨ registrato chiedo conferma, salvo e chiudo altrimenti chiedo login/registrazione
+3) se flag ritorno Ã¨ presente devo ripetere il processo con parametri da_ a_ scambiati
+
+
