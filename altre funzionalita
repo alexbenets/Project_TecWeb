@@ -1,0 +1,323 @@
+MANIPOLA PER SUPERADMIN E AMMINISTRATORE
+
+PUÃ’ INTERVENIRE SU 
+-TABUTENTEREGISTRATO (SUPERADMIN) done?
+-TABAMMINISTRATORE (SUPERADMIN) done?
+-TABAEREOPORTO (SUPERADMIN) done
+-TABCITTA (SUPERADMIN) done
+-TABNAZIONE (SUPERADMIN) done
+-TABTRATTA (SUPERADMIN)  
+-TABVOLO (SUPERADMIN) 
+-TABAEREO (SUPERADMIN) done
+-TABTIPOAEREO (SUPERADMIN) doe
+-TABCOMMENTO (SUPERADMIN E AMMINISTRATORE) done
+-TABSERVIZIO (SUPERADMIN) done
+-TABNEWS (SUPERADMIN E AMMINISTRATORE) done
+-TABFAQ (SUPERADMIN E AMMINISTRATORE) done
+
+in particolare:
+1)il S.A. puÃ² inserire nuovi aereoporti o cancellarne:
+Pagina INIZIALE: visualizza gli aereoporti con per ciascuno: 
+nome dell'aereoporto $nomeAp,				@nomeAp=/database/tabAereoporto/aereoporto/nome
+nome della citta alla quale appartene $nomeCitta,	@nomeCitta=(posizione indica appartenenza)/database/tabCitta/citta[idPKCitta=
+							$idFKCitta]/nome
+							@idFKCitta=(posizione indica appartenenza)/database/tabAereoporto/aereoporto/idFKCitta
+
+bottone per cancellarlo;
+e a fine pagina un bottone "per inserire un nuovo aereoporto" 
+PER INSERIREAEREOPORTO
+	->controllo che l'utenteRegistrato $cookie
+	(?si puÃ² usare i cookie x fare questo) 		$cookie=/database/tabUtenteRegistrato/utenteRegistrato/mail?
+							$idSA=/database/tabUtenteRegistrato/utenteRegistrato[mail=$cookie]/utente/idPKU
+	 sia effettivamente SA $checkSA=true		$checkSA=/database/tabAmministratore/amministratore
+							[/database/tabAmministratore/amministratore/utenteRegistrato/idPKU=$idSA]/
+							flagSA
+		->se si utente puÃ² accedere 
+		alla pagina di modifica         		
+		->altrimenti viene bloccato
+	->una volta entrato nella pagina 
+	di modifica selziona pulsante(?) 
+	"INSERISCI NUOVO" ed entra nella 
+	pagina con domanda: "la citta relativa 
+	a questo aereoporto Ã¨ gia presente nel DB?"
+	"YES" "NO"
+		->se YES posso passare alla form
+	  	vera e propria contenente 
+		"NOMEAEREOPORTO=$nomeAereoporto" 
+		e "NOMECITTA=$nomeCitta"
+		->creo un nuovo nodo Aereoporto con 
+		idPKAp=$numeroMax,			$numeroMax=massimo(@idAp=/database/tabAereoporto/aereoporto/idPKAp)+1	
+		nomeAp=$nomeAereoporto e 
+		idFKCitta=$idCitta 			$idCitta=/database/tabCitta/citta[nome=$nomeCitta]/idPKCitta
+		NB se $idCitta non trova nessuna cittÃ  
+		corrispondente deve salvare $numeroMax,	
+		$nomeAereoporto, $nomeCittÃ  e avvisare 
+		l'utente che la citta non Ã¨ presente nel DB 
+		offrendo le possibilitÃ :
+		=>"inserire citta con nome $nomeCittÃ  nel DB?" 
+		(*rimanda l'utente a CREACITTA e riporta poi 
+		a questa pagina mantenendo gli altri parametri)
+		OR "$nomeCittÃ  sagliato"=casella di modifica 
+		testo della variabile e riprova.
+
+		->se "NO" rimanda utente a CREACITTA e poi lo riporta
+		a quel che succede da "YES" 
+		NB: Ã¨ ridondante ma non so se limitarsi a fare il codice di "YES" Ã¨ sufficente 
+	NB: potrebbe essere una buona cosa sostituire $numeroMax 
+	con una variabile $nuovoID che cerca il primo buco tra gli id e lo riempie
+	=> si usa un ciclo su @idAp			@idAp=/database/tabAereoporto/aereoporto/idPKAp
+	: foreach ($idAp){				$precedente=valore iniziale:-1, aumenta di una unitÃ  ad ogni ciclo
+		if($idAp!=$precedente+1){ 		cioÃ¨ c'Ã¨ un id mancante
+			$nuovoId=$precedente+1		
+			break				MI FERMO NON ESEGUO I SUCCESSIVI CICLI			
+		}
+	} 
+ 
+PER CANCELLARE AEREOPORTO
+	->utente seleziona un aereoporto dai visibili
+	->controllo che l'utenteRegistrato $cookie
+	(?si puÃ² usare i cookie x fare questo) 		$cookie=/database/tabUtenteRegistrato/utenteRegistrato/mail?
+							$idSA=/database/tabUtenteRegistrato/utenteRegistrato[mail=$cookie]/utente/idPKU
+	 sia effettivamente SA $checkSA=true		$checkSA=/database/tabAmministratore/amministratore
+							[/database/tabAmministratore/amministratore/utenteRegistrato/idPKU=$idSA]/
+							flagSA
+		->se si utente puÃ² cancellare quella voce del DB        		
+		->altrimenti viene bloccato
+	->salvo il nome dell'aereoporto da cancellare:  $nomeDaCancellare
+	->seleziono l'id dell'aereoporto $daCancellare	$daCancellare=/database/tabAereoporto/aereoporto[nome=$nomeDacancellare]/idPKAp
+	->SE la citta alla quale appartiene ha altri aereoporti 
+	if($nApcitta>1)
+		->$nApCitta= conta il numero di		$nApCitta=numero elementi @Apcitta=/database/tabAereoporto/aereoporto[idFKAp=$citta/id
+		aereoporti per la citta relativa 	$citta=/database/tabAereoporto/aereoporto[idPKAp=$dacancellare]/idFKCitta
+		all'aereoporto da cancellare
+	 && non ci sono tratte che lo coinvolgono 
+	if($nPartenzeDaAp==$nAarriviDaAp==0)
+		->ho l'id del nodo ca cancellare  
+		->conto il numero di tratte che partono 
+		da quell'aereoporto			$nPartenzeDaAp=numero elementi @partenze=/database/tabTratta/tratta[idFKApPartenza=
+							$daCAncellare]/idPKT
+		->conto il numero di tratte che arrivano 
+		da quell'aereoporto			$nPartenzeDaAp=numero elementi @arrivi=/database/tabTratta/tratta[idFKApArrivo=
+							$daCAncellare]/idPKT	
+	=>elimino il nodo 
+	-> ALTRIMENTI SEGNALO i problemi
+		->se $nApcitta=1 => $daCancellare 
+		Ã¨ l'unico aereoporto che arriva a
+	 	quella citta
+		=>quindi chiedo "cancello l'aereoporto 
+		e la cittÃ  collegta?"
+		->"NO" non cencello nulla
+		->"SI" cancello l'aereoporto $daCAncellare e la citta $cittÃ 
+		(SE la citta Ã¨ l'unica cittÃ  della nazione ripeto l'algoritmo per $cittaDaCancellare e $nazione SIMILE A QUELLO VISTO 	
+		SOPRA	(*1))
+		
+		->se $nPartenzeDaAp>0 o $nAarriviDaAp>0
+		=>quindi chiedo "cancello l'aereoporto 
+		e le tratte collegate?"
+		->"NO" non cencello nulla
+		->"SI" cancello l'aereoporto $daCAncellare e le tratte contenute in@partenze e @arrivi
+		
+TABCITTA 
+ha una pagina a se per gli amministratori? se non esiste una pagina a se bisognerÃ  renderle visibili, queste e le nazioni, da qualche parte...
+PER OTTENERE I DATI TUTTAVIA:
+	->trovo tutte le nazioni presenti nel db	@nazioni=/database/tabNazione/nazione/idPKNazione
+	->per ogni nazione cerco le citta servite	@citta($nazioni)=/database/tabCitta/citta[idFPNazione=$nazioni]/idPKNazione
+	->di ogni nazione rendo visibile il nome	$nazioni/nome
+	->e il nome delle citta				$citta/nome
+	in formato: nazione1
+			citta1
+			citta2
+		    nazione2
+			citta1
+			citta2
+			citta3
+	PER INSERIRE UNA NUOVA CITTA
+	->SE la cittÃ  appartiene ad una nazione giÃ 
+	inserita seleziono la nazione	
+		->clicco "aggiungi una cittÃ "
+		->inserisco il nome della cittÃ 
+		->creo la nuova cittÃ 
+	->ALTRIMENTI
+		->clicco inserisci nuova nazione(*2)
+		euna volta creata inserisco una citta nella nuova nazizone creata
+	(*1) questo Ã¨ un metodo iÃ¹ seplice di organizzare quanto sopra nella tabella Aereoporto 
+NB facendo cosÃ¬ possono esistere cittÃ  prive di aereoporto, potremmo tenere questo sulla pagina degli aereoporti
+con formato
+nazione1
+	citta1
+		aereoporto1
+		aereoporto2
+	citta2
+		aereoporto1
+nazione2	
+	citta1
+		aereoporto1
+		aereoporto2
+	citta2
+		aereoporto1
+	citta3
+		aereoporto1
+
+Ci sono 2 array associativi aereoporto-citta citta-nazionee
+
+(key) -> (value)
+
+citta1 -> nazione1
+citta2 -> nazione1
+citta1 -> nazione2
+citta2 -> nazione2
+citta3 -> nazione2
+
+idem per aereoporto-citta
+
+
+
+
+
+
+
+
+
+
+Potremmo estendere la cosa ancora ulteriormente per comprendere le tratte ...
+	PER CANCELLARE UNA CITTÃ€
+	-> se la cittÃ  Ã¨ l'unica servita della nazione (cosa immediatamente visibile all'utente)
+		->clicco elimino nazione(? piÃ¹ semplice e veloce ma forse non buono qualora si 
+		voglia poi inserire un altra citta? BHE puÃ² nserire prima e eliminare dopo!)
+		->cerco l'id della nazione 	$idNazione=/database/tabNazione/nazione[nome=$nomeCliccato]/idPKNazione
+		->cerco l'id della citta 
+		della nazione			$idCitta=/database/tabNazione/nazione[nome=$nomeCliccato]/idPPKCitta
+		->elimino la cittÃ  dal database
+		->elimino la nazione dal db
+
+-TABNAZIONE (SUPERADMIN)
+PER INSERIRE UNA NAZIONE
+PER CANCELLARE UNA NAZIONE
+... BHE SOPRA RISOLVE QUESTI PUNTI 
+NB se 1 nazione con piÃ¹ cittÃ  viene cancellata allora esite un @idCitta con gli id delle cittÃ  a cancellare
+NB in entrambi i casi come su areoporti si potrebe dover risalire alle teatte che usano queste cittÃ 	 
+
+-TABAEREO (SUPERADMIN)
+Gli aerei sono oggetti fisici che possono essere impiegati per compiere voli. Un aereo puÃ² eseguire piÃ¹ voli in una giornata
+=> possono esistere piÃ¹ record che collegano un aereo a diversi voli MA NON diversi aerei ad uno stesso volo(?)
+
+=> dovrebbero probabilmente avere una pagina dedicata: se un volo Ã¨ cancellato l'aereo che lo compiva resta disponibile per altri voli;
+ogni aereo ha un modello ritrovato su TipoAereo, dunque la pagina (come organizzato sopra) dovrebbe presentare sia le caratteristice del aereo un link al modello dell'aereo.
+Nella pagina recuperati gli id degli aerei @idAerei=/database/tabAereo/aereo/idPKA
+e gli id dei modelli			   @idModelli=/database/tabAereo/aereo/idFKTA
+->devo mostrare lo stato dell'aereo, 
+->le eventuali note sullo stesso (recupeate per ogni aereo dai campi con gli stessi nomi)
+->il nome del modello $modello		$modello=/database/tabTipoAereo/tipoaereo[idPKTA=$idMdelli]/nome
+con il rispettivo link per modificare
+(? i modelli sono visibili anche agli utenti normali 
+ma ripetere + vote sulla pagina tutti i dati mi sembra inutile, 
+cpme d'altra parte modificare un modello: 
+non Ã¨ che nel tempo cambia, ANZI si possono usare le note
+ sull'aereo per dire quando Ã¨ stato revisionato o altro se serve )
+	PER INSERIRE UN AEREO
+	->utnte clicca "inserisci un nuovo aereo"
+	->chiedo "esiste giÃ  il modello dell'aereo"?
+		->SI: seleziono tra i disponibili il modello dell'aereo
+			->cerco l'id da usare con meccanismo simile a quello usato sopra per $nuovoId su aereoporti
+			->utente inserisce nome dell'aereo, lo stato ed eventuali note (su variabili con gli stessi nomi)
+			->creo nodo sulla tabella /database/tabAereo con i dati registrati
+		->NO:creo un nuovo tipo aereo (*3) e poi agisco come sopra
+PER CANCELLARE UN AEREO
+	-> seleziono un aereo da  cancellare
+	->SE Ã¨ l'unico aereo del suo tipo seleziono direttamente cancella tipo aereo (*4), 
+	che Ã¨ seguito dall'eliminazione di tutti i suoi aerei
+	->ALTRIMENTI perl ricava l'id dell'aereo 	   $daCancellare=$idAerei[nome=$parametroPerl]
+	->elimino il nodo con quell'id 
+	
+-TABTIPOAEREO (SUPERADMIN)
+tipo aerei ha una pagina a se nel sito per utente normale (la nostra flotta), dunque ha una pagina dedicata dove Ã¨ possibile aggiungere, modificare(?) o elimimare un elemento.
+per ciascun record in @tipiAerei=/database/tabTipoAereo/tipoAereo/idPKTA
+rendo visibile i campi nome, numeroPosti, produttore, descrizione
+(forse da ridefinire come tipo complesso con campi come: 
+velocitÃ  massima/massima distanza percorribile/lunghezza ecc)
+organizzando tutto in array.
+	PER INSERIRE UN NUOVO TIPOAEREO
+	->cerco l'id come su $nuovoId su aereoporti
+	->salvo i parametri inseriti dall'utente sulla form in variabili $nomecampo
+	->inserisco il nuovo record tipo aereo nella tabella
+	->(se *3 => passo all'inserimento di un nuovo aereo)
+	PER CANCELLARE UN TIPOAEREO	
+	->salvo il nome del tipoAereo da cencellare $nomeTA (selezionato dall'utente)
+	->cerco l'id corrispondente		    $idDaCancellare=/database/tabTipoAereo/TipoAereo[nome=$nomeTA]/idPKTA
+	->cerco gli aerei di quel tipo		    $aereiDaCancellare=/database/tabAereo/aereo[idFKTA=idDaCAncellare]/idPKA
+	->elimino gli aerei di quel tipo
+	->elimino il nodo tipoAereo
+NB BISOGNA AGGIUNGERE COSA FARE CON I VOLI DI QUESTI AEREI
+
+TABVOLO (SUPERADMIN) e TABTRATTE
+hanno un rapporto simile a quello tra AEREO e TIPOAEREO: ogni volo deve fare riferimento ad una tratta e una tratta puÃ² avere piÃ¹ voli;
+la pagina di visualizzazione dell'amministratore potrebbe quindi avere un'organizzazione:
+tratta1
+	volo1
+		aereofisico1
+	volo2
+		aereofisico2
+	volo3
+		aereofisico3
+	volo4
+		aereofisico1
+tratta2
+	volo1
+		aereofisico2
+	volo2
+		aereofisico3
+	volo3
+		aereofisico4
+pulsanti crea tratta crea volo 
+->dunque: trovo tutte le tratte disponibili 	@tratte=/database/tabTratta/tratta/idPKT
+->per ogni $tratte in tratte trovo i voli 	@voli=/database/tabVolo/volo[idFKT=$tratta]/idPKV (trova i voli di una tratta)=> ho 
+						cardinalitÃ @tratte array! ed ogni array puÃ² avere un diverso numero di elementi!(ouch)
+->per visuazizzare una tratta devo renderla 
+identificabile: devo recuperare i nomi degli 
+aereoporti coinvolti, delle rspettive citta e nazioni
+	->per ogni tratta quindi cerco gli id dell'
+	aereoporto $partenza e $arrivo		$partenza= /database/tabTratta/tratta[idPKT=$tratte]/idFKApPartenza 
+						$arrivo= /database/tabTratta/tratta[idPKT=$tratte]/idFKApArrivo
+	->i nomi dagli aereoporti 
+	$nomePart e $nomeArr			$nomePart=/database/tabAereoporto/aereoporto[idPKAp=$partenza]/nome
+						$nomeArr=/database/tabAereoporto/aereoporto[idPKAp=$arrivo]/nome
+	->gli id delle citta
+	$cittaPart e $cittaArr			$cittaPart=/database/tabAereoporto/aereoporto[idPKAp=$partenza]/idFKcitta 
+						$cittaArr=/database/tabAereoporto/aereoporto[idPKAp=$arrivo]/idFKcitta
+	->i nomi delle citta
+	$nomeCP e $nomeCA			$nomeCP=/database/tabCitta/citta[idPKcitta=$cittaPart]/nome
+						$nomeCA=/database/tabCitta/citta[idPKcitta=$cittaArr]/nome
+	->gli id delle nazioni
+	$nazPart e $nazArr			$nazPart=/database/tabCitta/citta[idPKcitta=$cittaPart]/idFKNazione 
+						$nazArr=/database/tabCitta/citta[idPKcitta=$cittaArr]/idFKNazione
+	->i nomi delle nazioni
+	$nomeNP e $nomeNA			$nomeNP=/database/tabNazione/nazione[idPKnazione=$nazPart]/nome
+						$nomeNA=/database/tabNazione/nazione[idPKnazione=$nazArr]/nome
+e visualizzo=> tratta 1: partenza:$nomeCP (aereoporto:$nomePart), $nomeNP; arrivo: $nomeCA (aereoporto:$nomeArr), $nomeNA;
+SEGUONO i voli di questa tratta: 
+ho bisogno dell'orario di partenza e arrivo e giorno per identificarli
+dunque per ogni volo di una tratta $tratte	@voli=/database/tabVolo/volo[idFKT=$tratte]/idPKV
+stampo i campi $oraPartenza, $oraArrivo,
+$giorno seguiti dal $prezzo 			$campo= /database/tabVolo/volo[idFKT=$voli]/campo (campo=segnaposto per il campo che ci 						interessa)
+	PER INSERIRE UNA NUOVA TRATTA (possono esistere tratte prive di voli=> non seve eliminare una tratta senza voli (?**))
+	PER INSERIRE UN NUOVO VOLO
+	PER ELIMINARE UN VOLO
+	PER ELIMINARE UNA TRATTA
+
+PROBLEMA DELLA RELAZIONE VOLI AEREI
+un volo Ã¨ un evento che si ripete una vlta alla settimana in un giorno e con egli orari stabiliti
+un dato volo puÃ² essere eseguito da aerei diversi in settimane diverse MA per SEMPLIFICARE POSSIAMO INTRODURRE UN VINCOLO
+che prevede che un volo viene eseguito sempre dallo stesso aereo ogni settimana
+un aereo in un giorno puÃ² effettuare uno o piÃ¹ voli, e in una settimana effettuerÃ  piÃ¹ voli
+come rappresentare questa relazione?
+SOLUZIONE XML:
+Ãˆ il volo ad aver memoria in uno dei suoi campi dell'id dell'aereo e non viceversa
+SOLUZIONE PERL/VISIBILE:
+dalla pagina del volo (che Ã¨ poi quella delle tratte) ci sarÃ  un link c il nome dell'aereo: in caso di necessitÃ  di cambiare l'aereo che effettuerÃ  il volo si avra a disposizione un PULSANTE "cambia aereo"che permettera di eliminare IL LEGAME tra le due entita (MA NON CANCELLERÃ€ il vecchio aereo) per crearene uno nuovo
+=>OPZIONE: CREA NUOVO AEREO (COME SOPRA)
+=>OPZIONE: scegli tra quelli esistenti 
+	->mostro al SA una lista con i nomi degli aerei che quel giorno non effettuano un volo in quelle ore [e si trovano in quell'aereoporto/in quella cittÃ /in quella nazione]
+
+
+NB(**) QUESTO POTREBBE VALERE NON SOLO PER LE TRATTE MA ANCHE PER NAZIONE, CITTA, TIPOAEREO => SE LI RENDIAMO VISIBILI AL SOLO SUPERADMIN SI POTREBBERO TENERE ANCHE SENZA AVERE DEI SOTTOINSIEMI DI APPARTENENZA, SE Ãˆ POSSIBILE/ CONVENIENTE, PER CANCELLARLI L'ADMIN INTERVIENE ESPLICITAMENTE, PER AGGIUNGER QUALCOSA A QUESTE CA
+	(wow piÃ¹ complesso del previsto)
