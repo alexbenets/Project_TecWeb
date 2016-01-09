@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+sub redirect{
+    print "Content-type: text/html\n\n";
+    # codice XHTML della pagina
+print <<HTML;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+HTML
+        print "\t\t<meta http-equiv='refresh' content='0;url=restricted.cgi' />\n";
+print <<HTML;
+</head>
+<body>
+<body />
+</html>
+HTML
+}
+
+sub getSession{
+	$session = CGI::Session->load() or die $!;
+	if($session->is_expired || $session->is_empty)
+	{
+		return undef;
+	}
+	else{
+		my $utente = $session->param('utente');
+		return $utente;
+	}
+}
+
+sub destroySession{
+	$session = CGI::Session->load() or die $!;
+	$SID = $session->id();
+	$session->close();
+	$session->delete();
+	$session->flush();
+}
+
+sub createSession{#parametro nome utente
+	$nome_utente = $_[0];
+	$session = new CGI::Session();
+	$session->param('utente', $nome_utente);
+	$session->expire('+20m');
+}
+
+1;
