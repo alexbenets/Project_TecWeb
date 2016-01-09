@@ -50,8 +50,8 @@ for(my $i=1; $i<=$passeggeri; $i++){
 		$errori++;
 		$errore|=4;
 	}
-	my $nascita=defined ($form{"nascita$i"})?$form{"nascita$i"}:"32/02/1990";
-	if((check_form::valida_data($form{"nascita$i"})==0) & defined ($form{"nascita$i"})){
+	my $nascita=defined ($form{"nascita$i"})?$form{"nascita$i"}:"32/02/1900";
+	if((check_form::controlla_data_passeggero($form{"nascita$i"})==0) & defined ($form{"nascita$i"})){
 		#errore
 		$errori++;
 		$errore|=8;

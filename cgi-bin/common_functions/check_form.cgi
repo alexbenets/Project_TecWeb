@@ -20,6 +20,55 @@ sub leggi_numeri {
 	$numeri =~/([0-9]+)/;
 	return $1;
 }
+
+#funzione per verificare se il formato della data è corretto; recupera il giorno, il mese e l'anno dalla data inserita.
+#il formato è GG MM AAAA
+# i separatori accettati sono: \ / . : -
+sub regexp_data{
+	my ($data)=@_;
+	if(!defined $data){
+		return 0;
+	}
+	$data =~/^([\d]{2})([\/-:\.\\]{1})+([\d]{2})([\/-:\.\\]{1})+([\d]{4})$/;
+	my $giorno=$1;
+	
+	my $mese=$3;
+	
+	my $anno=$5;
+	my @arr=($giorno, $mese, $anno);
+	return \@arr;
+}
+
+#controlla la data di nascita dei passeggeri, se sono neonati o matusalemme, non possono viaggiare.
+sub controlla_data_passeggero {
+	my ($data)=@_;
+	my $gma=regexp_data($data);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];	
+	eval {
+		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
+	};
+	if($@){
+		return 0;#data non valida
+	}else{
+		my $today = Time::Piece->new();
+		my $oggi=$today->year."/".$today->mon."/".$today->mday;
+		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+		my $d = ($dt1 - $dt2)->years;
+		#controllo se l'utente è troppo giovane o troppo anziano
+		#sotto il primo anno, il neonato non può viaggiare in aereo
+		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
+		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
+		if($d<1 | $d>150){
+			return 0;
+		}
+		return 1;
+	}
+}
+
 #estraggo la data dal form di ricerca: se la data non è valida (nel formato) e non è compresa tra "domani" e +1 anno, ritorno 0
 #se la data è valida e rispetta le condizioni di +1d..+365d, allora ritorno la data.
 sub leggi_data {
@@ -27,17 +76,10 @@ sub leggi_data {
 	if(!defined $data){
 		return 0;
 	}
-	$data =~/([\d]{2})([\/]+)+([\d]{2})([\/]+)+([\d]{4})/;
-	my $giorno=$1;
-	if(!($2 eq '/')){#se la stringa è nel formato GG/MM/AAAA
-		return 0;
-	}
-	my $mese=$3;
-	if(!($4 eq '/')){
-		return 0;
-	}
-	my $anno=$5;
-	
+	my $gma=regexp_data($data);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];	
 	eval {
 		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
 	};
@@ -58,6 +100,42 @@ sub leggi_data {
 	
 	return "$giorno/$mese/$anno";
 }
+
+
+#controllo se la data inserita è corretta e se l'utente è maggiorenne e non matusalemme.
+sub valida_data{
+	my ($data)=@_;
+	if(!defined $data){
+		return 0;
+	}
+	my $gma=regexp_data($data);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];	
+	
+	eval {
+		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
+	};
+	if($@){
+		return 0;#data non valida
+	}else{
+		my $today = Time::Piece->new();
+		my $oggi=$today->year."/".$today->mon."/".$today->mday;
+		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+		my $d = ($dt1 - $dt2)->years;
+		#controllo se l'utente è troppo giovane o troppo anziano
+		#sotto i 18 anni non può prenotare il volo.
+		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
+		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
+		if($d<18 | $d>150){
+			return 0;
+		}
+		return 1;
+	}
+}
+
 
 #controllo se l'email è corretta.
 sub valida_email {
@@ -89,46 +167,6 @@ sub valida_codice_fiscale {
 		return 1;#è corretto
 	}
 	return 0;#non è corretto
-}
-
-#controllo se la data inserita è corretta e se l'utente è maggiorenne e non matusalemme.
-sub valida_data{
-	my ($data)=@_;
-	if(!defined $data){
-		return 0;
-	}
-	#$testo =~/(<!--)+([ ]*)(title=")+([ ]*)([A-Za-z0-9]+)([ ]*)/;
-	$data =~/([\d]{2})([\/]+)+([\d]{2})([\/]+)+([\d]{4})/;
-	my $giorno=$1;
-	if(!($2 eq '/')){#se la stringa è nel formato GG/MM/AAAA
-		return 0;
-	}
-	my $mese=$3;if(!($4 eq '/')){
-		return 0;
-	}
-	my $anno=$5;
-	
-	eval {
-		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
-	};
-	if($@){
-		return 0;#data non valida
-	}else{
-		my $today = Time::Piece->new();
-		my $oggi=$today->year."/".$today->mon."/".$today->mday;
-		my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
-		my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
-		my $d = ($dt1 - $dt2)->years;
-		#controllo se l'utente è troppo giovane o troppo anziano
-		#sotto i 18 anni non può prenotare il volo.
-		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
-		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
-		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
-		if($d<18 | $d>150){
-			return 0;
-		}
-		return 1;
-	}
 }
 
 1;
