@@ -1,0 +1,93 @@
+				X-Path Functionality
+<<Functionality>>
+Registrazione
+
+utente compila form -> controllo che abbia inserito tutti i dati (altrimenti 
+						segnala gli errori)
+					-> controllo che la mail non sia già presente nell'xml: 		/database/tabUtenteRegistrato/utenteRegistrato/mail
+					  		-> se è prensente c'è un errore da segnalare(l'utente è 
+					  		già registrato 
+					  		-> altrimenti è tutto corretto
+
+<<Functionality>>
+Recupera Password
+utente segnala smarrimento password 	-> chiedo email all'utente 					$user = /database/tabUtenteRegistrato/utenteRegistrato[mail=<<
+																					input_mail>>]/utente/idPKU			
+utente inserisce email					-> chiedo domanda segreta					/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]/
+																					domandaSegreta	
+utente inserisce risposta a domanda		-> se la risposta è corretta				/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]																						/rispostaSegreta
+											->creo una form di compilazione nuova 	/database/tabUtenteRegistrato/utenteRegistrato[utente/idPKU=$user]/password								   password
+										-> se la risposta è sbagliata chiede di 
+											rinserire la risposta
+										-> altrimenti segnaliamo di inviare una 
+											email all'amministratore con l'email di 
+											registrazione che gli invia la risposta 
+											alla domanda segreta. 
+
+<<Functionality>>
+Login
+utente compila form 					
+	-> controllo che abbia inserito tutti i dati (altrimenti segnala 
+	gli errori "manca parametro")
+	-> controllo che la mail sia presente nell'xml: 								$user = /database/tabUtenteRegistrato/utenteRegistrato[mail=<<
+																					input_mail>>]/utente/idPKU	
+	-> ricerco la password del'utente registrato con quella mail:					$password=/database/tabUtenteRegistrato/utenteRegistrato[utente/
+		-> se è corretta ok 														idPKU=$user]/password
+		-> altrimenti password errata (max 3 tentativi?)							$password=<<input_password>>	
+
+<<Functionality>>
+Prenota
+utente compila prima form
+	-> ottengo la città di partenza e arrivo, il numero di di passeggeri, 
+	se si vuole eseguire prenotazioni anche per il volo di ritorno e la data(?)
+	
+	-> Caso 1)
+	Casella "Da" non selezionata e casella "A" non selezionata
+	Trovo tutte le nazioni															$nazione_tab = /database/tabNazione
+																					$nazione = foreach <<element>> in $nazione_tab
+																					$nazione_id = $nazione/idPKNazione 
+		Per ogni nazione trovo citta												$citta_tab = /database/tabCitta[citta/idFKNazione=$nazione_id]
+																					$citta = foreach <<element>> in $citta_tab
+																					$citta_id = $citta/idPKCitta 		
+			Per ogni citta trovo aeroporto											$aeroporto_tab = /database/tabAeroporto[aeroporto/
+																					idFKCitta=$citta_id]
+																					$aeroporto = foreach <<element>> in $aeroporto_tab
+																					$aeroporto_id = $aeroporto/idPKCitta
+	-> Caso 2) 
+	Casella "Da" selezionata e casella "A" non selezionato
+	Trovo tutte le nazioni															$nazione_tab = /database/tabNazione
+																					$nazione = foreach <<element>> in $nazione_tab
+																					$nazione_id = $nazione/idPKNazione 
+		Per ogni nazione trovo citta												$citta_tab = /database/tabCitta[citta/idFKNazione=$nazione_id]
+																					$citta = foreach <<element>> in $citta_tab
+																					$citta_id = $citta/idPKCitta 		
+			Per ogni citta trovo aeroporto											$aeroporto_tab = /database/tabAeroporto[aeroporto/
+																					idFKCitta=$citta_id]
+																					$aeroporto = foreach <<element>> in $aeroporto_tab
+																					$aeroporto_id = $aeroporto/idPKCitta
+
+
+
+	-> Caso 3)
+	Casella "Da" non selezionata e casella "A" selezionata
+
+
+
+	-> controllo che le città inserite siano presenti nel db a database/tabLuogo/luogo[nome=parametro da/a]
+							->se esistono devo trovare i possibili aereoporti di transito da database/tabAeroporto/aeroporto[idFKL=parametro portato da passo precedente]
+									-> trovati gli aeroporti devo trovare le tratte tra questi (NB solo le tratte che vanno da 1 possibile ap di partenza ed 1 possibile ap di arrivo!!!) con database/tabTratta/tratta[idFKAeroportoPartenza= idPKAp (par da_) && database/tabTratta/tratta[idFKAeroportoArrivo= idPKAp (parametro a_)]
+											->se esistono tratte devo trovare i voli con numero di posti disp>= al numero di di posti richiesti (?), ordinandoli per prezzo crescente da database/tabVolo/volo[idFKT= idPKT trovata]
+													->sotto ogni volo trovato bisogna inserire il VOTO complessivo dato dagli utenti !!! cerco si database/tabcommento/commento[idFKV=idPKV cercato]/voto(????) per ogni commento disponibile, sommo ai precedenti e, quando ho esaurito i commenti divido la somma per il numero di di commenti
+													->se non è stato inserito nessun voto...? segnalo nessun voto disponibile per il volo
+											->altrimenti errore non esistono voli (possibile?)
+									->se non esistono gli aeroporti errore!(possibile?) 
+							->altrimenti errore da segnalare
+					->atrimenti bisogna segnalare che non si effettuano voli tra quelle località
+					->devo creare x=numero dipasseggeri, se è selezionato flag andata e ritorno devo moltiplicare per 2 questa quantità, nodi di prenotazione (database/tabPrenotazione/prenotazione) sapendo a questo punto potenzialmente l'utente autore(non i passeggeri)(=idFKUR), e la data (?)   
+2) visualizzo i voli con i relativi prezzi in una nuova pagina (somma del prezzo base(database/tabVolo/volo[idPKV=idPKV trovato]/prezzo) x il numero di passeggeri), l'utente seleziona uno dei voli disponibili (NB vanno segnati solo se numero di posti disponibili >= posti richiesti)
+					->entro in una nuova pagina contentente: -form da compilare x inserire i dati dei passeggeri e (per ciascuno?) i possibili servizi aggiuntivi (database/tabServizio/servizio)
+					->utente inserisce i dati dei passeggieri e i servizi aggiuntivi che desidera vanno inseriti nell'xml: creo le prenotazioni e aggiorno i servizi prenotati
+3) se l'utente è registrato chiedo conferma, salvo e chiudo altrimenti chiedo login/registrazione
+3) se flag ritorno è presente devo ripetere il processo con parametri da_ a_ scambiati
+
+
