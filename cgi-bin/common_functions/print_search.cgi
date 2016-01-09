@@ -39,11 +39,18 @@ sub print {
 		$data_ritorno="Data ritorno";
 	}
 	
-my $testo= "$ettori $AR
+my $testo= "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
 				<form action=\"../cgi-bin/search.cgi\" method=\"post\">
 					<fieldset>
-						<div class=\"casella_AR\">
+						";
+						if($errori>0){
+							$testo.="<div>
+										<h3 class=\"errore\">Attenzione: alcune date non sono corrette!</h3>
+										<h3 class=\"errore\">Puoi prenotare solo voli da domani all'anno prossimo</h3>
+									</div>";
+						}
+						$testo.="<div class=\"casella_AR\">
 							<label for=\"andata\">solo andata</label>
 							<input type=\"radio\" name=\"AR\" id=\"andata\" value=\"andata\"  ";
 							if($andata==1){

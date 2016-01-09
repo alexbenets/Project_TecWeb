@@ -86,7 +86,7 @@ if($errori>0){
 	print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
 }
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_content::print(" $errori $andata_ritorno, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri");
+
 print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>
