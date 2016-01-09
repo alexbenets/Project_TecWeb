@@ -25,20 +25,57 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
-my $passeggeri=4; #poi verrà letta dalla variabile di sessione apposita.
-
-my $andata=0; #booleana: se non è andata, allora è con ritorno.
-
-if($andata_ritorno eq "andata"){
-	$andata=1;
+my $errori=0;
+my $passeggeri=1; #poi verrà letta dalla variabile di sessione apposita.
+my @dati;
+for(my $i=1; $i<=$passeggeri; $i++){
+	my $errore=0;
+	my $nome=defined ($form{"Nome$i"})?$form{"Nome$i"}:"Nome";
+	if((check_form::valida_nominativo($nome)==0) & defined ($form{"Nome$i"})){
+		#errore
+		$errori++;
+		$errore=1;
+	}
+	
+	my $cognome=defined ($form{"Cognome$i"})?$form{"Cognome$i"}:"Cognome";
+	if((check_form::valida_nominativo($cognome)==0) & defined ($form{"Cognome$i"})){
+		#errore
+		$errori++;
+		$errore|=2;
+	}
+	
+	my $cf=defined ($form{"CF$i"})?$form{"CF$i"}:"Codice fiscale";
+	if((check_form::valida_codice_fiscale($form{"CF$i"})==0) & defined ($form{"CF$i"})){
+		#errore
+		$errori++;
+		$errore|=4;
+	}
+	my $nascita=defined ($form{"nascita$i"})?$form{"nascita$i"}:"32/02/1990";
+	if((check_form::valida_data($form{"nascita$i"})==0) & defined ($form{"nascita$i"})){
+		#errore
+		$errori++;
+		$errore|=8;
+	}
+	my @dati_temp=(	$nome,
+					$cognome,
+					$cf,
+					$nascita, 
+					$errore);
+	push  @dati,\@dati_temp; 
 }
 
-my $titolo="Ricerca voli";
+
+if(($errori==0)&defined($form{"avanti"})){
+ #passo successivo	
+ print "Location: servizi_aggiuntivi.cgi\n\n";
+ exit;
+}
+
+my $titolo="Dati dei passeggeri";
 
 print "Content-type: text/html\n\n";
 
-print "
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
@@ -71,8 +108,84 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_content::print("$andata_ritorno, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri");
-print "		</div>"; #chiudo il div main
+my $messaggio="";
+if($errori>0){
+	$messaggio="<div>
+					<h3>Attenzione: alcuni dati non sono corretti!</h3>
+				</div>";
+}
+my $testo="
+		<div class=\"sezione\">
+			<form action=\"dati_passeggeri.cgi\" method=\"post\">
+				<fieldset>
+						<div>
+							<h3>Dati passeggeri</h3>
+						</div>$messaggio";
+					for (my $i=1; $i<=$passeggeri; $i++){
+					$testo.="
+						<div>
+							<h4>Passeggero $i</h3>
+						</div>
+						<div>
+							<label for=\"Nome$i\">Nome: </label>
+							<input type=\"text\" id=\"Nome$i\" name=\"Nome$i\" value=\"";
+							$testo.=@dati[$i-1]->[0];
+							$testo.="\" class=\"";
+							if(((@dati[$i-1]->[4])&1)>0){
+								$testo.="errore";
+							}
+							$testo.="\"></input>
+							<div class=\"clearer\"></div>
+						</div>
+						<div>
+							<label for=\"Cognome$i\">Cognome: </label>
+							<input type=\"text\" id=\"Cognome$i\" name=\"Cognome$i\" value=\"";
+							$testo.=@dati[$i-1]->[1];
+							$testo.="\" class=\"";
+							if(((@dati[$i-1]->[4])&2)>0){
+								$testo.="errore";
+							}
+							$testo.="\"></input>
+							<div class=\"clearer\"></div>
+						</div>
+						<div>
+							<label for=\"CF$i\">Codice Fiscale: </label>
+							<input type=\"text\" id=\"CF$i\" name=\"CF$i\" value=\"";
+							$testo.=@dati[$i-1]->[2];
+							$testo.="\" class=\"";
+							if(((@dati[$i-1]->[4])&4)>0){
+								$testo.="errore";
+							}
+							$testo.="\"></input>
+							<div class=\"clearer\"></div>
+						</div>
+						<div>
+							<label for=\"nascita$i\">Data di nascita: </label>
+							<input type=\"text\" id=\"nascita$i\" name=\"nascita$i\" value=\"";
+							$testo.=@dati[$i-1]->[3];
+							$testo.="\" class=\"";
+							if(((@dati[$i-1]->[4])&8)>0){
+								$testo.="errore";
+							}
+							$testo.="\"></input>
+							<div class=\"clearer\"></div>
+						</div>
+						
+						";
+					}
+				$testo.="
+					<div>
+							<button type=\"submit\" id=\"avanti\" name=\"avanti\" value=\"1\">
+								<span>Procedi</span>
+							</button>
+						</div>
+				</fieldset>
+			</form>
+		</div><!-- chiudo sezione-->
+";
+
+print print_content::print("$testo");
+print "		</div> <!-- chiudo main -->"; #chiudo il div main
 print print_footer::print();
 print "	</body>
 </html>";
