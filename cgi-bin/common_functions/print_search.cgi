@@ -8,7 +8,7 @@ our $VERSION   = 1.00;         # Version number
 ### Include your variables and functions here
 
 
-sub list_partenze {
+sub list_tratte {
 	my %partenze;
 	#array di stringhe contenente i vari riferimenti alle città
 	#formato: PAESE - CITTÀ - AEREOPORTO
@@ -19,22 +19,15 @@ sub list_partenze {
 	$temp{"Roma"}=\@aereoporti_temp;
 	$partenze {"Italia"}=\%temp;
 	
-	return %partenze;
-	
-}
-
-sub list_arrivi {
-	my %arrivi;
-	#array di stringhe contenente i vari riferimenti alle città
-	#formato: PAESE - CITTÀ - AEREOPORTO
 	my @aereoporti_temp=("Linate", "Malpensa");
 	my %temp;
 	$temp{"Milano"}=\@aereoporti_temp;
 	my @aereoporti_temp=("Fiumicino");
 	$temp{"Roma"}=\@aereoporti_temp;
-	$arrivi {"Italia"}=\%temp;
+	$partenze {"Italia"}=\%temp;
 	
-	return %arrivi;
+	return %partenze;
+	
 }
 
 sub print { 
@@ -71,8 +64,8 @@ my $testo= "$ettori $AR
 						
 						$testo.="<div class=\"casella_partenza\">
 							<label for=\"partenza\">Partenza:</label>
-							<select name=\"partenza\" class=\"partenza\">";
-						my %partenze=list_partenze();
+							<select id=\"partenza\" name=\"partenza\" class=\"partenza\">";
+						my %partenze=list_tratte();
 						while (($paese, $citta) = each(%partenze))
 						{
 							$testo.= "<optgroup label=\"$paese\">\n";
@@ -94,8 +87,8 @@ my $testo= "$ettori $AR
 						</div>
 						<div class=\"casella_arrivo\">					
 							<label for=\"arrivo\">Arrivo:</label>
-							<select name=\"arrivo\" class=\"arrivo\">";
-						my %partenze=list_arrivi();
+							<select id=\"arrivo\" name=\"arrivo\" class=\"arrivo\">";
+						my %partenze=list_tratte();
 						while (($paese, $citta) = each(%partenze))
 						{
 							$testo.= "<optgroup label=\"$paese\">\n";
@@ -135,7 +128,7 @@ my $testo= "$ettori $AR
 
 						<div class=\"casella_passeggeri\">
 							<label for=\"n_passeggeri\">numero Passeggeri:</label>
-							<select name=\"passeggeri\" class=\"passeggeri\">";
+							<select id=\"n_passeggeri\" name=\"passeggeri\" class=\"passeggeri\">";
 							for(my $i=0; $i<=10; $i++){
 								if($i==0){
 									$testo.="<option";
