@@ -9,9 +9,7 @@ our $VERSION   = 1.00;         # Version number
 
 
 sub list_tratte {
-	my %partenze;
-	#array di stringhe contenente i vari riferimenti alle città
-	#formato: PAESE - CITTÀ - AEREOPORTO
+	
 	my @aereoporti_temp=("Linate", "Malpensa");
 	my %temp;
 	$temp{"Milano"}=\@aereoporti_temp;
@@ -25,9 +23,25 @@ sub list_tratte {
 	my @aereoporti_temp=("Fiumicino");
 	$temp{"Roma"}=\@aereoporti_temp;
 	$partenze {"Italia"}=\%temp;
+	
+	my @aereoporti_temp=( "Charles de gaulle");
+	my %temp;
+	$temp{"Parigi"}=\@aereoporti_temp;
+	$partenze {"Francia"}=\%temp;
 	
 	return %partenze;
 	
+	#funzionamento:
+	# ARRAY associativo di paesi (Italia, Francia, ecc...)	
+	# Ad ogni paese viene associato un array associativo di città
+	# Ogni città contiene un array di nomi di aereoporti.
+	#
+	#   ITALIA ---->  MILANO ---> Linate
+	#         |              |--> Malpensa
+	#         |
+	#         |---->  ROMA -----> Fiumicino
+	#
+	#
 }
 
 sub print { 
@@ -38,16 +52,23 @@ sub print {
 	if(!defined $data_ritorno| $data_ritorno==0){
 		$data_ritorno="Data ritorno";
 	}
-	
+	if ((defined $data_partenza & $data_partenza>0)&(defined $data_ritorno & $data_ritorno>0)){
+		$errori|=8;
+	}
 my $testo= "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
 				<form action=\"../cgi-bin/search.cgi\" method=\"post\">
 					<fieldset>
 						";
-						if($errori>0){
+						if(($errori & 3)>0){
 							$testo.="<div>
 										<h3 class=\"errore\">Attenzione: alcune date non sono corrette!</h3>
 										<h3 class=\"errore\">Puoi prenotare solo voli da domani all'anno prossimo</h3>
+									</div>";
+						}
+						if(($errori & 8)>0){
+							$testo.="<div>
+										<h3 class=\"errore\">L'aereoporto di destinazione non pu&ograve; essere lo stesso di partenza!</h3>
 									</div>";
 						}
 						$testo.="<div class=\"casella_AR\">
@@ -137,12 +158,18 @@ my $testo= "
 							<label for=\"n_passeggeri\">numero Passeggeri:</label>
 							<select id=\"n_passeggeri\" name=\"passeggeri\" class=\"passeggeri\">";
 							for(my $i=0; $i<=10; $i++){
-								if($i==0){
+								if($i<2){
 									$testo.="<option";
 									if($passeggeri==$i){
-										$testo.=" checked=\"checked\"";
+										$testo.=" selected=\"selected\"";
 									}
-									$testo.=">Nessun passeggero</option>";
+									$testo.=">";
+									if($i==1){
+										$testo.="1 passeggero";
+									}else{
+										$testo.="Nessun passeggero";
+									}
+									$testo.="</option>";
 								}else{
 									$testo.="<option";
 									if($passeggeri==$i){

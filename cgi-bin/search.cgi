@@ -41,10 +41,17 @@ my $errori=0;
 if($data_partenza==0){
 	$errori=1;
 }
-if($data_ritorno==0){
+if(($data_ritorno==0)&($andata==0)){
 	$errori+=2;
 }
-
+#controllo se la data di ritorno è inferiore alla data di partenza
+if(($data_partenza>=$data_ritorno)&($andata==0)){
+	$errori=3;
+}
+#non posso atterrare nello stesso aeroporto!
+if($select_partenza eq $select_arrivo){
+	$errori|=8;
+}
 my $titolo="Ricerca voli";
 
 print "Content-type: text/html\n\n";
