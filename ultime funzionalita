@@ -1,0 +1,167 @@
+APPUNTI
+(?) indica una insicurezza, una pagina/una funzionalità o idea che potrebbe non venir implementata
+"S" indica una pagina con solo contenuto statico
+"D" indica una agina a contenuto dinamico 
+il sito per utente è contiene:
+->la pagina HOME (già ampliamente discussa, contiene l'inizio della form per effettuare una prenotazione, 
+	il link per la registrazione/login degli utenti, il menù con i link alle altre pagine, un testo statico di presentazione del sito(? 		nella pagina html/css fatta mi pare ci fossero dei paragrafi che andavano riempiti da qualche testo?) 
+->la pagina dei SERVIZI(D(?) Presenta i servizi aggiuntivi che il sito permette di aggiungere alla prenotazione del volo)
+->la pagina delle città(D(?) presenta le città raggiungibili da tratte offerte dalla compagnia)
+->la pagina delle FAQ (D contiene le domande, ragguppate secondo argomento, sui servizi offerti, sulla compagnia e sul sito)
+->la pagina delle NEWS(D contiene le (?ultime) notizie sulla compagnia, i servizi offerti e sul sito)
+->la pagina CHI SIAMO (S contiene informazioni sulla politica(?potrebbe essere integrata con la pagina della storia della compagnia) 
+->la pagina dei contatti( S contiene le informazioni per contattare il servizio clienti/l'amministratore del sito/ un numeero verde di aiuto o 		simili)
+->la pagina della STORIA DELLA COMPAGNIA (S contiene la storia della compagnia)
+->la pagina dei Termini e delle condizioni (S(? non abbiamo definito una tabella nel database per ospitare i dati del regolamento... ma 	basterebbe creare una tabella simile a quella delle faq..., potrebbe essere una buona idea visto che c'è molto contenuto organizzabile 		per argomento, MA DIFFIILMENTE QUSTO F PARTE DELLE tabelle che verrebbero modificate, il contenuto difficilmente dovrà essere modifica to una volta creato ) 
+->la pagina dedicata alle PRENOTAZIONI EFFETTUATE E DEI COMMENTI degli utenti registrati (D contiene le prenotazioni effettuate da un certo utente, permettendo all'utente di modificare ed eliminare quelle indesiderate; inoltre contiene i commenti scritt dall'utente e permette di crearne di nuovi (?cancellarne e modificare gli esistenti=> sono funzionalità di cui si potrebbe sperare di non aver bisogno) 
+
+
+PAGINA DELLE FAQ (struttura identica qualora si volesse fare dinamica la pagina dei TERMINI E DELLE CONDIZIONI)
+In termini di organizzazione i vari articoli sono organizzati in base all'argomento (bagagli, documenti di imbarco ecc), ed identificati dal titolo (la struttura usata da ryanair).
+per visualizzarle dunque:
+->entro nella tabella tabFaq
+->creo un array contenente gli argomenti @argomenti=/database/tabFaq/faq/argomento
+->organizzo alfabeticamente questo
+array(?se possibile darebbe un ordine 
+alla pagina finale, 
+anche se non so se è il MIGLIORE ordine possibile)
+->per ogni $argomento posso trovare 
+gli articoli lo riguardano 		@articoli= articoli di un argomento /database/tabFaq/faq[argomento=$argomenti]/idPKF
+(?posso usare un array associativo che 
+leghi un argomento ai suoi articoli?)
+->per ogni argomento: 
+	->display il contenuto 
+	di $argomento
+	->display $titolo e $contenuto 
+	di ogni articolo in @articoli 
+	di quell'argomento		$titolo=database/tabFaq/faq[idPKF=$articoli]/testo/titolo
+					$contenuto=database/tabFaq/faq[idPKF=$articoli]/testo/contenuto
+fine
+
+PAGINA DELLE NEWS
+In termini di organizzazione i vari articoli sono organizzati in base alla data e identificati dal titolo
+->entro nella tabella tabNews
+->creo un array contenente le date @date=/database/tabNews/news/testo/data
+->organizzo questo
+array in base alla data più recente
+(? se esite una libreria per farlo 
+se possibile darebbe un ordine 
+alla pagina finale)
+->per ogni $data posso trovare 
+gli articoli che sono stati scritti 
+in quella data 			@articoli= articoli scriti in una data /database/tabNews/news/testo[data=$date]/idPKN
+(?posso usare un array associativo che 
+leghi una data ai suoi articoli?)
+->per ogni data: 
+	->display il contenuto 
+	di $data
+	->display $titolo e $contenuto 
+	di ogni articolo in @articoli 
+	di quella data		$titolo=database/tabNews/news[idPKN=$articoli]/testo/titolo
+				$contenuto=database/tabNews/news[idPKN=$articoli]/testo/contenuto
+fine	
+
+PAGINA DEI SERVIZI
+In termini di organizzazione si potrebbe usare semplicemente l'ordine alfabetico (?)
+->entro nella tabella tabServizi
+->creo un array contenente 
+i nomi dei servizi 		@servizi=/database/tabServizio/servizio/nome
+->organizzo questo
+array in ordine alfabetico
+->per ogni servizio: 
+	->display il contenuto 
+	di $servizi
+	->display $prezzo e 
+	$descrizionecontenuto	$prezzo=database/tabServizio/servizio[nome=$servizi]/prezzo
+				$descrizione=database/tabServizio/servizio[nome=$servizi]/descrizione
+NB postrebbe servire un campo link in questa tabella per associare al servizio un sito di link al quale operare
+fine	
+
+PAGINA DELLE CITTÀ
+Organizzata per nazioni, a loro volte organizzate in ordine alfabetico (?)
+->trovo gli id delle 
+nazioni						@idN=/database/tabNazione/nazione/idPKNazione
+							@nomeN=/database/tabNazione/nazione/nome
+->per ogni nazione cerco 
+le citta che le appartengono @idC=citta di una nazione /database/tabCitta/citta[idFKNazione=$idN]/idPKCitta
+->per ogni nazione
+	->visualizza nome nazione $nomeN=/database/tabNazione/nazione[idFKNazione=$idN]/nome
+	->visualizza i nomi delle
+	sue città (seguito da)
+	->i dati che riguardano
+	quella citta $nomeC, $immagineC,
+	$descrizioneC 			$campoC=/database/tabCitta/citta[idPKCitta=$idC]/campo
+
+<<functionality>>
+Manipola per utenti
+
+1) untente entra in una pagina contenente le sue prenotazioni (identificate dal nome della tratta, del passeggiero e dalla data alla quale è stata effettuata?)
+																		E IL PREZZO=$prenotazioni/prezzo+$prezzoDeiServizi
+																					$prezzoDeiServizi=somma del contenuto di @PrezzoServizio
+																					@prezzoServizio=/database/tabServizioPrenotato/servizioPrenotato[idPKSP=$Richiesti]/prezzo
+																					@richiesto=/database/tabSAervizioPrenotato/servizioPrenotato[idFKP=$prenotazioni]/idPKSP 
+			su xml sono costruiti in modo tale che 
+			-> bisogna trovare tutte le prenotazioni dell'utente  					@prenotazioni= ogni risposta a /database/tabPrenotazione/prenotazione[                                                                        idFKUR=$utenteRegistrato] (NB $prenotazioni[sottointese]=1 casella)
+			(gia registrato, parametro $utenteRegistrato/cookie?)
+			e emtterli in un array
+			->poi bisogna trovare per ogni prenotazione 
+			NB(potremmo unire anche questi in array,
+			posizione dice di quale prenotazione sono)
+				-il nome del passeggero ($nomePasseggero) 
+					->prendo $idPasseggero   										$idPasseggero=$prenotazioni/idFKU
+					->cerco nella tabella untente il record con quell'id			$utenteBase=/database/tabUtente/utente[idPKU=$idPasseggero]
+					->trovo nome 													$nomePasseggero=$utenteBase/nome
+				-i nomi degli areoporti ($partenza/$arrivo)(procedimento simile)
+					->prendo $idTratta												$idTratta=$prenotazioni/idFKT
+					->cerco nella tabella tratte il record con quell'id				$trattaBase=/database/tabTratta/tratta[idPKT=idTratta]
+					->trovo gli id degli areoporti coinvolti						$idPartenza=$trattaBase/idFKApPartenza
+																					$idArrivo=$trattaBase/idFKApArrivo
+					->trovo i nomi degli aereoporti coinvolti						$nomePartenza=/database/tabAeroporto/aeroporto[idPKAp=$idPartenza]/nome
+																					$nomeArrivo=/database/tabAeroporto/aeroporto[idPKAp=$idArrivo]/nome
+					=>ALTERNATIVA: trovo i nomi delle citta, 
+					con un ulteriore passo:
+					->trovo id citta 												$idCittaPartenza=/database/tabAeroporto/aeroporto[idPKAp=$idArrivo]/idFKCitta
+																					$idCittaArrivo=/database/tabAeroporto/aeroporto[idPKAp=$idArrivo]/idFKCitta
+					->trovo nome citta 												$nomeCittaPartenza=/database/tabCitta/citta[idPKCitta=idCittaPartenza]/nome
+																					$nomeCittaArrivo=/database/tabCitta/citta[idPKCitta=idCittaArrivo]/nome
+				-la data alla quale era stata effettuata							$data=$prenotazioni/data
+			e: 
+			A)ne seleziona una, se la data della partenza è passata, 				$vecchia=booleano true=$prenotazioni/datapartenza<dataCorrente(!!!libreria?)
+			 può esprimere un commento sul volo 
+			 (dalla prenotazione recupero idFKV 									$idVolo=$prenotazioni/idFKV 
+			 e lo uso come valore x creare un nodo commento con quel valore 
+			 su idFKV di commento), 
+			 o modificare/cancellare i commenti già inseriti dall'utente 						 
+			 riguardanti lo stesso volo
+			 ->recupera commenti sul volo tc idFKUR=$utenteRegistrato 
+			 e idPKV=$idVolo (metti in un array gli id degli stessi?) 			@CommentiFatti=risposte x /database/tabCommento/commento[idFKUR        =                                                                  =$utenteRegistrato&& idPKV=$idVolo] !!! si usa &&???
+			 ->e x modifica utente compila form campo x campo 
+			 e si salvano le modifiche ai singoli campi(se è presente input)	$commentiFatti/CAMPO
+			 ->per elimina, si elimina il nodo $commentiFatti  				
+			B) fino a x giorni prima può cancellare la prenotazione:
+			->check data partenza è distante almeno $nGiorni					$prenotazioni/dataPartenza-$oggi>$nGiorni(!!!libreria)   
+			->elimina i nodi corrisponenti su tabPrenotazione 					$prenotazioni
+			C)modifica la prenotazione
+				->togli un servizio
+					->cerca le voci della tabella servizioPrenotato
+					dove idFKP=$prenotazioni/idPKP 								@serviziPrenotati=risposte a /database/tabServizioPrenotato/ServizioPrenotato
+																				[idFKP=$prenotazioni/idPKP]
+					->cerca i servizi corrispondenti 							@servizi=risposte a /database/tabServizio/Servizio[idPKS=$serviziPrenotati/idFKS]
+					-> visualizza nome, costo e descrizione 
+					di questi sulla pagina
+					->seleziona uno (perl recupera $idServizioPrenotato) 		$idServiziPrenotati=$serviziPrenotati/idPKSP 
+					->cancella nodo da tabella									/database/tabServizioPrenotato/ServizioPrenotato[idPKSP=$idServiziPrenotati]
+				->aggungi un servizio
+					->cerca le voci della tabella servizioPrenotato
+					dove idFKP=$prenotazioni/idPKP 								@serviziPrenotati=risposte a /database/tabServizioPrenotato/ServizioPrenotato
+																				[idFKP=$prenotazioni/idPKP]
+					->cerca i servizi corrispondenti 							@servizi=risposte a /database/tabServizio/Servizio[idPKS=$serviziPrenotati/idFKS]
+					-> visualizza nome, costo e descrizione 					$serviziCAMPO=$servizi/CAMPO
+					di questi sulla pagina
+					->cerca i servizi possibili non presenti da sopra 			@ulterioriServizi=risposte a /database/tabServizio/Servizio[																				idPKS!=$serviziPrenotati/idFKS]
+					->visualizza nome, costo e descrizione	 					$ulterioriServiziCAMPO=$servizi/CAMPO
+					di questi sulla pagina
+					->utente seleziona un servizio (o più?)
+					->perl recupera id del servizio scelto						$idScielto=$servizi/idPKS
+					->crea un nuovo nodo su tabServizioPrenotato
+					dove ho idFKP=$prenotazioni/idPKP, idFKS=$idScielto
