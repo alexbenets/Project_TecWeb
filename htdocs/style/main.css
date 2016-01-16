@@ -8,6 +8,12 @@
 .clearer {
 	clear:both;
 }
+
+.errore {
+	margin-top:1%;
+	background-color:#FFFFEE;
+}
+
 /*SEZIONE HEADER*/
 #header {
 	width: 100%; /* layout fluido*/
