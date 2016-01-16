@@ -11,12 +11,19 @@
 /*SEZIONE HEADER*/
 #header {
 	width: 100%; /* layout fluido*/
-	background-color:#FFFFFF;
+	background-color:#DDEEFF;
+	border-radius: 0px 0px 20px 20px;
 }
 /*logo*/
 #logo{
 	float: left;
 	display: block;
+	padding-top:1.4em;
+	padding-left:0.5em;
+	background-image: url(../images/aereo.png);
+	width: 258px;
+	height: 188px;
+	background-repeat: no-repeat;
 }
 /*fine sezione logo*/
 #banner {
@@ -100,21 +107,24 @@
 
 /*INIZIO SEZIONE CONTENUTO PRINCIPALE*/
 #main {
-	
+	background-color: #f7fcff;
+	border-radius: 20px 20px 0px 0px;
 }
 
 /*INIZIO SEZIONE CASELLA "PRENOTA"*/
 #prenota {
 	width: 78%;
 	margin: 0 auto;
-	/*background-color:#3cf;*/
-	margin-bottom:0.5em;
-	margin-top:0.5%;
+	/*background-color:#f7fcff;*/
+	padding-bottom:0.5em;
+	padding-top:0.5%;
 }
 #prenota form fieldset {
 	padding-top:0em;
-	background-color:#3385ff;
+	/*background-color:#3366ff;*/
 	padding-bottom:0.3em;
+	background-image: url(cielo.jpg);
+	border-radius: 20px 20px 20px 20px;
 }
 #prenota form label {
 	height:3.5em;
@@ -303,10 +313,14 @@
 	float:left;
 	width:15%;
 	display:block;
-	background-color:#ddd;
+	/*background-color:#00cc99;
+	border-radius: 0px 20px 20px 0px;*/
 }
 #secondo_menu a{
+	margin-bottom: 2px;
 	text-decoration: none;
+	background-color:#00cc99;
+	border-radius: 0px 5px 5px 0px;
 }
 #secondo_menu ul {
 	list-style:none;
@@ -323,6 +337,7 @@
 }
 #secondo_menu ul li a:hover {
 	background-color:#e4edf2;
+	/*border-radius: 0px 20px 20px 0px;*/
 }
 /*FINE SEZIONE SECONDO MENU'*/
 
@@ -338,7 +353,7 @@
 	display:block;
 	position:fixed;
 	right:15.5%;
-	bottom:6.5em;
+	bottom:6.0em;
 	/*sezione testo*/
 	text-transform:uppercase;
 }
@@ -438,12 +453,11 @@
 	display:block;
 	background-color:#f7fcff;
 }
-#news ul {	list-style:none;
-
+#news ul {	
+	list-style:none;
 }
 #news ul li {
-
-	background-color:#dcddde;
+	background-color:#00cc99;
 }
 #news ul li a {
 	width:100%;
@@ -484,8 +498,9 @@
 /*INIZIO SEZIONE FOOTER*/
 #footer {
 	width:100%;
-	background-color:#669999;
+	background-color:#3000ff;
 	position:absolute;
+	border-radius: 0px 0px 20px 20px;
 }
 #sitemap {
 	position:absolute;
