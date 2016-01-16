@@ -15,7 +15,7 @@ require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
-
+require "common_functions/Session.cgi";
 
 my %form;
 
@@ -25,7 +25,11 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
+my $create=gestione_sessione::createSession();
+gestione_sessione::setParam("location","/cgi-bin/search.cgi");
+
 my $andata_ritorno=$form{"AR"};
+
 my $select_partenza=$form{"partenza"};
 my $select_arrivo=$form{"arrivo"};
 my $data_partenza=check_form::leggi_data($form{"data_partenza"});
@@ -33,7 +37,6 @@ my $data_ritorno=check_form::leggi_data($form{"data_ritorno"});
 my $select_passeggeri=check_form::leggi_numeri($form{"passeggeri"});
 
 my $andata=0; #booleana: se non è andata, allora è con ritorno.
-
 if($andata_ritorno eq "andata"){
 	$andata=1;
 }
@@ -52,9 +55,39 @@ if(($data_partenza>=$data_ritorno)&($andata==0)){
 if($select_partenza eq $select_arrivo){
 	$errori|=8;
 }
+
+if(defined($form{"cerca"})){ #se non è stato premuto il pulsante "cerca"
+	gestione_sessione::setParam("Defined",undef($form{"cerca"}));
+	gestione_sessione::setParam("AR",$andata);
+	gestione_sessione::setParam("partenza",$select_partenza);
+	gestione_sessione::setParam("arrivo",$select_arrivo);
+	gestione_sessione::setParam("data_partenza",$data_partenza);
+	gestione_sessione::setParam("data_ritorno",$data_ritorno);
+	gestione_sessione::setParam("passeggeri",$select_passeggeri);
+}else{
+	if((gestione_sessione::getParam("AR")==1)){
+		$andata_ritorno="andata";
+	}
+	$select_partenza=gestione_sessione::getParam("partenza");
+	$select_arrivo=gestione_sessione::getParam("arrivo");
+	$data_partenza=gestione_sessione::getParam("data_partenza");
+	$data_ritorno=gestione_sessione::getParam("data_ritorno");
+	$select_passeggeri=gestione_sessione::getParam("passeggeri");
+	#recupero i dati dalle variabili di sessione
+}
+
+
+
+
+
+
 my $titolo="Ricerca voli";
 
-print "Content-type: text/html\n\n";
+
+
+my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
+
+print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
@@ -88,11 +121,13 @@ my @path=("Pagina principale", "index.html");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
+
 print print_header::print();
 if($errori>0){
 	print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
 }
-print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print gestione_sessione::getParam("partenza")." $errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+
 
 print "		</div>"; #chiudo il div main
 print print_footer::print();

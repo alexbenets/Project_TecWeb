@@ -5,17 +5,17 @@ require      Exporter;
 our @ISA       = qw(Exporter);
 our $VERSION   = 1.00;         # Version number
 
-my $menu; #(Titolo, pagina.html, selezionato:0/1)
-my $path; #(Titolo, pagina.html)
+local $menu; #(Titolo, pagina.html, selezionato:0/1)
+local $path; #(Titolo, pagina.html)
 
 #menu[x]: array (Titolo, pagina, selezionato)
 
 sub setMenu {#@m: array contenente i vari riferimenti ai menu
-	 my ($m) = @_;
+	 local ($m) = @_;
 	$menu=$m;
 }
 sub setPath {#@p: array contenente i vari riferimenti al path
-	my ($p)=@_;
+	local ($p)=@_;
 	$path=$p;
 }
 
@@ -29,7 +29,7 @@ sub print {
 			
 			<div id=\"menu\">\n";
 				
-				for( my $i=0; $i<scalar(@{$menu}); $i++){
+				for( local $i=0; $i<scalar(@{$menu}); $i++){
 					my @arr_temp=@{$menu->[$i]};
 					$temp.="				<a href=\"".@arr_temp[1]."\"";
 						if(@arr_temp[2]>0){

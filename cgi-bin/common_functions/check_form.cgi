@@ -50,6 +50,11 @@ sub controlla_data_passeggero {
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
 	my $anno=$gma->[2];	
+	if ($anno<1900){
+		return 0;
+		#la funzione Time::Piece fallisce se l'anno è inferiore al 1900.
+		#questo controllo iniziale evita l'errore.
+	}
 	eval {
 		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
 	};
@@ -63,10 +68,10 @@ sub controlla_data_passeggero {
 		my $d = ($dt1 - $dt2)->years;
 		#controllo se l'utente è troppo giovane o troppo anziano
 		#sotto il primo anno, il neonato non può viaggiare in aereo
-		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#sopra i 100 anni, nonostante i migliori auguri e l'incremento 
 		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
 		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
-		if($d<1 | $d>150){
+		if($d<1 | $d>100){
 			return 0;
 		}
 		return 1;
@@ -83,7 +88,12 @@ sub leggi_data {
 	my $gma=regexp_data($data);
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
-	my $anno=$gma->[2];	
+	my $anno=$gma->[2];
+	if ($anno<1900){
+		return 0;
+		#la funzione Time::Piece fallisce se l'anno è inferiore al 1900.
+		#questo controllo iniziale evita l'errore.
+	}
 	eval {
 		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
 	};
@@ -116,7 +126,11 @@ sub valida_data{
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
 	my $anno=$gma->[2];	
-	
+	if ($anno<1900){
+		return 0;
+		#la funzione Time::Piece fallisce se l'anno è inferiore al 1900.
+		#questo controllo iniziale evita l'errore.
+	}
 	eval {
 		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
 	};
@@ -130,10 +144,10 @@ sub valida_data{
 		my $d = ($dt1 - $dt2)->years;
 		#controllo se l'utente è troppo giovane o troppo anziano
 		#sotto i 18 anni non può prenotare il volo.
-		#sopra i 150 anni, nonostante i migliori auguri e l'incremento 
+		#sopra i 100 anni, nonostante i migliori auguri e l'incremento 
 		#dell'aspettativa di vita, è improbabile che l'utente  sia ancora tra noi e/o che sia ancora in grado di utilizzare
 		#il computer, visto il decadimento delle funzioni cognitive, visive ed uditive.
-		if($d<18 | $d>150){
+		if($d<18 | $d>100){
 			return 0;
 		}
 		return 1;

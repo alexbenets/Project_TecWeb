@@ -1,33 +1,33 @@
 #!/usr/bin/perl
+
 package print_search;
+
+use strict;
+
 require      Exporter;
 
-our @ISA       = qw(Exporter);
-our $VERSION   = 1.00;         # Version number
+my @ISA       = qw(Exporter);
+my $VERSION   = 1.00;         # Version number
 
 ### Include your variables and functions here
 
 
 sub list_tratte {
 	
+	my %partenze;
 	my @aereoporti_temp=("Linate", "Malpensa");
 	my %temp;
-	$temp{"Milano"}=\@aereoporti_temp;
-	my @aereoporti_temp=("Fiumicino");
-	$temp{"Roma"}=\@aereoporti_temp;
-	$partenze {"Italia"}=\%temp;
 	
-	my @aereoporti_temp=("Linate", "Malpensa");
-	my %temp;
 	$temp{"Milano"}=\@aereoporti_temp;
+	
 	my @aereoporti_temp=("Fiumicino");
 	$temp{"Roma"}=\@aereoporti_temp;
 	$partenze {"Italia"}=\%temp;
 	
 	my @aereoporti_temp=( "Charles de gaulle");
-	my %temp;
-	$temp{"Parigi"}=\@aereoporti_temp;
-	$partenze {"Francia"}=\%temp;
+		my %temp;
+		$temp{"Parigi"}=\@aereoporti_temp;
+		$partenze {"Francia"}=\%temp;
 	
 	return %partenze;
 	
@@ -93,17 +93,17 @@ my $testo= "
 						$testo.="<div class=\"casella_partenza\">
 							<label for=\"partenza\">Partenza:</label>
 							<select id=\"partenza\" name=\"partenza\" class=\"partenza\">";
-						my %partenze=list_tratte();
-						while (($paese, $citta) = each(%partenze))
+						my %lista_partenze=list_tratte();
+						while ((my $paese, my $citta) = each(%lista_partenze))
 						{
 							$testo.= "<optgroup label=\"$paese\">\n";
-							while (($nome_citta, $aereoporto) = each(%{$citta}))
+							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
 							{
-								while (($id, $nome_aereoporto) = each(@{$aereoporto}))
+								while ((my $id, my $nome_aereoporto) = each(@{$aereoporto}))
 								{
 									$testo.="<option";
 									if("$nome_citta - $nome_aereoporto" eq $partenza){
-										$testo.=" selected=\"selected\"";
+										$testo.=" selected=\"selected\" ";
 									}
 									$testo.=">$nome_citta - $nome_aereoporto</option>";
 								}
@@ -116,17 +116,17 @@ my $testo= "
 						<div class=\"casella_arrivo\">					
 							<label for=\"arrivo\">Arrivo:</label>
 							<select id=\"arrivo\" name=\"arrivo\" class=\"arrivo\">";
-						my %partenze=list_tratte();
-						while (($paese, $citta) = each(%partenze))
+						my %arrivi=list_tratte();
+						while ((my $paese, my $citta) = each(%arrivi))
 						{
-							$testo.= "<optgroup label=\"$paese\">\n";
-							while (($nome_citta, $aereoporto) = each(%{$citta}))
+							$testo.= "<optgroup label=\"$paese\"> \n";
+							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
 							{
-								while (($id, $nome_aereoporto) = each(@{$aereoporto}))
+								while ((my $id, my $nome_aereoporto) = each(@{$aereoporto}))
 								{
 									$testo.="<option";
 									if("$nome_citta - $nome_aereoporto" eq $arrivo){
-										$testo.=" selected=\"selected\"";
+										$testo.=" selected=\"selected\" ";
 									}
 									$testo.=">$nome_citta - $nome_aereoporto</option>";
 								}

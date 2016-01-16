@@ -14,6 +14,7 @@ require "common_functions/print_header.cgi";
 require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
+require "common_functions/Session.cgi";
 
 my %form;
 
@@ -28,16 +29,27 @@ my $password=$form{"password"};
 
 my $titolo="Login";
 
-my $location="index.cgi"; #variabile che contiene la pagina a cui ero prima (per esempio, se mi chiede il login durante la registrazione, allora tornerò là.
+my $create=gestione_sessione::createSession();
 
+my $location=gestione_sessione::getParam("location"); #variabile che contiene la pagina a cui ero prima (per esempio, se mi chiede il login durante la registrazione, allora tornerò là.
+if(!defined($location)){#se la variabile di sessione non è definita
+	$location="index.cgi";
+}
+if (gestione_sessione::getParam("logged") == 1){
+		print "Location: $location\n\n";
+		exit;
+}
 if(defined($email) and defined($password)){
-	if(0){ #se la combinazione di nome utente e password esistono
+	if(0){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
+		gestione_sessione::setParam("logged","1");
 		print "Location: $location\n\n";
 		exit;
 	}
 }
 
-print "Content-type: text/html\n\n";
+my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
+
+print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">

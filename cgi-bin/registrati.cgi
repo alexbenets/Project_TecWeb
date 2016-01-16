@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 
-package index_page;
+package registrati_page;
 use CGI::Carp qw(fatalsToBrowser);
 use strict;
 
@@ -15,6 +15,7 @@ require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
+require "common_functions/Session.cgi";
 
 
 my %form;
@@ -36,6 +37,8 @@ my $password=$form{"password"};
 
 
 sub registrati {
+	gestione_sessione::setParam("logged","1"); 
+	#imposto il parametro flag "logged", praticamente, alla registrazione, l'utente esegue il login automaticamente.
 
 }
 
@@ -64,11 +67,17 @@ if(defined ($nascita)){
 		$errore|=8;
 	}
 }
+my $create=gestione_sessione::createSession();
+
 if(($errore==0) & defined $form{"invia"}){#se il form è stato compilato correttamente
 	registrati();
 	print "Location: ../index.html\n\n";
 	exit;
 }
+
+my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
+
+print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 if($errore==0){#se il campo non è ancora stato compilato...
 	$nome="Nome";
@@ -80,8 +89,6 @@ if($errore==0){#se il campo non è ancora stato compilato...
 }
 
 my $titolo="Home";
-
-print "Content-type: text/html\n\n";
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
@@ -117,7 +124,7 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-print "	<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print " <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo="<div class=\"sezione\">
 					<form action=\"registrati.cgi\" method=\"post\">
 						<fieldset>";
