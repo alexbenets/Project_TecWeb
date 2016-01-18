@@ -24,8 +24,10 @@
 #logo{
 	float: left;
 	display: block;
-	padding-top:1.4em;
+	padding-top:0.5em;
 	padding-left:0.5em;
+	margin-left: 0.3em;
+	background-position: left;
 	background-image: url(../images/aereo.png);
 	width: 258px;
 	height: 188px;
@@ -129,7 +131,7 @@
 	padding-top:0em;
 	/*background-color:#3366ff;*/
 	padding-bottom:0.3em;
-	background-image: url(cielo.jpg);
+	background-image: url(../images/cielo.jpg);
 	border-radius: 20px 20px 20px 20px;
 }
 #prenota form label {
@@ -319,6 +321,7 @@
 	float:left;
 	width:15%;
 	display:block;
+	margin-top: 0.5em;
 	/*background-color:#00cc99;
 	border-radius: 0px 20px 20px 0px;*/
 }
@@ -329,7 +332,7 @@
 	border-radius: 0px 5px 5px 0px;
 }
 #secondo_menu ul {
-	list-style:none;
+	list-style: none;
 }
 #secondo_menu ul li {
 }
@@ -338,8 +341,9 @@
 	height:2em;
 	/*sezione testo*/
 	text-align:center;
-	font-size:1em;
+	font-size:1.2em;
 	line-height:2em;
+	color: #000;
 }
 #secondo_menu ul li a:hover {
 	background-color:#e4edf2;
@@ -365,6 +369,8 @@
 }
 #torna_su a{
 	text-decoration: none;
+	/*testo*/
+	color: #000;
 }
 /*FINE SEZIONE "contenitore_sezioni"*/
 
@@ -452,11 +458,77 @@
 
 /*FINE SEZIONE FORM*/
 
+/*INIZIO SEZIONE CERCA VOLI*/
+
+/*Inteztazione*/
+#cerca_voli h1{
+	text-align: center;
+}
+#titolo_tabellaAndata, #titolo_tabellaRitorno{
+	margin-left: 5.9em;
+}
+
+/*tabella cerca voli */
+table, th, td{
+	border: 0.1em solid black;
+	border-collapse: collapse;
+	margin-left: 2em;
+	margin-right: 2em;
+	padding-right: 4em;
+	/*testo*/
+	text-align: left;
+}
+#tabella_voliAndata, #tabella_voliRitorno{
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom: 1em;
+}
+
+/*tabella thead, tfoot*/
+thead, tfoot{
+	font-weight: bold;
+	background-color: #00CC99;
+}
+/*fine tabella cerca voli*/
+
+/*parte seleziona casella*/
+.intestazione_tabella{
+	font-size: 1.2em;
+}
+
+.scacchiera{
+	background-color: #DDEEFF;
+	/*display: block;*/
+}
+
+.seleziona_cella{
+	height:120%;
+	width:6em;
+}
+.seleziona_cella a {
+	/*sezione per il pseudo contenitore*/
+	height:100%;
+	width: 8.3em;
+	display:block;
+	float:left;
+	/*background-color:#dcddde;*/
+	/*sezione per il testo interno*/
+	text-decoration:none;
+	color:#000;
+	font-size:1.2em;
+}
+.seleziona_cella a:hover {
+	background-color:#e4edf2;
+}
+/*fine parte seleziona casella*/
+/*FINE SEZIONE CERCA VOLI*/
+
 /*INIZIO SEZIONE NEWS*/
 #news {
 	float:left;
 	width:15%;
 	display:block;
+	margin-top: 1em;
 	background-color:#f7fcff;
 }
 #news ul {	
@@ -464,6 +536,7 @@
 }
 #news ul li {
 	background-color:#00cc99;
+	border-radius: 5px 0px 0px 5px;
 }
 #news ul li a {
 	width:100%;
@@ -471,6 +544,7 @@
 	display:block;
 	/*sezione font*/
 	color:#000;
+	border-radius: 5px 0px 0px 5px;
 }
 #news ul li a:hover {
 	background-color:#e4edf2;
@@ -481,6 +555,7 @@
 	padding-left:0.2em;
 	padding-top:0.2em;
 	border:1px solid #000;
+	border-radius: 5px 0px 0px 5px;
 	/*inizio sezione font*/
 }
 #news ul li a .riquadro_news .titolo_news {
@@ -507,6 +582,8 @@
 	background-color:#3000ff;
 	position:absolute;
 	border-radius: 0px 0px 20px 20px;
+	/*testo*/
+	color: #FFF;
 }
 #sitemap {
 	position:absolute;
@@ -515,6 +592,8 @@
 }
 #sitemap a{
 	text-decoration: none;
+	/*testo*/
+	color: #FFF;
 }
 #gruppo {
 	margin:0 auto;
