@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 
-package index_page;
+package search_page;
 
 use strict;
 use CGI::Carp qw(fatalsToBrowser);
@@ -41,6 +41,27 @@ if($andata_ritorno eq "andata"){
 	$andata=1;
 }
 my $errori=0;
+
+
+if(defined($form{"cerca"})){ #se non è stato premuto il pulsante "cerca"
+	gestione_sessione::setParam("AR",$andata);
+	gestione_sessione::setParam("partenza",$select_partenza);
+	gestione_sessione::setParam("arrivo",$select_arrivo);
+	gestione_sessione::setParam("data_partenza",$data_partenza);
+	gestione_sessione::setParam("data_ritorno",$data_ritorno);
+	gestione_sessione::setParam("passeggeri",$select_passeggeri);
+}else{
+	if((gestione_sessione::getParam("AR")==1)){
+		$andata_ritorno="andata";
+	}
+	$select_partenza=gestione_sessione::getParam("partenza");
+	$select_arrivo=gestione_sessione::getParam("arrivo");
+	$data_partenza=check_form::leggi_data(gestione_sessione::getParam("data_partenza"));
+	$data_ritorno=check_form::leggi_data(gestione_sessione::getParam("data_ritorno"));
+	$select_passeggeri=gestione_sessione::getParam("passeggeri");
+	#recupero i dati dalle variabili di sessione
+}
+
 if($data_partenza==0){
 	$errori=1;
 }
@@ -56,29 +77,11 @@ if($select_partenza eq $select_arrivo){
 	$errori|=8;
 }
 
-if(defined($form{"cerca"})){ #se non è stato premuto il pulsante "cerca"
-	gestione_sessione::setParam("Defined",undef($form{"cerca"}));
-	gestione_sessione::setParam("AR",$andata);
-	gestione_sessione::setParam("partenza",$select_partenza);
-	gestione_sessione::setParam("arrivo",$select_arrivo);
-	gestione_sessione::setParam("data_partenza",$data_partenza);
-	gestione_sessione::setParam("data_ritorno",$data_ritorno);
-	gestione_sessione::setParam("passeggeri",$select_passeggeri);
-}else{
-	if((gestione_sessione::getParam("AR")==1)){
-		$andata_ritorno="andata";
-	}
-	$select_partenza=gestione_sessione::getParam("partenza");
-	$select_arrivo=gestione_sessione::getParam("arrivo");
-	$data_partenza=gestione_sessione::getParam("data_partenza");
-	$data_ritorno=gestione_sessione::getParam("data_ritorno");
-	$select_passeggeri=gestione_sessione::getParam("passeggeri");
-	#recupero i dati dalle variabili di sessione
+
+if($errori==0){# se non ho avuto problemi nella compilazione del form
+	print "Location: /cgi-bin/seleziona_voli.cgi\n\n";#vado alla pagina "scacchiera"
+	exit;
 }
-
-
-
-
 
 
 my $titolo="Ricerca voli";

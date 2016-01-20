@@ -145,7 +145,7 @@ my $testo= "
 							}
 							$testo.="\"></input>
 						</div>
-						<div class=\"casella_dataRitorno\">
+						<div class=\"casella_dataArrivo\">
 							<label for=\"data_ritorno\">Data Ritorno:</label>
 							<input type=\"text\" name=\"data_ritorno\" id=\"data_ritorno\" value=\"$data_ritorno\" class=\"";
 							if($errori & 2){

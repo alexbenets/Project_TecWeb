@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 
-package index_page;
+package login_page;
 
 use strict;
 
@@ -40,7 +40,7 @@ if (gestione_sessione::getParam("logged") == 1){
 		exit;
 }
 if(defined($email) and defined($password)){
-	if(0){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
+	if(1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
 		gestione_sessione::setParam("logged","1");
 		print "Location: $location\n\n";
 		exit;
