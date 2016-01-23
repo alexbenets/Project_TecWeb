@@ -18,6 +18,38 @@ require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
 
 
+sub compareDate{
+	my($partenza, $ritorno)=@_;
+	my $gma=check_form::regexp_data($partenza);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];
+	if($giorno+$mese+$anno==0){
+		return 1; #non posso confrontare
+	}
+	my $dt1 = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+    my $gma=check_form::regexp_data($ritorno);
+	$giorno=$gma->[0];
+	$mese=$gma->[1];
+	$anno=$gma->[2];
+	if($giorno+$mese+$anno==0){
+		return 1; #non posso confrontare
+	}
+	my $dt2 = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+    if($ritorno<=$partenza){
+    	return 0;#no
+    }
+    return 1;#tutto ok
+}
+
 sub getVoli
 {
 	my ($giorno, $partenza, $arrivo, $passeggeri, $n)=@_;
@@ -82,7 +114,6 @@ my $data_ritorno=gestione_sessione::getParam("data_ritorno");
 my $select_passeggeri=gestione_sessione::getParam("passeggeri");
 
 
-
 if(!($volo_andata eq "")){
 	$selezione=1;
 }
@@ -97,6 +128,15 @@ if(!($giorno_ritorno eq "")){
 }
 if(!($form{"visitato"} eq "1")){
 	$selezione=0;
+}else{
+	my $click=gestione_sessione::getParam("numero_selezioni_voli");
+	if($form{"andata"}){
+		$click|=1;
+	}
+	if($form{"ritorno"}){
+		$click|=2;
+	}
+	gestione_sessione::setParam("numero_selezioni_voli",$click);
 }
 
 if($selezione>0){ #se ho selezionato tutti i valori desiderati
@@ -108,7 +148,9 @@ if($selezione>0){ #se ho selezionato tutti i valori desiderati
 	}
 	else {
 		if(($selezione&15)==15){ #se ho impostato sia partenza che ritorno
-			print "Location: dati_passeggeri.cgi\n\n";
+			if(($andata==0)&(gestione_sessione::getParam("numero_selezioni_voli")==3)){
+				print "Location: dati_passeggeri.cgi\n\n";
+			}
 			#redirect alla pagina desiderata.
 		}
 	}
@@ -131,8 +173,7 @@ my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires 
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
-print "$andata $selezione
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
+print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
@@ -157,9 +198,11 @@ push @menu_temp, \@menu;
 print_header::setMenu(\@menu_temp);
 
 my @path_temp;
-my @path=("Home", "index.html");
+my @path=("Home", "index.cgi");
 push @path_temp, \@path;
-my @path=("Pagina principale", "index.html");
+my @path=("Ricerca voli", "search.cgi");
+push @path_temp, \@path;
+my @path=("Seleziona i voli disponibili", "seleziona_voli.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
@@ -222,13 +265,15 @@ for(my $dd=-3; $dd<=3; $dd++){
       				day        => $giorno
       				);
 	$dt2=$dt2->add(days =>$dd);
-	my $temp=\@{getVoli($dt2, $select_partenza, $select_arrivo, $select_passeggeri, $dd+4)};
+	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
+	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, $select_passeggeri, $dd+4)};
 	push @voli_settimana, $temp;
+	
 	if(scalar(@{$temp})>$max_altezza){
 		$max_altezza=scalar(@{$temp});
 	}
 }
-
+print $giorno_partenza;
 #poi scorro i vari elementi
 for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 	$testo.='<tr>';
@@ -242,10 +287,19 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			my $selected;
 			if(((@elemento[$altezza]->[0]) eq $volo_andata) and ((@elemento[$altezza]->[5]) eq $giorno_partenza)){
 				$selected="volo_selected";
+				gestione_sessione::setParam("Andata_data",$giorno_partenza);
+				gestione_sessione::setParam("Andata_id",@elemento[$altezza]->[0]);
+				gestione_sessione::setParam("Andata_partenza",@elemento[$altezza]->[1]);
+				gestione_sessione::setParam("Andata_arrivo",@elemento[$altezza]->[2]);
+				gestione_sessione::setParam("Andata_prezzo",@elemento[$altezza]->[3]);
 			}
-			$testo.='<td class="'.$classe.' '.$selected.'">
-									<a href="search.cgi?volo_andata='.@elemento[$altezza]->[0].'&giorno_partenza='.@elemento[$altezza]->[5].'&visitato=1">
-										<object>
+			$testo.='<td class="'.$classe.' '.$selected.'">';
+			my $data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
+			print "<p>$data_ok @elemento[$altezza]->[5],$giorno_ritorno</p>";			
+							if($data_ok>0){
+								$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
+							}
+							$testo.='			<object>
 											<div class="seleziona_cella">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
@@ -253,9 +307,11 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
 											</div>
-										</object>
-									</a>	
-									</td>';
+										</object>';
+						if($data_ok>0){
+							$testo.='			</a>	';
+						}
+$testo.='									</td>';
 		}else{
 			$testo.='<td>
 										<div class="seleziona_cella">
@@ -271,7 +327,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 
 $date_tabella='';
 for(my $dd=-3; $dd<=3; $dd++){
-	#da -6 giorni a + 6 giorni
+	#da -3 giorni a + 3 giorni
 	my $gma=check_form::regexp_data($data_ritorno);
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
@@ -311,9 +367,10 @@ my @voli_settimana;
 
 my $max_altezza=0;# contiene il numero massimo di elementi presenti "in colonna"
 
+
 for(my $dd=-3; $dd<=3; $dd++){
-	#da -6 giorni a + 6 giorni
-	my $gma=check_form::regexp_data($data_partenza);
+	#da -3 giorni a + 3 giorni
+	my $gma=check_form::regexp_data($data_ritorno);
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
 	my $anno=$gma->[2];
@@ -322,9 +379,10 @@ for(my $dd=-3; $dd<=3; $dd++){
       				month      => $mese,
       				day        => $giorno
       				);
-	$dt2=$dt2->add(days =>$dd);
-	my $temp=\@{getVoli($dt2, $select_partenza, $select_arrivo, $select_passeggeri, 3)};
+	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
+	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, $select_passeggeri, 3)};
 	push @voli_settimana, $temp;
+	
 	if(scalar(@{$temp})>$max_altezza){
 		$max_altezza=scalar(@{$temp});
 	}
@@ -343,20 +401,30 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			my $selected;
 			if(((@elemento[$altezza]->[0]) eq $volo_ritorno) and ((@elemento[$altezza]->[5]) eq $giorno_ritorno)){
 				$selected="volo_selected";
+				gestione_sessione::setParam("Ritorno_id",@elemento[$altezza]->[0]);
+				gestione_sessione::setParam("Ritorno_data",$giorno_partenza);
+				gestione_sessione::setParam("Ritorno_partenza",@elemento[$altezza]->[1]);
+				gestione_sessione::setParam("Ritorno_arrivo",@elemento[$altezza]->[2]);
+				gestione_sessione::setParam("Ritorno_prezzo",@elemento[$altezza]->[3]);
+				
 			}
-			$testo.='<td class="'.$classe.' '.$selected.'">
-									<a href="search.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&giorno_ritorno='.@elemento[$altezza]->[5].'&visitato=1">
+			if(!(@elemento[$altezza]->[1] eq '')){
+				$testo.='<td class="'.$classe.' '.$selected.'">
+									<a href="seleziona_voli.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&amp;giorno_ritorno='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;ritorno=1">
 										<object>
 											<div class="seleziona_cella">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
-												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
+												<p>Prezzo: '.@elemento[$altezza]->[3].'&euro;</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
 											</div>
 										</object>
 									</a>	
 									</td>';
+			}else{
+				$testo.="<td></td>";
+			}
 		}else{
 			$testo.='<td >
 										<div class="seleziona_cella">

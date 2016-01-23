@@ -28,6 +28,8 @@ foreach my $p (param()) {
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/search.cgi");
 
+gestione_sessione::setParam("numero_selezioni_voli",0);
+
 my $andata_ritorno=$form{"AR"};
 
 my $select_partenza=$form{"partenza"};
@@ -54,6 +56,7 @@ if(defined($form{"cerca"})){ #se non è stato premuto il pulsante "cerca"
 	if((gestione_sessione::getParam("AR")==1)){
 		$andata_ritorno="andata";
 	}
+	$andata=gestione_sessione::getParam("AR");
 	$select_partenza=gestione_sessione::getParam("partenza");
 	$select_arrivo=gestione_sessione::getParam("arrivo");
 	$data_partenza=check_form::leggi_data(gestione_sessione::getParam("data_partenza"));
@@ -66,11 +69,36 @@ if($data_partenza==0){
 	$errori=1;
 }
 if(($data_ritorno==0)&($andata==0)){
-	$errori+=2;
+	$errori|=2;
 }
 #controllo se la data di ritorno è inferiore alla data di partenza
-if(($data_partenza>=$data_ritorno)&($andata==0)){
-	$errori=3;
+my $gma=check_form::regexp_data($data_partenza);
+my $giorno=$gma->[0];
+my $mese=$gma->[1];
+my $anno=$gma->[2];
+my $partenza = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+my $gma=check_form::regexp_data($data_ritorno);
+my $ritorno=DateTime->new(
+					year       => "1900",
+      				month      => "01",
+      				day        => "01"
+      				);
+my $giorno=$gma->[0];
+my $mese=$gma->[1];
+my $anno=$gma->[2];
+if(defined($giorno) & defined($mese)){
+	$ritorno = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+}	
+if(($partenza>=$ritorno)&($andata==0)){
+	$errori|=3;
 }
 #non posso atterrare nello stesso aeroporto!
 if($select_partenza eq $select_arrivo){
@@ -78,7 +106,7 @@ if($select_partenza eq $select_arrivo){
 }
 
 
-if($errori==0){# se non ho avuto problemi nella compilazione del form
+if(($errori==0)&(defined($form{"cerca"}))){# se non ho avuto problemi nella compilazione del form
 	print "Location: /cgi-bin/seleziona_voli.cgi\n\n";#vado alla pagina "scacchiera"
 	exit;
 }
@@ -118,18 +146,17 @@ push @menu_temp, \@menu;
 print_header::setMenu(\@menu_temp);
 
 my @path_temp;
-my @path=("Home", "index.html");
+my @path=("Home", "index.cgi");
 push @path_temp, \@path;
-my @path=("Pagina principale", "index.html");
+my @path=("Ricerca voli", "index.html");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-if($errori>0){
-	print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
-}
-print gestione_sessione::getParam("partenza")." <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
+
+print "<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
 
 print "		</div>"; #chiudo il div main

@@ -32,6 +32,13 @@ my $titolo="Login";
 my $create=gestione_sessione::createSession();
 
 my $location=gestione_sessione::getParam("location"); #variabile che contiene la pagina a cui ero prima (per esempio, se mi chiede il login durante la registrazione, allora tornerò là.
+
+if($form{"logout"} eq '1'){
+	gestione_sessione::destroySession();
+	print "Location: index.cgi\n\n";
+	exit;
+}
+
 if(!defined($location)){#se la variabile di sessione non è definita
 	$location="index.cgi";
 }

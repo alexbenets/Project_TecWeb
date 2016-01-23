@@ -53,9 +53,6 @@ sub print {
 	if(!defined $data_ritorno| $data_ritorno==0){
 		$data_ritorno="Data ritorno";
 	}
-	if ((defined $data_partenza & $data_partenza>0)&(defined $data_ritorno & $data_ritorno>0)){
-		$errori|=8;
-	}
 	if($vuoto==1){
 		$errori=0;
 	}

@@ -21,7 +21,7 @@ my $titolo="Home";
 
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/index.cgi");
-
+my $ar=gestione_sessione::getParam("AR");
 my $select_partenza=gestione_sessione::getParam("partenza");
 my $select_arrivo=gestione_sessione::getParam("arrivo");
 my $data_partenza=check_form::leggi_data(gestione_sessione::getParam("data_partenza"));
@@ -58,15 +58,13 @@ push @menu_temp, \@menu;
 print_header::setMenu(\@menu_temp);
 
 my @path_temp;
-my @path=("Home", "index.html");
-push @path_temp, \@path;
-my @path=("Pagina principale", "index.html");
+my @path=("Home", "index.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_search::print(0, 1, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri,1);
+print print_search::print(0, $ar, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri,1);
 print print_content::print("ciao");
 print "		</div>"; #chiudo il div main
 print print_footer::print();

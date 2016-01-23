@@ -21,6 +21,7 @@ require "common_functions/Session.cgi";
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/dati_passeggeri.cgi");
 
+gestione_sessione::setParam("numero_selezioni_voli",0);
 my %form;
 
 
@@ -113,7 +114,11 @@ if((($errori==0)&defined($form{"avanti"})| $passeggeri==0)){
 
 my $titolo="Dati dei passeggeri";
 
-print "Content-type: text/html\n\n";
+
+my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
+
+print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
+
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
@@ -140,12 +145,15 @@ push @menu_temp, \@menu;
 print_header::setMenu(\@menu_temp);
 
 my @path_temp;
-my @path=("Home", "index.html");
+my @path=("Home", "index.cgi");
 push @path_temp, \@path;
-my @path=("Pagina principale", "index.html");
+my @path=("Ricerca voli", "search.cgi");
+push @path_temp, \@path;
+my @path=("Seleziona i voli disponibili", "seleziona_voli.cgi");
+push @path_temp, \@path;
+my @path=("Inserisci i dati dei passeggeri", "dati_passeggeri.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
-
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $messaggio="";
