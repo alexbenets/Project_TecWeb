@@ -5,8 +5,8 @@ NOTA MOLTO BENE:= ->@ HA DUE DIVERSI SIGNIFICATI: a SINISTRA dell'uguale  "=" ra
 CONTIENE MANIPOLA PER SUPERADMIN E AMMINISTRATORE
 
 PUÒ INTERVENIRE SU 
--TABUTENTEREGISTRATO (SUPERADMIN) MANCA
--TABAMMINISTRATORE (SUPERADMIN)  MANCA
+-TABUTENTEREGISTRATO (SUPERADMIN) done
+-TABAMMINISTRATORE (SUPERADMIN)  done
 -TABAEREOPORTO (SUPERADMIN) DONE 
 -TABCITTA (SUPERADMIN) DONE
 -TABNAZIONE (SUPERADMIN) DONE
@@ -15,10 +15,10 @@ PUÒ INTERVENIRE SU
 -TABAEREO (SUPERADMIN) DONE
 -TABTIPOAEREO (SUPERADMIN) DONE
 -TABPRODUTTOREAEREO (SUPERADMIN) DONE
--TABCOMMENTO (SUPERADMIN E AMMINISTRATORE) INCOMPLETO 
--TABSERVIZIO (SUPERADMIN) INCLOMPLETO
--TABNEWS (SUPERADMIN E AMMINISTRATORE) INCOMLETO
--TABFAQ (SUPERADMIN E AMMINISTRATORE) INCOMPLETO
+-TABCOMMENTO (SUPERADMIN E AMMINISTRATORE) Done(?) 
+-TABSERVIZIO (SUPERADMIN) DONE
+-TABNEWS (SUPERADMIN E AMMINISTRATORE) DONE
+-TABFAQ (SUPERADMIN E AMMINISTRATORE) DONE
 
 in particolare:
 
@@ -35,12 +35,12 @@ modificare solo le tabelle con un attributo diA
 le pagine a disposizione dell'amministratore SA sono:
 1->UNA pagina che contiene tutte le informazioni relative a Nazioni, Citta e aereoporti
 2->una pagina che si occupa di Tratte e Voli
-3->una pagina che si occupa dei Produttori degli aerei, i tipi di aerei e gli aerei
+3->una pagina che si occupa dei Produttori degli aerei, i tipi di aerei e gli aerei NO
 4->una pagina riguardante i servizi
-5->una pagina riguardante le news
-6->una pagina riguardante le faq
-7->una pagina riguardante i commenti
-8->UNA PAGINA RIGUARDANTE UTENTI E AMMINISTRATORI
+5->una pagina riguardante le news S
+6->una pagina riguardante le faq S
+7->una pagina riguardante i commenti S
+8->UNA PAGINA RIGUARDANTE UTENTI E AMMINISTRATORI MINE
 
 NB una tabella può essere modificata solo a partire da form chiamate dalla pagina che se ne occupa QUINDI:
 ESEMPIO:
@@ -478,7 +478,40 @@ OLTRE A QUESTO a fine pagina deve essereci un bottone "inserisci nuovo servzio";
 NB è possibile che questo servizio sia impiegato in una qualche prenotazione =>non posso cancellarlo (OR se posso devo far si che l'utente ne venga a 
 conoscienza/che quel record su servizio prenotato sia cancellato... non fa parte della tabella prenotazione (cui neanche SA può toccare) quindi si potrebbe fare)
 
-4-A)
+4-A)PER INSERIRE UN NUOVO SERVIZIO
+
+->utnte clicca "inserisci un nuovo servizio"
+->cerco l'id da usare con meccanismo simile a quello usato sopra per $nuovoId su aereoporti
+$idNewS=$numeroMax							$numeroMax=(massimo(@idServ=/database/tabServizio/servizio/@idS))+1 
+		
+	NB: potrebbe essere una buona cosa sostituire $numeroMax 
+	con una variabile $nuovoID che cerca il primo buco tra gli id e lo riempie
+	=> si usa un ciclo su @idN			@idN=/database/tabServizio/servizio/@idS
+	: foreach ($idC){					$precedente=valore iniziale:-1, aumenta di una unità ad ogni ciclo
+		if($idC!=$precedente+1){ 		cioè c'è un id mancante
+			$nuovoId=$precedente+1		
+			break				MI FERMO NON ESEGUO I SUCCESSIVI CICLI			
+		}
+	} 
+->utente inserisce nome del servizio, la descrizione e il prezzo(su variabili con gli stessi nomi)
+->creo nodo sulla tabella /database/tabServizio con i dati registrati
+AGGIORNA PAGINA
+
+4-B)PER ELIMINARE UN SERVIZIO
+
+->salvo il nome del servizio da cencellare  $nomeS (selezionato dall'utente)
+->cerco l'id corrispondente		    		$idDaCancellare=/database/tabServizio/servizio[nome=$nomeS]/@idS
+->controllo che questo non sia impiegato 	$flagServPrenotato=true se @servPrenotato=/database/tabServizioPernotato/ServizioPernotato[@idSP=$idDaCancellare]
+											/@idSP ha almeno un elemento
+in qualche pernotazione						  
+	->se $flagServPren=TRUE interrompo 
+	=> segnalo che esitono prenotazioni che hanno richiesto quel servizio e che quindi non posso eliminarlo... FORSE VA INSERITO UN CAMPO CHE IMPEDISCA CHE IL 
+	SERVIZIO POSSA ESSERE PI§ RICHIESTO? 
+	->altrimenti proseguo
+->elimino il nodo ProduttoreAereo
+AGGIORNA PAGINA
+
+
 
 VISUALIZZAZIONE PAGINA 5
 
@@ -504,6 +537,32 @@ leghi una data ai suoi articoli?)
 	di quella data		$titolo=database/tabNews/news[@idN=$articoli]/testo/titolo
 				$contenuto=database/tabNews/news[@idN=$articoli]/testo/contenuto
 
+4-A)PER INSERIRE UNA NUOVA NOTIZIA
+
+->utnte clicca "inserisci una nuova notizia"
+->cerco l'id da usare con meccanismo simile a quello usato sopra per $nuovoId su aereoporti
+$idNewS=$numeroMax							$numeroMax=(massimo(@idServ=/database/tabNews/news/@idNe))+1 
+		
+	NB: potrebbe essere una buona cosa sostituire $numeroMax 
+	con una variabile $nuovoID che cerca il primo buco tra gli id e lo riempie
+	=> si usa un ciclo su @idN			@idN=/database/tabNews/news/@idNe
+	: foreach ($idC){					$precedente=valore iniziale:-1, aumenta di una unità ad ogni ciclo
+		if($idC!=$precedente+1){ 		cioè c'è un id mancante
+			$nuovoId=$precedente+1		
+			break				MI FERMO NON ESEGUO I SUCCESSIVI CICLI			
+		}
+	} 
+->utente inserisce nome del servizio, la descrizione e il prezzo(su variabili con gli stessi nomi)
+->perl inserisce la data sulla variabile $data (funzione di libreria)
+->creo nodo sulla tabella /database/tabServizio con i dati registrati
+AGGIORNA PAGINA
+
+4-B)PER ELIMINARE UNA NOTIZIA
+
+->salvo il nome della notizia da cencellare $nomeNe (selezionato dall'utente)
+->cerco l'id corrispondente		    		$idDaCancellare=/database/tabNews/news[nome=$nomeNe]/@idNe
+->elimino il nodo news
+AGGIORNA PAGINA
 
 
 VISUALIZZAZIONE PAGINA 6
@@ -528,6 +587,113 @@ leghi un argomento ai suoi articoli?)
 	di quell'argomento		$titolo=database/tabFaq/faq[@idF=$articoli]/testo/titolo
 							$contenuto=database/tabFaq/faq[@idF=$articoli]/testo/contenuto
 
+3-A)PER INSERIRE UN ARTICOLO
+->utnte clicca "inserisci un nuova faq"
+->cerco l'id da usare con meccanismo simile a quello usato sopra per $nuovoId su aereoporti
+$idNewAe=$numeroMax							$numeroMax=(massimo(@idAe=/database/tabFaq/faq/@idF))+1 
+		
+	NB: potrebbe essere una buona cosa sostituire $numeroMax 
+	con una variabile $nuovoID che cerca il primo buco tra gli id e lo riempie
+	=> si usa un ciclo su @idN			@idN=/database/tabFaq/faq/@idF
+	: foreach ($idC){					$precedente=valore iniziale:-1, aumenta di una unità ad ogni ciclo
+		if($idC!=$precedente+1){ 		cioè c'è un id mancante
+			$nuovoId=$precedente+1		
+			break				MI FERMO NON ESEGUO I SUCCESSIVI CICLI			
+		}
+	} 
+->utente inserisce l'argomento, il titolo, contenuto (su variabili con gli stessi nomi)
+->perl registra la data e l'id dell'amministratore che ha creato l'articolo (su variabili con gli stessi nomi)
+->creo nodo sulla tabella /database/tabFaq con i dati registrati
+NB $argomento, $idAutore sono campi di un record Faq, mentre $titolo e $contenuto appartengono all'elemento complesso Testo di Faq 
+AGGIORNA PAGINA
+
+3-B)PER CANCELLARE UN ARTICOLO
+-> seleziono un articolo da cancellare
+->perl ricava l'id dell'articolo    $daCancellare[=$parametroPerl]=$idFaq
+->elimino il nodo con quell'id 
+AGGIORNA PAGINA
+
 
 
 VISUALIZZAZIONE PAGINA 7
+
+In termini di organizzazione i vari commenti sono organizzati in base alla data (piu recenti in primo piano così che quelli da manipolare maggiormente siano subito
+visibili) e al volo a chi si rifersiscono(?).
+per visualizzarle dunque:
+->entro nella tabella tabCommento
+->creo un array contenente le date @date=/database/tabCommento/commento/testo/data
+->organizzo questo array in base all'attributo @idV
+(?se possibile darebbe un ordine 
+alla pagina finale, 
+anche se non so se è il MIGLIORE ordine possibile)
+->per ogni $date posso trovare 
+i commenti la riguardano 		@commento= Commento di un argomento /database/tabCommento/commento/testo[data=$date]/@idC (OK?)
+(?posso usare un array associativo che 
+leghi una data ai suoi commenti?)
+->per ogni commento: 
+	->display il titolo, il contenuto,			$titoloComm, $contenutoComm,$dataComm=/database/tabCommento/commento[@idCo=$commento]/testo/campo
+	la data (elementi del sottoelemento testo) 
+	NB l'argomento del commento,
+	viente scritto una volta sola, 
+	seguito appunto da tutti i sui "record" 
+	il nome e la data del volo ($campoVolo)     $nomeVolo=/database/tabVolo/volo[@idV=$voloComm(ricavato come sopra)]/nome
+	->devo inoltre visualizzare il nome dell'autore $moneAut=/database/tabUtenteRegistrato/utenteRegistrato[@idUR=$idAutore]/mail
+													$idAutore=/database/tabCommento/commento[@idCo=$commento]/@idUR
+
+	->di ogni commento bisogna inoltre specificare 
+	se è stato già approvato OR se è un commento nuovo
+	(il campo puo essere false solo PRIMA CHE SA LO RIFIUTI O LO ACCETTI
+	una volta che è stato preso in considerazione
+	viene eliminato o inserito 
+	tra i commenti visibili) 					$flagApprovato=/database/tabCommento/commento[@idCo=$commento]/abilitato
+La pagina consente al SA di decidere quali dei commenti inseriti dagli utenti
+vengono tenuti e quali invece vengono rifiutati
+DUE BOTTONI PER OGNI COMMENTO: "accetta" "rifiuta"
+
+7-A)ACCETTAZIONE DEL COMMENTO
+->utente seleziona il commento da accettare
+->perl recupera l'id 							$idAccettato=/database/tabCommento/commento[@idvolo=$voloRif and @idUtente=$utenteRif]/@idCo
+->perl cambia il valore del campo "abilitato" da false a true
+->perl imposta @idA al valore ricavato dal cookie dell'utente
+->AGGIORNA LA PAGINA
+
+7-B)RIFIUTO DEL COMMENTO  
+->perl recupera l'id del commento da eliminare $daEliminare=/database/tabCommento/commento[@idUR=$idAutore and @idV=$Comm and data=$dataComm]/@idCo
+->chiedo conferma: "vuoi eliminare il commento scritto il $dataComm di $nomeAut, eseguito sul volo $nomeVolo?"
+	-> se SI: elimino il nodo commento con quell'id
+		->AGGIORNO LA PAGINA
+	->altrimenti torno alla pagina iniziale di visualizzazione commenti senza aver eseguito nulla
+
+
+
+VISUALIZZAZIONE PAGINA 8
+
+1 "tabella" contenente i dati degli utenti registrati CON CAMPO CHE SPECIFICA SE SONO ANCHE AMMINISTRATORI O ADDIRITTURA SA)
+->scorro tutta la tabella tabUtenteRegistrato @idUtenti
+->registro gli id degli utenti registrati				@id=/database/tabUtenteRegistrato/utenteRegistrato/idUR
+->per ogni elemento voglio sapere $mail, 				$mail=/database/tabUtenteRegistrato/utenteRegistrato[@idUR=$idUtente]/mail
+->il nome, cognome, codice fiscale e data di nascita 	$campo=/database/tabUtenteRegistrato/utenteRegistrato[@idUR=$idUtente]/campo
+->voglio sapere il ruolo
+	->se $idcompare nella tabella AMMINISTRATORE 		if(ESISTE /database/tabAmministratore/Amministratore[@idA=$id])
+		->se $flagSA true => scrivo che si tratta dell'SA del sito $flagSA=/database/tabAmministratore/Amministratore[@idUR=$id]/superAdmin
+		->altrimenti =>scrivo che è amministratore
+	->alrtimenti si tratta di un semplice cliente
+voglio poter trasformare un semplice cliente in amministratore
+o rendere cliente una voce di amministratore
+
+8-A)CREARE UN NUOVO AMMINISTRATORE
+->scelgo l'utente da rendere amministratore
+->perl salva l'id dell'utente 							$idNewAmm=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idUR
+->creo sulla tabella tabAmministratore
+un nuovo record con @idUR=$idNewAll
+e superAdmin=false
+->aggiorno pagina
+
+8-B)ELIMINARE UN AMMINISTRATORE
+->scelgo l'amministratore da cancellare
+->perl salva l'id dell'utente 							$idDaEliminare=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idUR
+->cerco record sulla tabella tabAmministratore
+con @idUR=$idDaEliminare
+->SE $superAdmin=false ok cancello
+->ALTRIMENTI segnalo errore "non si può cancellare SA" 
+->aggiorno pagina
