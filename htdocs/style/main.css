@@ -469,29 +469,31 @@
 }
 
 /*tabella cerca voli */
-table, th, td{
+#cerca_voli table {
+	width:99%;
+	margin:0 auto;
+}
+#cerca_voli table, th, td{
 	border: 0.1em solid black;
 	border-collapse: collapse;
-	margin-left: 2em;
-	margin-right: 2em;
-	padding-right: 4em;
 	/*testo*/
 	text-align: left;
 }
 #tabella_voliAndata, #tabella_voliRitorno{
-	margin-left:auto;
-	margin-right:auto;
 	margin-bottom: 1em;
 }
-
 /*tabella thead, tfoot*/
-thead, tfoot{
+#cerca_voli table thead, #cerca_voli table tfoot{
 	font-weight: bold;
 	background-color: #00CC99;
 }
 /*fine tabella cerca voli*/
 
 /*parte seleziona casella*/
+
+#tabella_voliAndata a {
+	text-decoration:none;
+}
 .intestazione_tabella{
 	font-size: 1.2em;
 }
@@ -501,24 +503,23 @@ thead, tfoot{
 	/*display: block;*/
 }
 
-.seleziona_cella{
-	height:120%;
-	width:6em;
+.volo_selected {
+	background-color:#C0FFee;
 }
-.seleziona_cella a {
+
+.seleziona_cella{
 	/*sezione per il pseudo contenitore*/
-	height:100%;
-	width: 8.3em;
+	padding:1%;
 	display:block;
-	float:left;
 	/*background-color:#dcddde;*/
 	/*sezione per il testo interno*/
 	text-decoration:none;
 	color:#000;
 	font-size:1.2em;
 }
-.seleziona_cella a:hover {
+.seleziona_cella:hover {
 	background-color:#e4edf2;
+	font-weight:bold;
 }
 /*fine parte seleziona casella*/
 /*FINE SEZIONE CERCA VOLI*/

@@ -129,7 +129,7 @@ print print_header::print();
 if($errori>0){
 	print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
 }
-print gestione_sessione::getParam("partenza")." $errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print gestione_sessione::getParam("partenza")." <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
 
 print "		</div>"; #chiudo il div main

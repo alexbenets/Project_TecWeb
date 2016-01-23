@@ -24,10 +24,16 @@ sub getVoli
 
 	my @voli;
 	for (my $i=0; $i<$n; $i++){
-		my @volo=('AZ000'.$i, '8:00', '10:00', '160', '4.75');
+		my @volo=('AZ000'.$i, '8:00', '10:00', '160', '4.75', $giorno);
 		push @voli, \@volo; 
 	}
 	return \@voli;
+}
+
+my %form;
+foreach my $p (param()) {
+    $form{$p} = param($p);
+    #print "$p = $form{$p}<br>\n";
 }
 
 my $create=gestione_sessione::createSession();
@@ -168,8 +174,12 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			if((($altezza+$giorno)%2)==0){
 				$classe="scacchiera";
 			}
-			$testo.='<td class="'.$classe.'">
-									<a href="#">
+			my $selected;
+			if(((@elemento[$altezza]->[0]) eq $form{"volo_andata"}) and ((@elemento[$altezza]->[5]) eq $form{"giorno_partenza"})){
+				$selected="volo_selected";
+			}
+			$testo.='<td class="'.$classe.' '.$selected.'">
+									<a href="search.cgi?volo_andata='.@elemento[$altezza]->[0].'&giorno_partenza='.@elemento[$altezza]->[5].'">
 										<object>
 											<div class="seleziona_cella">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
