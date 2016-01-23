@@ -66,6 +66,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record utente registrato  -->
 <xsd:complexType name="tUtenteRegistrato">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagBann" type="xsd:boolean"/><!--true=> non può accedere o prenotare; false=>è un account attivo-->
 		<xsd:element name="mail" type="xsd:string"/>
 		<xsd:element name="password" type="tPassword"/>
 		<xsd:element name="domandaSegreta" type="xsd:string"/>
@@ -120,6 +121,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record aereoporto -->
 <xsd:complexType name="tAereoporto">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagAttivo" type="xsd:boolean"/> <!--se true:è servita da qualche volo atrimenti esiste sul db ma non è servita-->
 		<xsd:element name="nome" type="xsd:string"/>
 	</xsd:sequence>
 	<xsd:attribute name="idAp" type="tId"/>
@@ -138,8 +140,8 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record citta -->
 <xsd:complexType name="tCitta">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="nome" type="xsd:string"/>
 		<xsd:element name="flagServita" type="xsd:boolean"/> <!--se true:è servita da qualche volo atrimenti esiste sul db ma non è servita-->
+		<xsd:element name="nome" type="xsd:string"/>
 	</xsd:sequence>	
 	<xsd:attribute name="idC" type="tId"/>
 	<xsd:attribute name="idN" type="tId"/>
