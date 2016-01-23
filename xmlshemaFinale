@@ -15,9 +15,9 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="tabUtente" type="tTabUtente"/>
 		<xsd:element name="tabUtenteRegistrato" type="tTabUtenteRegistrato"/>
 		<xsd:element name="tabAmministratore" type="tTabAmministratore"/>
-		<xsd:element name="tabNazione" type="tNazione"/>
+		<xsd:element name="tabNazione" type="tTabNazione"/>
 		<xsd:element name="tabCitta" type="tTabCitta"/>
-		<xsd:element name="tabAeroporto" type="tTabAeroporto"/>
+		<xsd:element name="tabAereoporto" type="tTabAereoporto"/>
 		<xsd:element name="tabTratta" type="tTabTratta"/>
 		<xsd:element name="tabProduttoreAereo" type="tTabProduttoreAereo"/>
 		<xsd:element name="tabVolo" type="tTabVolo"/>
@@ -39,11 +39,6 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <xsd:complexType name="tTabUtente">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
 		<xsd:element name="utente" type="tUtente">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKU">
-				<xsd:selector xpath="utente"/>
-				<xsd:field xpath="@idU"/>  <!--provo a mettere nome uguale nome del campo -->
-			</xsd:key>
 		</xsd:element>
 	</xsd:sequence>	
 </xsd:complexType>
@@ -65,17 +60,6 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <xsd:complexType name="tTabUtenteRegistrato">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
 		<xsd:element name="utenteRegistrato" type="tUtenteRegistrato">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKUR">
-				<xsd:selector xpath="utenteRegistrato"/>
-				<xsd:field xpath="@idUR"/>
-			</xsd:key>
-			<!-- chiave esterna per vincolo ISA -->
-			<!-- utente -->
-			<xsd:keyref name="idFKU_UR" refer="idPKU">
-				<xsd:selector xpath="utenteRegistrato"/>
-				<xsd:field xpath="@idU"/>
-			</xsd:keyref>
 		</xsd:element>
 	</xsd:sequence>
 </xsd:complexType>
@@ -96,19 +80,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione tabella amministratore -->			
 <xsd:complexType name="tTabAmministratore">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
-		<xsd:element name="amministratore" type="tAmministratore">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKA">
-				<xsd:selector xpath="amministratore"/>
-				<xsd:field xpath="@idA"/>
-			</xsd:key>
-			<!-- chiave esterna per vincolo ISA -->
-			<!-- utente -->
-			<xsd:keyref name="idFKUR_A" refer="idPKUR">
-				<xsd:selector xpath="amministratore"/>
-				<xsd:field xpath="@idUR"/>
-			</xsd:keyref>
-		</xsd:element>
+		<xsd:element name="amministratore" type="tAmministratore"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record amministratore -->
@@ -120,28 +92,33 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 </xsd:complexType>
 
 
+<!-- 		    NAZIONE          -->
+
+<!-- definizione tabella nazione -->
+<xsd:complexType name="tTabNazione">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="nazione" type="tNazione"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record nazione -->
+<xsd:complexType name="tNazione">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+	</xsd:sequence>		
+	<xsd:attribute name="idN" type="tId"/>
+</xsd:complexType>
+
+
 <!-- 		    AEREOPORTO         -->
 
-<!-- definizione tabella aeroporto -->
-<xsd:complexType name="tTabAeroporto">
+<!-- definizione tabella aereoporto -->
+<xsd:complexType name="tTabAereoporto">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
-		<xsd:element name="aeroporto" type="tAeroporto">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKAp">
-				<xsd:selector xpath="aeroporto"/>
-				<xsd:field xpath="@idAp"/>
-			</xsd:key>
-			<!-- chiave esterna per vincolo 1:N -->
-			<!-- citta -->
-			<xsd:keyref name="idFKC_Ae" refer="idPKC">
-				<xsd:selector xpath="aeroporto"/>
-				<xsd:field xpath="@idC"/>
-			</xsd:keyref>
-		</xsd:element>
+		<xsd:element name="aereoporto" type="tAereoporto"/>
 	</xsd:sequence>	
 </xsd:complexType>
 <!-- definizione record aereoporto -->
-<xsd:complexType name="tAeroporto">
+<xsd:complexType name="tAereoporto">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="nome" type="xsd:string"/>
 	</xsd:sequence>
@@ -155,79 +132,26 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione tabella citta  -->
 <xsd:complexType name="tTabCitta">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
-		<xsd:element name="citta" type="tCitta">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKC">
-				<xsd:selector xpath="citta"/>
-				<xsd:field xpath="@idC"/>
-			</xsd:key>
-			<!-- chiave esterna -->
-			<!-- nazione -->
-			<xsd:keyref name="idFKN_C" refer="idPKN">
-				<xsd:selector xpath="citta"/>
-				<xsd:field xpath="@idN"/>
-			</xsd:keyref>
-		</xsd:element>
+		<xsd:element name="citta" type="tCitta"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record citta -->
 <xsd:complexType name="tCitta">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="nome" type="xsd:string"/>
+		<xsd:element name="flagServita" type="xsd:boolean"/> <!--se true:è servita da qualche volo atrimenti esiste sul db ma non è servita-->
 	</xsd:sequence>	
 	<xsd:attribute name="idC" type="tId"/>
 	<xsd:attribute name="idN" type="tId"/>
 </xsd:complexType>
 
 		
-
-<!-- 		    NAZIONE          -->
-
-<!-- definizione tabella nazione -->
-<xsd:complexType name="tTabNazione">
-	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="nazione" type="tNazione">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKN">
-				<xsd:selector xpath="nazione"/>
-				<xsd:field xpath="@idN"/>
-			</xsd:key>			
-		</xsd:element>	
-	</xsd:sequence>
-</xsd:complexType>
-<!-- definizione record nazione -->
-<xsd:complexType name="tNazione">
-	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="nome" type="xsd:string"/>
-	</xsd:sequence>		
-	<xsd:attribute name="idN" type="tId"/>
-</xsd:complexType>
-
-
-
 <!-- 		    TRATTA          -->
 
 <!-- descrizione tabella tratta -->			
 <xsd:complexType name="tTabTratta">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="tratta" type="tTratta">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKT">
-				<xsd:selector xpath="tratta"/>
-				<xsd:field xpath="@idT"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- aeroporto partenza -->
-			<xsd:keyref name="idFKApP_T" refer="idPKAp">
-				<xsd:selector xpath="tratta"/>
-				<xsd:field xpath="@idApP"/>
-			</xsd:keyref>
-			<!-- aeroporto ritorno -->
-			<xsd:keyref name="idFKApA_T" refer="idPKAp">
-				<xsd:selector xpath="tratta"/>
-				<xsd:field xpath="@idApA"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="tratta" type="tTratta"/>	
 	</xsd:sequence>	
 </xsd:complexType>
 <!-- definizione record tratta -->
@@ -246,13 +170,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella produttore aereo -->
 <xsd:complexType name="tTabProduttoreAereo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="produttoreAereo" type="tProduttoreAereo">
-		 	<!-- chiave primaria -->
-			<xsd:key name="idPKPA">
-				<xsd:selector xpath="produttoreAereo"/>
-				<xsd:field xpath="@idPA"/>
-			</xsd:key>
-		</xsd:element>	
+		<xsd:element name="produttoreAereo" type="tProduttoreAereo"/>	
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record produttore aereo -->
@@ -269,18 +187,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella tipo aereo -->
 <xsd:complexType name="tTabTipoAereo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="tipoAereo" type="tTipoAereo"> 
-			<!-- chiave primaria -->
-			<xsd:key name="idPKTA">
-				<xsd:selector xpath="tipoAereo"/>
-				<xsd:field xpath="@idTA"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<xsd:keyref name="idFKPA_TA" refer="idPKPA">
-				<xsd:selector xpath="tipoAereo"/>
-				<xsd:field xpath="@idPA"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="tipoAereo" type="tTipoAereo"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record tipo aereo -->
@@ -305,7 +212,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="infoSediliFile" type="xsd:string"/>
 	</xsd:sequence>
 	<xsd:attribute name="idTA" type="tId"/>
-	<xsd:attribute name="idPr" type="tId"/>		
+	<xsd:attribute name="idPA" type="tId"/>		
 </xsd:complexType>
 
 
@@ -314,18 +221,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella aereo -->
 <xsd:complexType name="tTabAereo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="aereo" type="tAereo">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKAe">
-				<xsd:selector xpath="aereo"/>
-				<xsd:field xpath="@idAe"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<xsd:keyref name="idFKTA_Ae" refer="idPKTA">
-				<xsd:selector xpath="aereo"/>
-				<xsd:field xpath="@idTA"/>
-			</xsd:keyref>
-		</xsd:element>				
+		<xsd:element name="aereo" type="tAereo"/>				
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record aereo -->
@@ -344,29 +240,13 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella volo-->
 <xsd:complexType name="tTabVolo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="volo" type="tVolo">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKV">
-				<xsd:selector xpath="volo"/>
-				<xsd:field xpath="@idV"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- tratta -->
-			<xsd:keyref name="idFKT_V" refer="idPKT">
-				<xsd:selector xpath="volo"/>
-				<xsd:field xpath="@idT"/>
-			</xsd:keyref>
-			<!-- aereo -->
-			<xsd:keyref name="idFKAe_V" refer="idPKAe">
-				<xsd:selector xpath="aereo"/>
-				<xsd:field xpath="@idAe"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="volo" type="tVolo"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record volo -->
 <xsd:complexType name="tVolo">	
 	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagAttivo" type="xsd:boolean"/> <!--true=> è eseguito altrimenti non è piu attivo-->
 		<xsd:element name="oraPartenza" type="xsd:time"/>
 		<xsd:element name="prezzo" type="xsd:float"/>
 		<xsd:element name="giorno" type="tGiorno"/> 
@@ -382,29 +262,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella prenotazione -->
 <xsd:complexType name="tTabPrenotazione">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="prenotazione" type="tPrenotazione">
-		 	<!-- chiave primaria -->
-			<xsd:key name="idPKP">
-				<xsd:selector xpath="prenotazione"/>
-				<xsd:field xpath="@idP"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- autore prenotazione -->
-			<xsd:keyref name="idFKUR_P" refer="idPKUR">
-				<xsd:selector xpath="prenotazione"/>
-				<xsd:field xpath="@idUR"/>
-			</xsd:keyref>
-			<!-- nominativo prenotazione -->
-			<xsd:keyref name="idFKU_P" refer="idPKU">
-				<xsd:selector xpath="prenotazione"/>
-				<xsd:field xpath="@idU"/>
-			</xsd:keyref>
-			<!-- volo prenotazione -->
-			<xsd:keyref name="idFKV_P" refer="idPKV">
-				<xsd:selector xpath="prenotazione"/>
-				<xsd:field xpath="@idV"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="prenotazione" type="tPrenotazione"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record prenotazione -->
@@ -426,37 +284,15 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella commento -->
 <xsd:complexType name="tTabCommento">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="commento" type="tCommento">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKCo">
-				<xsd:selector xpath="commento"/>
-				<xsd:field xpath="@idCo"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- utente autore-->
-			<xsd:keyref name="idFKUR_Co" refer="idPKUR">
-				<xsd:selector xpath="commento"/>
-				<xsd:field xpath="@idUR"/>
-			</xsd:keyref>
-			<!-- amministratore moderatore -->
-			<xsd:keyref name="idFKA_Co" refer="idPKA">
-				<xsd:selector xpath="commento"/>
-				<xsd:field xpath="@idA"/>
-			</xsd:keyref>
-			<!-- volo -->
-			<xsd:keyref name="idFKV_Co" refer="idPKV">
-				<xsd:selector xpath="commento"/>
-				<xsd:field xpath="@idV"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="commento" type="tCommento"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record commento -->
 <xsd:complexType name="tCommento">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="abiltato" type="xsd:boolean"/><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
+		<xsd:element name="abilitato" type="xsd:boolean"/><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
 		<xsd:element name="voto" type="xsd:integer"/> 
-		<xsd:element name="Testo" type="tTesto"/>
+		<xsd:element name="testo" type="tTesto"/>
 	</xsd:sequence>	
 	<xsd:attribute name="idCo" type="tId"/>
 	<xsd:attribute name="idV" type="tId"/>
@@ -471,19 +307,13 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella servizio -->			
 <xsd:complexType name="tTabServizio">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="servizio" type="tServizio">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKS">
-				<xsd:selector xpath="servizio"/>
-				<xsd:field xpath="@idS"/>
-			</xsd:key>
-		</xsd:element>	
+		<xsd:element name="servizio" type="tServizio"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record servizio -->
 <xsd:complexType name="tServizio">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="name" type="xsd:string"/><!--serve il nome del servizio eh!-->
+		<xsd:element name="nome" type="xsd:string"/><!--serve il nome del servizio eh!-->
 		<xsd:element name="descrizione" type="xsd:string"/>
 		<xsd:element name="prezzo" type="xsd:float"/>
 	</xsd:sequence>
@@ -496,24 +326,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella servizio  prenotato--> 
 <xsd:complexType name="tTabServizioPrenotato">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="servizioPrenotato" type="tServizioPrenotato">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKSP">
-				<xsd:selector xpath="servizioPrenotato"/>
-				<xsd:field xpath="@idSP"/>
-			</xsd:key>
-			<!--chiavi esterne-->
-			<!--prenotazione-->
-			<xsd:keyref name="idFKP_SP" refer="idPKP">
-				<xsd:selector xpath="servizioPrenotato"/>
-				<xsd:field xpath="@idP"/>
-			</xsd:keyref>
-			<!--servizio-->
-			<xsd:keyref name="idFKS_SP" refer="idPKS">
-				<xsd:selector xpath="servizioPrenotato"/>
-				<xsd:field xpath="@idS"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="servizioPrenotato" type="tServizioPrenotato"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record servizio prenotato-->
@@ -529,19 +342,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella news-->
 <xsd:complexType name="tTabNews">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
- 		<xsd:element name="News" type="tNews">
- 			<!-- chiave primaria -->
-			<xsd:key name="idPKNe">
-				<xsd:selector xpath="news"/>
-				<xsd:field xpath="@idNe"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- amministratore autore-->
-			<xsd:keyref name="idFKA_Ne" refer="idPKA">
-				<xsd:selector xpath="news"/>
-				<xsd:field xpath="@idA"/>
-			</xsd:keyref>
-		</xsd:element>	
+ 		<xsd:element name="news" type="tNews"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record News -->
@@ -560,19 +361,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- descrizione tabella faq -->
 <xsd:complexType name="tTabFaq">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-		<xsd:element name="faq" type="tFaq">
-			<!-- chiave primaria -->
-			<xsd:key name="idPKF">
-				<xsd:selector xpath="faq"/>
-				<xsd:field xpath="@idF"/>
-			</xsd:key>
-			<!-- chiavi esterne -->
-			<!-- amministratore autore-->
-			<xsd:keyref name="idFKA_F" refer="idPKA">
-				<xsd:selector xpath="faq"/>
-				<xsd:field xpath="@idA"/>
-			</xsd:keyref>
-		</xsd:element>	
+		<xsd:element name="faq" type="tFaq"/>
 	</xsd:sequence>
 </xsd:complexType>
 <!-- definizione record Faq -->
@@ -585,9 +374,6 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idA" type="tId"/>	
 </xsd:complexType>
 
-
-
-			
 			
 <!-- definizione tipo testo -->
 <xsd:complexType name="tTesto">
@@ -601,25 +387,25 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione tipo Id -->
 <xsd:simpleType name="tId">
 	<xsd:restriction base="xsd:integer">
-		<xsd:minExclusive value="1"/>
+		<xsd:minInclusive value="1"/>
 	</xsd:restriction>
 </xsd:simpleType>	
 
 <!-- definizione tipo Giorno -->
 <xsd:simpleType name="tGiorno">
-	<xsd:union memberTypes="tNumGiorno tNomeGiorno" />
+	<xsd:union memberTypes="tNumGiorno tnomeGiorno" />
 </xsd:simpleType>
 
 <!-- definizione tipo NumGiorno -->
 <xsd:simpleType name="tNumGiorno">
 	<xsd:restriction base="xsd:integer">
-		<xsd:minExclusive value="1"/>
+		<xsd:minInclusive value="1"/>
 		<xsd:maxExclusive value="7"/>
 	</xsd:restriction>
 </xsd:simpleType>	
 
-<!-- definizione tipo NomeGiorno -->
-<xsd:simpleType name="tNomeGiorno">
+<!-- definizione tipo nomeGiorno -->
+<xsd:simpleType name="tnomeGiorno">
 	<xsd:restriction base="xsd:string">
 		<xsd:enumeration value="lunedi"/>
 		<xsd:enumeration value="martedi"/>				
