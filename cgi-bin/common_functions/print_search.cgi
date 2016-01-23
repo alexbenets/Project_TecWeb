@@ -45,7 +45,8 @@ sub list_tratte {
 }
 
 sub print { 
-	my ($errori, $andata, $partenza, $arrivo, $data_partenza, $data_ritorno, $passeggeri)=@_;
+	my ($errori, $andata, $partenza, $arrivo, $data_partenza, $data_ritorno, $passeggeri, $vuoto)=@_;
+	#vuoto:bypass per evitare di stampare errori nella pagina index.cgi
 	if(!defined $data_partenza | $data_partenza==0){
 		$data_partenza="Data partenza";
 	}
@@ -54,6 +55,9 @@ sub print {
 	}
 	if ((defined $data_partenza & $data_partenza>0)&(defined $data_ritorno & $data_ritorno>0)){
 		$errori|=8;
+	}
+	if($vuoto==1){
+		$errori=0;
 	}
 my $testo= "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->

@@ -36,8 +36,40 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
+
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/seleziona_voli.cgi");
+
+my $volo_andata=$form{"volo_andata"};
+my $volo_ritorno=$form{"volo_ritorno"};
+my $giorno_partenza=$form{"giorno_partenza"};
+my $giorno_ritorno=$form{"giorno_ritorno"};
+
+my $selezione=0;#se la pagina è stata caricata in seguito ad un back
+
+if($volo_andata eq ""){#forse sono tornato indietro o sono appena arrivato?
+	$volo_andata=gestione_sessione::getParam("volo_andata");
+}else{
+	gestione_sessione::setParam("volo_andata",$volo_andata);
+}
+if($giorno_partenza eq ""){#forse sono tornato indietro o sono appena arrivato?
+	$giorno_partenza=gestione_sessione::getParam("giorno_partenza");
+}else{
+	gestione_sessione::setParam("giorno_partenza",$giorno_partenza);
+}
+
+if($volo_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
+	$volo_ritorno=gestione_sessione::getParam("volo_ritorno");
+}else{
+	gestione_sessione::setParam("volo_ritorno",$volo_ritorno);
+}
+
+if($giorno_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
+	$giorno_ritorno=gestione_sessione::getParam("giorno_ritorno");
+}else{
+	gestione_sessione::setParam("giorno_ritorno",$giorno_ritorno);
+}
+
 
 
 #dati recuperati dalle variabili di sessione
@@ -48,6 +80,39 @@ my $select_arrivo=gestione_sessione::getParam("arrivo");
 my $data_partenza=gestione_sessione::getParam("data_partenza");
 my $data_ritorno=gestione_sessione::getParam("data_ritorno");
 my $select_passeggeri=gestione_sessione::getParam("passeggeri");
+
+
+
+if(!($volo_andata eq "")){
+	$selezione=1;
+}
+if(!($giorno_partenza eq "")){
+	$selezione+=2;
+}
+if(!($volo_ritorno eq "")){
+	$selezione+=4;
+}
+if(!($giorno_ritorno eq "")){
+	$selezione+=8;
+}
+if(!($form{"visitato"} eq "1")){
+	$selezione=0;
+}
+
+if($selezione>0){ #se ho selezionato tutti i valori desiderati
+	if($andata==1){
+		if(($selezione&3)==3){ #se ho impostato sia la data che l'ora di partenza
+			print "Location: dati_passeggeri.cgi\n\n";
+			#redirect alla pagina desiderata.
+		}
+	}
+	else {
+		if(($selezione&15)==15){ #se ho impostato sia partenza che ritorno
+			print "Location: dati_passeggeri.cgi\n\n";
+			#redirect alla pagina desiderata.
+		}
+	}
+}
 
 #$andata=0;
 #$select_partenza="Milano - Linate";
@@ -66,7 +131,7 @@ my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires 
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
-print "
+print "$andata $selezione
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\">
 	<head>
@@ -175,11 +240,11 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				$classe="scacchiera";
 			}
 			my $selected;
-			if(((@elemento[$altezza]->[0]) eq $form{"volo_andata"}) and ((@elemento[$altezza]->[5]) eq $form{"giorno_partenza"})){
+			if(((@elemento[$altezza]->[0]) eq $volo_andata) and ((@elemento[$altezza]->[5]) eq $giorno_partenza)){
 				$selected="volo_selected";
 			}
 			$testo.='<td class="'.$classe.' '.$selected.'">
-									<a href="search.cgi?volo_andata='.@elemento[$altezza]->[0].'&giorno_partenza='.@elemento[$altezza]->[5].'">
+									<a href="search.cgi?volo_andata='.@elemento[$altezza]->[0].'&giorno_partenza='.@elemento[$altezza]->[5].'&visitato=1">
 										<object>
 											<div class="seleziona_cella">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
@@ -275,8 +340,12 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			if((($altezza+$giorno)%2)==0){
 				$classe="scacchiera";
 			}
-			$testo.='<td class="'.$classe.'">
-									<a href="#">
+			my $selected;
+			if(((@elemento[$altezza]->[0]) eq $volo_ritorno) and ((@elemento[$altezza]->[5]) eq $giorno_ritorno)){
+				$selected="volo_selected";
+			}
+			$testo.='<td class="'.$classe.' '.$selected.'">
+									<a href="search.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&giorno_ritorno='.@elemento[$altezza]->[5].'&visitato=1">
 										<object>
 											<div class="seleziona_cella">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>

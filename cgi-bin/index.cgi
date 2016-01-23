@@ -4,18 +4,33 @@
 package index_page;
 
 use strict;
-#use warnings;
+use CGI::Carp qw(fatalsToBrowser);
+use CGI qw(:standard);
+use CGI;
 
 
 require "common_functions/print_header.cgi";
 require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
-
+require "common_functions/Session.cgi";
+require "common_functions/check_form.cgi";
 
 my $titolo="Home";
 
-print "Content-type: text/html\n\n";
+
+my $create=gestione_sessione::createSession();
+gestione_sessione::setParam("location","/cgi-bin/index.cgi");
+
+my $select_partenza=gestione_sessione::getParam("partenza");
+my $select_arrivo=gestione_sessione::getParam("arrivo");
+my $data_partenza=check_form::leggi_data(gestione_sessione::getParam("data_partenza"));
+my $data_ritorno=check_form::leggi_data(gestione_sessione::getParam("data_ritorno"));
+my $select_passeggeri=gestione_sessione::getParam("passeggeri");
+
+my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
+
+print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
@@ -51,7 +66,7 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_search::print();
+print print_search::print(0, 1, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri,1);
 print print_content::print("ciao");
 print "		</div>"; #chiudo il div main
 print print_footer::print();

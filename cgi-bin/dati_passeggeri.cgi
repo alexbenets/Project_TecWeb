@@ -16,6 +16,10 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 
+require "common_functions/Session.cgi";
+
+my $create=gestione_sessione::createSession();
+gestione_sessione::setParam("location","/cgi-bin/dati_passeggeri.cgi");
 
 my %form;
 
@@ -26,31 +30,67 @@ foreach my $p (param()) {
 }
 
 my $errori=0;
-my $passeggeri=1; #poi verrà letta dalla variabile di sessione apposita.
+my $passeggeri=gestione_sessione::getParam("passeggeri");
 my @dati;
 for(my $i=1; $i<=$passeggeri; $i++){
 	my $errore=0;
-	my $nome=defined ($form{"Nome$i"})?$form{"Nome$i"}:"Nome";
+	my $nome="Nome";
+	if (defined ($form{"Nome$i"})){
+		$nome=$form{"Nome$i"};
+		gestione_sessione::setParam("Nome$i", $nome);
+	}else{
+		my $temp=gestione_sessione::getParam("Nome$i");
+		if(defined($temp)){
+			$nome=$temp;
+		}
+	}
 	if((check_form::valida_nominativo($nome)==0) & defined ($form{"Nome$i"})){
 		#errore
 		$errori++;
 		$errore=1;
 	}
 	
-	my $cognome=defined ($form{"Cognome$i"})?$form{"Cognome$i"}:"Cognome";
+	my $cognome="Cognome";
+	if (defined ($form{"Cognome$i"})){
+		$cognome=$form{"Cognome$i"};
+		gestione_sessione::setParam("Cognome$i", $cognome);
+	}else{
+		my $temp=gestione_sessione::getParam("Cognome$i");
+		if(defined($temp)){
+			$cognome=$temp;
+		}
+	}
 	if((check_form::valida_nominativo($cognome)==0) & defined ($form{"Cognome$i"})){
 		#errore
 		$errori++;
 		$errore|=2;
 	}
 	
-	my $cf=defined ($form{"CF$i"})?$form{"CF$i"}:"Codice fiscale";
+	my $cf="Codice fiscale";
+	if (defined ($form{"CF$i"})){
+		$cf=$form{"CF$i"};
+		gestione_sessione::setParam("CF$i", $cf);
+	}else{
+		my $temp=gestione_sessione::getParam("CF$i");
+		if(defined($temp)){
+			$cf=$temp;
+		}
+	}
 	if((check_form::valida_codice_fiscale($form{"CF$i"})==0) & defined ($form{"CF$i"})){
 		#errore
 		$errori++;
 		$errore|=4;
 	}
-	my $nascita=defined ($form{"nascita$i"})?$form{"nascita$i"}:"32/02/1900";
+	my $nascita="32/02/1900";
+	if (defined ($form{"nascita$i"})){
+		$nascita=$form{"nascita$i"};
+		gestione_sessione::setParam("nascita$i", $nascita);
+	}else{
+		my $temp=gestione_sessione::getParam("nascita$i");
+		if(defined($temp)){
+			$nascita=$temp;
+		}
+	}
 	if((check_form::controlla_data_passeggero($form{"nascita$i"})==0) & defined ($form{"nascita$i"})){
 		#errore
 		$errori++;
@@ -65,7 +105,7 @@ for(my $i=1; $i<=$passeggeri; $i++){
 }
 
 
-if(($errori==0)&defined($form{"avanti"})){
+if((($errori==0)&defined($form{"avanti"})| $passeggeri==0)){
  #passo successivo	
  print "Location: servizi_aggiuntivi.cgi\n\n";
  exit;
