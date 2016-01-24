@@ -1,6 +1,9 @@
 NOTA MOLTO BENE:= ->@ HA DUE DIVERSI SIGNIFICATI: a SINISTRA dell'uguale  "=" rappresenta un ARRAY PERL  
 											   a DESTRA dell'uguale "=" O DOPO UNA PARENTESI QUADRA "[" rappresenta un ATTRIBUTO XPATH
-				 ->ricorda che se vuio solo il testo di un nodo devi aggiungere text() alla fine
+				  ->ricorda che se vuio solo il testo di un nodo devi aggiungere text() alla fine
+
+				  ->IRRILEVANTE) SEGNALA CHE QUELLA PARTE DI TESTO, DALLA VISUALIZZAZIONE INIZIALE DELLA PAGINA FINO AL PASSAGGIO AD UN ALTRO ARGOMENTO (UN ALTRA 
+				  PAGINA) RIGUARDA TEMI CHE ABBIAMO DECISO DI MANTENERE STATICI
 
 CONTIENE MANIPOLA PER SUPERADMIN E AMMINISTRATORE
 
@@ -11,18 +14,18 @@ PUÒ INTERVENIRE SU
 -TABCITTA (SUPERADMIN) DONE
 -TABNAZIONE (SUPERADMIN) DONE
 -TABTRATTA (SUPERADMIN)  AL?
--TABVOLO (SUPERADMIN)  AL?
--TABAEREO (SUPERADMIN) DONE
--TABTIPOAEREO (SUPERADMIN) DONE
--TABPRODUTTOREAEREO (SUPERADMIN) DONE
--TABCOMMENTO (SUPERADMIN E AMMINISTRATORE) Done(?) 
+-TABVOLO (SUPERADMIN)  AL? 
+IRRILEVANTE)-TABAEREO (SUPERADMIN) DONE 
+IRRILEVANTE)-TABTIPOAEREO (SUPERADMIN) DONE
+IRRILEVANTE)-TABPRODUTTOREAEREO (SUPERADMIN) DONE
+IRRILEVANTE)-TABCOMMENTO (SUPERADMIN E AMMINISTRATORE) Done(?) 
 -TABSERVIZIO (SUPERADMIN) DONE
--TABNEWS (SUPERADMIN E AMMINISTRATORE) DONE
--TABFAQ (SUPERADMIN E AMMINISTRATORE) DONE
+IRRILEVANTE)-TABNEWS (SUPERADMIN E AMMINISTRATORE) DONE
+IRRILEVANTE)-TABFAQ (SUPERADMIN E AMMINISTRATORE) DONE
 
 in particolare:
 
-IN primo luogo devo controllare 
+IRRILEVANTE)IN primo luogo devo controllare 
 che l'utente abbia accesso alle 
 pagine che richiede: 						$flagSA=/database/tabAmministratore/amministratore[@idA=$idSA]/superAdmin
 per $idSA contenente l'id del SA 			$idSA=/database/tabUtenteRegistrato/utenteRegistrato[mail=$cookie]/@idA
@@ -35,14 +38,14 @@ modificare solo le tabelle con un attributo diA
 le pagine a disposizione dell'amministratore SA sono:
 1->UNA pagina che contiene tutte le informazioni relative a Nazioni, Citta e aereoporti
 2->una pagina che si occupa di Tratte e Voli
-3->una pagina che si occupa dei Produttori degli aerei, i tipi di aerei e gli aerei NO
+IRRILEVANTE)3->una pagina che si occupa dei Produttori degli aerei, i tipi di aerei e gli aerei NO
 4->una pagina riguardante i servizi
-5->una pagina riguardante le news S
-6->una pagina riguardante le faq S
-7->una pagina riguardante i commenti S
-8->UNA PAGINA RIGUARDANTE UTENTI E AMMINISTRATORI MINE
+IRRILEVANTE)5->una pagina riguardante le news S
+IRRILEVANTE)6->una pagina riguardante le faq S
+IRRILEVANTE)7->una pagina riguardante i commenti S
+8->UNA PAGINA RIGUARDANTE UTENTI E AMMINISTRATORI 
 
-NB una tabella può essere modificata solo a partire da form chiamate dalla pagina che se ne occupa QUINDI:
+IMPORTANTE)NB una tabella può essere modificata solo a partire da form chiamate dalla pagina che se ne occupa QUINDI:
 ESEMPIO:
 1)	per creare una citta/aereoporto o nazione posso agire solo dalla pagina 1; SE POI voglio creare una nuova tratta e passo alla pagina 2 da li non posso creare
 	un nuovo aereporto, ma solo scelgire da una select quelli già disponibili (è una buona soluzione?)
@@ -131,7 +134,7 @@ AGGIORNO PAGINA
 ->seleziono l'id dell'aereoporto $daCancellare	$daCancellare=/database/tabAereoporto/aereoporto[nome=$nomeDacancellare]/@idAp
 ->controllo se quell'aereoporto era impiegato 
 da qualche tratta
-	->if($inPartenza=/database/tabTratta/tratta[@idApP=$daCancellare]/durata[1] OR $inarrivo=/database/tabTratta/tratta[@idApP=$daCancellare]/durata[1]){
+	->if($inPartenza=/database/tabTratta/tratta[@idApP=$daCancellare]/idT OR $inarrivo=/database/tabTratta/tratta[@idApP=$daCancellare]/idT){
 				$flagIntoccabile=true;
 			}
 			else{
@@ -142,18 +145,10 @@ da qualche tratta
 		tratte che partono @partenzaT 	 		@partenzaT=/database/tabTratta/tratta[@idApP=$daCancelllare]/@idT
 		o arrivano @arrivoT da quell'aereoporto @arrivoT=/database/tabTratta/tratta[@idApP=$daCancelllare]/@idT
 		allora quella città è intoccabile perche servita da una tratta;
-			->SE $flagIntoccabile=TRUE=> 
-			impedisco distruzione record,
-			segnalo che l'aereoporto è servito 
-			da delle tratte e quindi è intoccabile
-				->IN PARTICOLARE segnalo 
-				@partenzaT e @arrivoT l'id 
-				delle tratte e chiedo se si 
-				desidera eliminarle  (!!!)
-				->salvo $da cancellare e vado 
-				alla pagina delle tratte con $flagTornaAereoporto=true 
-				per ricordarmi che devo riportare 
-				SA all'eliminazione del aereoporto dal quale è partito 
+		MA POSSO RENDERLA INATTIVA:
+		->cambio il valore del sottoemenento flagAttivoda TRUE a FALSE sul nodo corrispondenta a $daCancellare: 
+												$modificaFlag=/database/tabAereoporto/aereoporto[@idC=$daCancellare]/flagAttivo
+												=>$modificaFlag=false		
 			->SE $flagIntoccabile=FALSE elimino l'aereoporto dal database
 AGGIORNO PAGINA
 
@@ -193,6 +188,10 @@ e preme il bottone "ELIMINA CITTà"
 ->controllo se la citta ha degli 
 aereoporti serviti							@idApC=/database/tabAereoporto/aereoporto[@idC=$idCitta]/@idAp
 	->SE @idApC!=0 ha valore TRUE non posso cancellare la citta	
+		MA POSSO RENDERLA INATTIVA:
+		->cambio il valore del sottoemenento flagAttivo da TRUE a FALSE sul nodo corrispondenta a $daCancellare: 
+												$modificaFlag=/database/tabCitta/citta[@idC=$daCancellare]/flagAttivo
+												=>$modificaFlag=false		
 	->SE FALSE elimino la città dal database
 AGGIORNO PAGINA
 
@@ -227,12 +226,15 @@ da cancellare 						$idNaz=/database/tabNazione/nazione[nome=$nomeCliccato]/@idN
 ->controllo se questo è contenuto 
 nell'attributo @idN di qualche citta
 ->se TRUE=> non posso cancellare la nazione
-e chiedo a SA di cancellare prima le città e poi di riprovare
+		MA POSSO RENDERLA INATTIVA:
+		->cambio il valore del sottoemenento flagAttivoda TRUE a FALSE sul nodo corrispondenta a $daCancellare: 
+												$modificaFlag=/database/tabNazione/nazione[@idC=$daCancellare]/flagAttivo
+												=>$modificaFlag=false		
 ->se FALSE=> cancello dal xml la nazione con quell'id
 
 VISUALIZZAZIONE PAGINA 2
 (PAG VOLI/TRATTE)
-DA MODIFICARE PESANTEMENTE E TROVARE LE COSE DI ALESSANDRO
+ORGANIZZATO DA ALESSANDRO
 TABVOLO (SUPERADMIN) e TABTRATTE
 hanno un rapporto simile a quello tra AEREO e TIPOAEREO: ogni volo deve fare riferimento ad una tratta e una tratta può avere più voli;
 la pagina di visualizzazione dell'amministratore potrebbe quindi avere un'organizzazione:
@@ -310,7 +312,7 @@ un aereo fisico si trova in un dato aereoporto
 
 
 
-VISUALIZZAZIONE PAGINA 3
+IRRILEVANTE)VISUALIZZAZIONE PAGINA 3
 
 (PAG AEREI/MODELLI/PRODUTTORI)
 Gli aerei sono oggetti fisici che possono essere impiegati per compiere voli. Un aereo può eseguire più voli in una giornata
@@ -505,15 +507,18 @@ AGGIORNA PAGINA
 											/@idSP ha almeno un elemento
 in qualche pernotazione						  
 	->se $flagServPren=TRUE interrompo 
-	=> segnalo che esitono prenotazioni che hanno richiesto quel servizio e che quindi non posso eliminarlo... FORSE VA INSERITO UN CAMPO CHE IMPEDISCA CHE IL 
-	SERVIZIO POSSA ESSERE PI§ RICHIESTO? 
+	=> segnalo che esitono prenotazioni che hanno richiesto quel servizio e che quindi non posso eliminarlo
+		MA POSSO RENDERLO INATTIVO:
+		->cambio il valore del sottoemenento flagAttivoda TRUE a FALSE sul nodo corrispondenta a $daCancellare: 
+												$modificaFlag=/database/tabServizio/servizio[@idC=$daCancellare]/flagAttivo
+												=>$modificaFlag=false		
 	->altrimenti proseguo
-->elimino il nodo ProduttoreAereo
+		->elimino il nodo 
 AGGIORNA PAGINA
 
 
 
-VISUALIZZAZIONE PAGINA 5
+IRRILEVANTE)VISUALIZZAZIONE PAGINA 5
 
 (PAG NEWS)
 In termini di organizzazione i vari articoli sono organizzati in base alla data e identificati dal titolo
@@ -565,7 +570,7 @@ AGGIORNA PAGINA
 AGGIORNA PAGINA
 
 
-VISUALIZZAZIONE PAGINA 6
+IRRILEVANTE)VISUALIZZAZIONE PAGINA 6
 
 In termini di organizzazione i vari articoli sono organizzati in base all'argomento (bagagli, documenti di imbarco ecc), ed identificati dal titolo (la struttura usata da ryanair).
 per visualizzarle dunque:
@@ -615,7 +620,7 @@ AGGIORNA PAGINA
 
 
 
-VISUALIZZAZIONE PAGINA 7
+IRRILEVANTE)VISUALIZZAZIONE PAGINA 7
 
 In termini di organizzazione i vari commenti sono organizzati in base alla data (piu recenti in primo piano così che quelli da manipolare maggiormente siano subito
 visibili) e al volo a chi si rifersiscono(?).
@@ -686,14 +691,24 @@ o rendere cliente una voce di amministratore
 ->perl salva l'id dell'utente 							$idNewAmm=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idUR
 ->creo sulla tabella tabAmministratore
 un nuovo record con @idUR=$idNewAll
-e superAdmin=false
 ->aggiorno pagina
 
 8-B)ELIMINARE UN AMMINISTRATORE
 ->scelgo l'amministratore da cancellare
-->perl salva l'id dell'utente 							$idDaEliminare=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idUR
+->perl salva l'id dell'utente 							$idDaEliminare=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idAm (? è ancora questa
+														la chiave interna di amministratore giusto?)
 ->cerco record sulla tabella tabAmministratore
 con @idUR=$idDaEliminare
-->SE $superAdmin=false ok cancello
-->ALTRIMENTI segnalo errore "non si può cancellare SA" 
+->elimino il nodo dalla tabella Amministratore, resta su utente registrato
+->aggiorno pagina
+
+8-C)BANNA UN UTENTE
+->scelgo l'utente registrato da bloccare
+->perl salva l'id dell'utente 							$idDaEliminare=/database/tabUtenteRegistrato/utenteRegistrato[mail=$mailcliccata]/@idUR
+->cerco record sulla tabella tabUtenteRegistrato
+con @idUR=$idDaEliminare
+->cambio il valre del sottoelemento 
+flagAttivo da true a false 								$modificaFlag=/database/tabUtenteRegistrato/utenteRegistrato[@idUR=$idDaEliminare]/flagAttivo
+														=>$modificaFlag=False
+														=>salva su xml
 ->aggiorno pagina
