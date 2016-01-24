@@ -12,13 +12,13 @@ il sito per utente è contiene:
 	il link per la registrazione/login degli utenti, il menù con i link alle altre pagine, un testo statico di presentazione del sito(? 		
 	nella pagina html/css fatta mi pare ci fossero dei paragrafi che andavano riempiti da qualche testo?) 
 
-->la pagina dei SERVIZI(D(?) Presenta i servizi aggiuntivi che il sito permette di aggiungere alla prenotazione del volo) DONE
+->la pagina dei SERVIZI(D Presenta i servizi aggiuntivi che il sito permette di aggiungere alla prenotazione del volo) 
 
 ->la pagina delle città(D(?) presenta le città raggiungibili da tratte offerte dalla compagnia)
 
-->la pagina delle FAQ (D contiene le domande, ragguppate secondo argomento, sui servizi offerti, sulla compagnia e sul sito) DONE
+->la pagina delle FAQ (S contiene le domande, ragguppate secondo argomento, sui servizi offerti, sulla compagnia e sul sito) 
 
-->la pagina delle NEWS(D contiene le (?ultime) notizie sulla compagnia, i servizi offerti e sul sito) DONE
+->la pagina delle NEWS(S(?) contiene le notizie sulla compagnia, i servizi offerti e sul sito) 
 
 ->la pagina CHI SIAMO (S contiene informazioni sulla politica(?potrebbe essere integrata con la pagina della storia della compagnia) 
 
@@ -33,7 +33,7 @@ il sito per utente è contiene:
 ->la pagina dedicata alle PRENOTAZIONI EFFETTUATE E DEI COMMENTI degli utenti registrati (D contiene le prenotazioni effettuate da un certo utente, permettendo all'utente di modificare ed eliminare quelle indesiderate; inoltre contiene i commenti scritt dall'utente e permette di crearne di nuovi (?cancellarne e modificare gli esistenti=> sono funzionalità di cui si potrebbe sperare di non aver bisogno) 
 
 
-PAGINA DELLE FAQ (struttura identica qualora si volesse fare dinamica la pagina dei TERMINI E DELLE CONDIZIONI)
+IRRILEVANTE) PAGINA DELLE FAQ (struttura identica qualora si volesse fare dinamica la pagina dei TERMINI E DELLE CONDIZIONI) IRRILEVANTE
 In termini di organizzazione i vari articoli sono organizzati in base all'argomento (bagagli, documenti di imbarco ecc), ed identificati dal titolo (la struttura usata da ryanair).
 per visualizzarle dunque:
 ->entro nella tabella tabFaq
@@ -55,7 +55,7 @@ leghi un argomento ai suoi articoli?)
 							$contenuto=database/tabFaq/faq[@idF=$articoli]/testo/contenuto
 fine
 
-PAGINA DELLE NEWS
+IRRILEVANTE) PAGINA DELLE NEWS 
 In termini di organizzazione i vari articoli sono organizzati in base alla data e identificati dal titolo
 ->entro nella tabella tabNews
 ->creo un array contenente le date @date=/database/tabNews/news/testo/data
@@ -82,7 +82,7 @@ PAGINA DEI SERVIZI
 In termini di organizzazione si potrebbe usare semplicemente l'ordine alfabetico (?)
 ->entro nella tabella tabServizi
 ->creo un array contenente 
-i nomi dei servizi 		@servizi=/database/tabServizio/servizio/nome
+i nomi dei servizi 		@servizi=/database/tabServizio/servizio[flagAttivo=true]/nome
 ->organizzo questo
 array in ordine alfabetico
 ->per ogni servizio: 
@@ -100,7 +100,7 @@ Organizzata per nazioni, a loro volte organizzate in ordine alfabetico (?)
 nazioni						@idN=/database/tabNazione/nazione/@idN
 							@nomeN=/database/tabNazione/nazione/nome
 ->per ogni nazione cerco 
-le citta che le appartengono @idC=citta di una nazione /database/tabCitta/citta[@idN=$idN]/idC
+le citta SERVITE che le appartengono @idC=citta di una nazione /database/tabCitta/citta[@idN=$idN and flagAttivo=true]/idC
 ->per ogni nazione
 	->visualizza nome nazione $nomeN=/database/tabNazione/nazione[@idN=$idN]/nome
 	->visualizza i nomi delle
@@ -109,7 +109,7 @@ le citta che le appartengono @idC=citta di una nazione /database/tabCitta/citta[
 	quella citta $nomeC, $immagineC,
 	$descrizioneC 			$campoC=/database/tabCitta/citta[idC=$idC]/campo
 
-PAGINA DELLA FLOTTA
+IRRILEVANTE)PAGINA DELLA FLOTTA
 Organizzata in base ai produttiri dei modelli impiegati dalla compagnia
 -> trovo gli id dei produttori @idProd=/database/tabProduttoreAereo/produttoreAereo/@idPA
 -> trovo i nomi dei produttori @nomiProd=/database/tabProduttoreAereo/produttoreAereo/nome
@@ -163,7 +163,7 @@ Manipola per utenti
 																					$nomeCittaArrivo=/database/tabCitta/citta[@idC=idCittaArrivo]/nome
 				-la data alla quale era stata effettuata							$data=$prenotazioni/data
 			e: 
-			A)ne seleziona una, se la data della partenza è passata, 				$vecchia=booleano true=$prenotazioni/datapartenza<dataCorrente(!!!libreria?)
+			IRRILEVANTE)A)ne seleziona una, se la data della partenza è passata, 	$vecchia=booleano true=$prenotazioni/datapartenza<dataCorrente(!!!libreria?)
 			 può esprimere un commento sul volo 
 			 (dalla prenotazione recupero idFKV 									$idVolo=$prenotazioni/@idV 
 			 e lo uso come valore x creare un nodo commento con quel valore 
@@ -176,9 +176,11 @@ Manipola per utenti
 			 ->e x modifica utente compila form campo x campo 
 			 e si salvano le modifiche ai singoli campi(se è presente input)	$commentiFatti/CAMPO
 			 ->per elimina, si elimina il nodo $commentiFatti  				
+			
 			B) fino a x giorni prima può cancellare la prenotazione:
 			->check data partenza è distante almeno $nGiorni					$prenotazioni/dataPartenza-$oggi>$nGiorni(!!!libreria)   
 			->elimina i nodi corrisponenti su tabPrenotazione 					$prenotazioni
+			
 			C)modifica la prenotazione
 				->togli un servizio
 					->cerca le voci della tabella servizioPrenotato
