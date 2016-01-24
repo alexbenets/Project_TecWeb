@@ -19,13 +19,15 @@ require "common_functions/Session.cgi";
 
 
 sub compareDate{
+#controllo se la data "partenza" è inferiore o uguale alla data di "ritorno"
+#questa funzione viene utilizzata per evitare di selezionare una data di ritorno inferiore o uguale ad una data di partenza.
 	my($partenza, $ritorno)=@_;
 	my $gma=check_form::regexp_data($partenza);
-	my $giorno=$gma->[0];
-	my $mese=$gma->[1];
-	my $anno=$gma->[2];
+	my $giorno=int($gma->[0]);
+	my $mese=int($gma->[1]);
+	my $anno=int($gma->[2]);
 	if($giorno+$mese+$anno==0){
-		return 1; #non posso confrontare
+		return 0; #non posso confrontare
 	}
 	my $dt1 = DateTime->new( 
 					year       => $anno,
@@ -37,14 +39,15 @@ sub compareDate{
 	$mese=$gma->[1];
 	$anno=$gma->[2];
 	if($giorno+$mese+$anno==0){
-		return 1; #non posso confrontare
+		return 0; #non posso confrontare
 	}
 	my $dt2 = DateTime->new( 
 					year       => $anno,
       				month      => $mese,
       				day        => $giorno
       				);
-    if($ritorno<=$partenza){
+    my $cmp=DateTime->compare($dt1,$dt2);
+    if($cmp>=0){
     	return 0;#no
     }
     return 1;#tutto ok
@@ -139,6 +142,12 @@ if(!($form{"visitato"} eq "1")){
 	gestione_sessione::setParam("numero_selezioni_voli",$click);
 }
 
+
+if(compareDate($giorno_partenza, $giorno_ritorno)==0){
+	$giorno_ritorno=0;
+	gestione_sessione::setParam("numero_selezioni_voli",0);
+}
+
 if($selezione>0){ #se ho selezionato tutti i valori desiderati
 	if($andata==1){
 		if(($selezione&3)==3){ #se ho impostato sia la data che l'ora di partenza
@@ -212,6 +221,8 @@ print print_header::print();
 
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
+print "$data_partenza $data_ritorno ".compareDate($data_partenza, $data_ritorno);
+
 my $date_tabella='';
 for(my $dd=-3; $dd<=3; $dd++){
 	#da -6 giorni a + 6 giorni
@@ -273,7 +284,6 @@ for(my $dd=-3; $dd<=3; $dd++){
 		$max_altezza=scalar(@{$temp});
 	}
 }
-print $giorno_partenza;
 #poi scorro i vari elementi
 for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 	$testo.='<tr>';
@@ -295,12 +305,14 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			}
 			$testo.='<td class="'.$classe.' '.$selected.'">';
 			my $data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
-			print "<p>$data_ok @elemento[$altezza]->[5],$giorno_ritorno</p>";			
-							if($data_ok>0){
-								$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
-							}
+			my $classe_cella="seleziona_cella";
+			if($data_ok>0){
+				$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
+			}else {
+				$classe_cella=" disabled";
+			}	
 							$testo.='			<object>
-											<div class="seleziona_cella">
+											<div class="'.$classe_cella.'">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
@@ -379,6 +391,7 @@ for(my $dd=-3; $dd<=3; $dd++){
       				month      => $mese,
       				day        => $giorno
       				);
+	$dt2=$dt2->add(days =>$dd);
 	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
 	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, $select_passeggeri, 3)};
 	push @voli_settimana, $temp;
@@ -409,19 +422,27 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				
 			}
 			if(!(@elemento[$altezza]->[1] eq '')){
-				$testo.='<td class="'.$classe.' '.$selected.'">
-									<a href="seleziona_voli.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&amp;giorno_ritorno='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;ritorno=1">
-										<object>
-											<div class="seleziona_cella">
+				$testo.='<td class="'.$classe.' '.$selected.'">';
+				my $data_ok=compareDate($giorno_partenza,@elemento[$altezza]->[5]);	
+				my $classe_cella="seleziona_cella";
+				if($data_ok>0){
+					$testo.='	<a href="seleziona_voli.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&amp;giorno_ritorno='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;ritorno=1">';
+				}else{
+					$classe_cella="disabled";
+				}
+				$testo.='			<object>
+											<div class="'.$classe_cella.'">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
 												<p>Prezzo: '.@elemento[$altezza]->[3].'&euro;</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
 											</div>
-										</object>
-									</a>	
-									</td>';
+										</object>';
+							if($data_ok>0){		
+								$testo.='</a>	';
+							}
+							$testo.='		</td>';
 			}else{
 				$testo.="<td></td>";
 			}

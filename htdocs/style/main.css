@@ -506,7 +506,16 @@
 .volo_selected {
 	background-color:#C0FFee;
 }
-
+.disabled {
+	background-color:#AAA;
+	padding:1%;
+	display:block;
+	/*background-color:#dcddde;*/
+	/*sezione per il testo interno*/
+	text-decoration:none;
+	color:#000;
+	font-size:1.2em;
+}
 .seleziona_cella{
 	/*sezione per il pseudo contenitore*/
 	padding:1%;
