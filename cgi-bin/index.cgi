@@ -15,12 +15,15 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
+require "common_functions/database.cgi";
 
 my $titolo="Home";
 
 
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/index.cgi");
+
+
 my $ar=gestione_sessione::getParam("AR");
 my $select_partenza=gestione_sessione::getParam("partenza");
 my $select_arrivo=gestione_sessione::getParam("arrivo");
@@ -56,6 +59,9 @@ push @menu_temp, \@menu;
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
 print_header::setMenu(\@menu_temp);
+
+my %tratte=database::listTratte();
+print_search::set_tratte(%tratte);
 
 my @path_temp;
 my @path=("Home", "index.cgi");

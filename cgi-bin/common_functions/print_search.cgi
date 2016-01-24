@@ -6,42 +6,19 @@ use strict;
 
 require      Exporter;
 
+
+
 my @ISA       = qw(Exporter);
 my $VERSION   = 1.00;         # Version number
 
 ### Include your variables and functions here
+my %tratte;
 
-
-sub list_tratte {
+sub set_tratte {
 	
-	my %partenze;
-	my @aereoporti_temp=("Linate", "Malpensa");
-	my %temp;
+	my (%temp)=@_;
+	%tratte=%temp;
 	
-	$temp{"Milano"}=\@aereoporti_temp;
-	
-	my @aereoporti_temp=("Fiumicino");
-	$temp{"Roma"}=\@aereoporti_temp;
-	$partenze {"Italia"}=\%temp;
-	
-	my @aereoporti_temp=( "Charles de gaulle");
-		my %temp;
-		$temp{"Parigi"}=\@aereoporti_temp;
-		$partenze {"Francia"}=\%temp;
-	
-	return %partenze;
-	
-	#funzionamento:
-	# ARRAY associativo di paesi (Italia, Francia, ecc...)	
-	# Ad ogni paese viene associato un array associativo di città
-	# Ogni città contiene un array di nomi di aereoporti.
-	#
-	#   ITALIA ---->  MILANO ---> Linate
-	#         |              |--> Malpensa
-	#         |
-	#         |---->  ROMA -----> Fiumicino
-	#
-	#
 }
 
 sub print { 
@@ -94,8 +71,7 @@ my $testo= "
 						$testo.="<div class=\"casella_partenza\">
 							<label for=\"partenza\">Partenza:</label>
 							<select id=\"partenza\" name=\"partenza\" class=\"partenza\">";
-						my %lista_partenze=list_tratte();
-						while ((my $paese, my $citta) = each(%lista_partenze))
+						while ((my $paese, my $citta) = each(%tratte))
 						{
 							$testo.= "<optgroup label=\"$paese\">\n";
 							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
@@ -117,8 +93,7 @@ my $testo= "
 						<div class=\"casella_arrivo\">					
 							<label for=\"arrivo\">Arrivo:</label>
 							<select id=\"arrivo\" name=\"arrivo\" class=\"arrivo\">";
-						my %arrivi=list_tratte();
-						while ((my $paese, my $citta) = each(%arrivi))
+						while ((my $paese, my $citta) = each(%tratte))
 						{
 							$testo.= "<optgroup label=\"$paese\"> \n";
 							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
@@ -195,3 +170,4 @@ my $testo= "
 ";
 return $testo;
 }
+1;

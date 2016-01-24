@@ -16,19 +16,11 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
-
+require "common_functions/database.cgi";
 
 sub getServizi
 {
-	my ($selezionati)=@_;
-
-	my @servizi;
-	for (my $i=0; $i<5; $i++){
-		#id servizio, nome servizio, costo
-		my @servizio=($i, "Servizio: $i", 20+$i);
-		push @servizi, \@servizio; 
-	}
-	return \@servizi;
+	return database::listServizi();
 }
 
 my %form;
@@ -148,15 +140,8 @@ for(my $i=1; $i<=$num_passeggeri; $i++){
 }
 
 #sezione variabili inerenti ai servizi
-my $num_servizi=gestione_sessione::getParam("Numero_servizi");
-my @servizi;
-for(my $i=0; $i<$num_servizi; $i++){
-	my $selezionato=gestione_sessione::getParam("servizio$i");
-	my $nome=gestione_sessione::getParam("nome_servizio$i");
-	my $prezzo=gestione_sessione::getParam("prezzo_servizio$i");
-	my @temp=($selezionato, $nome, $prezzo);
-	push @servizi, \@temp;
-}
+my @servizi=@{getServizi()};
+
 
 
 #variabili generali
@@ -232,9 +217,9 @@ $testo.='
 				<div><!-- div servizi -->
 					<h3>Servizi aggiuntivi:</h3>
 					';
-for(my $i=0; $i<$num_servizi; $i++){
+for(my $i=0; $i<scalar(@servizi); $i++){
 	my @temp=@{@servizi[$i]};
-	if(@temp[0]==1){
+	if(gestione_sessione::getParam("servizio".@temp[0])==1){
 		$testo.='	<p>'.@temp[1].', prezzo: '.@temp[2].'&euro; </p>';
 		$prezzo_servizi+=int(@temp[2]);
 	}

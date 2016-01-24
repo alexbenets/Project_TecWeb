@@ -142,12 +142,12 @@ if(!($form{"visitato"} eq "1")){
 	gestione_sessione::setParam("numero_selezioni_voli",$click);
 }
 
-
-if(compareDate($giorno_partenza, $giorno_ritorno)==0){
-	$giorno_ritorno=0;
-	gestione_sessione::setParam("numero_selezioni_voli",0);
+if($andata==0){
+	if(compareDate($giorno_partenza, $giorno_ritorno)==0){
+		$giorno_ritorno=0;
+		gestione_sessione::setParam("numero_selezioni_voli",0);
+	}
 }
-
 if($selezione>0){ #se ho selezionato tutti i valori desiderati
 	if($andata==1){
 		if(($selezione&3)==3){ #se ho impostato sia la data che l'ora di partenza
@@ -221,7 +221,7 @@ print print_header::print();
 
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
-print "$data_partenza $data_ritorno ".compareDate($data_partenza, $data_ritorno);
+#print "$data_partenza $data_ritorno ".compareDate($data_partenza, $data_ritorno);
 
 my $date_tabella='';
 for(my $dd=-3; $dd<=3; $dd++){
@@ -304,7 +304,10 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				gestione_sessione::setParam("Andata_prezzo",@elemento[$altezza]->[3]);
 			}
 			$testo.='<td class="'.$classe.' '.$selected.'">';
-			my $data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
+			my $data_ok=1;
+			if($andata==0){
+				$data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
+			}
 			my $classe_cella="seleziona_cella";
 			if($data_ok>0){
 				$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
@@ -337,6 +340,9 @@ $testo.='									</td>';
 }
 
 
+$testo.='					</tbody>
+					</table>';
+if($andata==0){
 $date_tabella='';
 for(my $dd=-3; $dd<=3; $dd++){
 	#da -3 giorni a + 3 giorni
@@ -353,9 +359,6 @@ for(my $dd=-3; $dd<=3; $dd++){
 	$date_tabella.='<th class="data">Data: '.$dt2->strftime('%d/%m/%y').'</th>';
 }
 
-$testo.='					</tbody>
-					</table>';
-if($andata!=1){
 		
 $testo.='					<h2 id="titolo_tabellaRitorno">Ritorno: &quot;'.$select_arrivo.' &gt; '.$select_partenza.'&quot;</h2>
 
@@ -460,8 +463,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 $testo.='
 							</tbody>
 					</table>';
-}
-			
+}		
 $testo.='			</div><!-- chiudo sezione visualizzazione voli -->';
 
 print print_content::print($testo);

@@ -16,19 +16,12 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
-
+require "common_functions/database.cgi";
 
 sub getServizi
 {
-	my ($selezionati)=@_;
-
-	my @servizi;
-	for (my $i=0; $i<5; $i++){
-		#id servizio, nome servizio, costo
-		my @servizio=($i, "Servizio: $i", 20+$i);
-		push @servizi, \@servizio; 
-	}
-	return \@servizi;
+	
+	return database::listServizi();
 }
 
 my %form;
@@ -48,21 +41,17 @@ my @servizi=@{getServizi()};
 #dati recuperati dalle variabili di sessione
 for(my $i=0; $i<scalar(@servizi); $i++){
 	my @temp=@{@servizi[$i]};
-	#temp: ID, Nome, Prezzo
+	#temp: ID
 	#verifico se il checkbox corrispondente è stato selezionato o meno e, nel caso, leggo/aggiorno il suo valore
 	#sulla base di quanto impostato nelle variabili di sessione.
 	if(defined($form{"prenota"})){
 		
 		my $selezionato=0;
-		if(defined($form{"servizio$i"})){
+		if(defined($form{"servizio".@temp[0]})){
 			$selezionato=1;
-		}else{
-			$selezionato=0;
 		}
 			
-		gestione_sessione::setParam("servizio$i",$selezionato);
-		gestione_sessione::setParam("nome_servizio$i",@temp[1]);
-		gestione_sessione::setParam("prezzo_servizio$i",@temp[2]);
+		gestione_sessione::setParam("servizio".@temp[0],$selezionato);
 	}
 		
 }
@@ -130,7 +119,6 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo='
 	<div class="sezione">
@@ -138,14 +126,16 @@ my $testo='
 			<fieldset>';
 for(my $i=0; $i<scalar(@servizi); $i++){
 	my @temp=@{@servizi[$i]};
-	my $selezionato=gestione_sessione::getParam("servizio$i");
+	my $selezionato=gestione_sessione::getParam("servizio".@temp[0]);
 	if($selezionato==1){
 		$selezionato=' checked="checked"';
 	}else{
 		$selezionato="";
 	}
-	$testo.='<div>	<label for="servizio'.$i.'">'.@temp[1].' ('.@temp[2].'&euro;)</label>
-			<input type="checkbox" id="servizio'.$i.'" name="servizio'.$i.'" value="1" '.$selezionato.'/></div>';
+	$testo.='<div>	<label for="servizio'.@temp[0].'">'.@temp[1].' ('.@temp[2].'&euro;)</label>
+			<p><input type="checkbox" id="servizio'.@temp[0].'" name="servizio'.@temp[0].'" value="1" '.$selezionato.'/></p>
+			<p>'.@temp[3].'</p>
+			</div>';
 }
 
 gestione_sessione::setParam("Numero_servizi", scalar(@servizi));

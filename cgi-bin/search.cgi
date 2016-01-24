@@ -16,6 +16,7 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
+require "common_functions/database.cgi";
 
 my %form;
 
@@ -73,9 +74,16 @@ if(($data_ritorno==0)&($andata==0)){
 }
 #controllo se la data di ritorno è inferiore alla data di partenza
 my $gma=check_form::regexp_data($data_partenza);
+
 my $giorno=$gma->[0];
 my $mese=$gma->[1];
 my $anno=$gma->[2];
+if(($giorno==0)|($mese==0)|($anno=0)){
+	$giorno="31";
+	$mese="12";
+	$anno="1950";
+	$errori|=3;
+}
 my $partenza = DateTime->new( 
 					year       => $anno,
       				month      => $mese,
@@ -144,6 +152,8 @@ push @menu_temp, \@menu;
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
 print_header::setMenu(\@menu_temp);
+my %tratte=database::listTratte();
+print_search::set_tratte(%tratte);
 
 my @path_temp;
 my @path=("Home", "index.cgi");
