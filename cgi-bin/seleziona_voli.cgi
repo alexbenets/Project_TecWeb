@@ -16,6 +16,7 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
+require "common_functions/database.cgi";
 
 
 sub compareDate{
@@ -53,17 +54,7 @@ sub compareDate{
     return 1;#tutto ok
 }
 
-sub getVoli
-{
-	my ($giorno, $partenza, $arrivo, $passeggeri, $n)=@_;
 
-	my @voli;
-	for (my $i=0; $i<$n; $i++){
-		my @volo=('AZ000'.$i, '8:00', '10:00', '160', '4.75', $giorno);
-		push @voli, \@volo; 
-	}
-	return \@voli;
-}
 
 my %form;
 foreach my $p (param()) {
@@ -105,7 +96,22 @@ if($giorno_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
 	gestione_sessione::setParam("giorno_ritorno",$giorno_ritorno);
 }
 
+sub getVoli
+{
+	my ($giorno, $partenza, $arrivo, $passeggeri)=@_;
+	my $aereoporto_partenza=get_aereoporto($partenza);
+	my $aereoporto_arrivo=get_aereoporto($arrivo);
+	my $voli=database::getVoli($aereoporto_partenza, $aereoporto_arrivo,1,$giorno);
+	return $voli;
+}
 
+sub get_aereoporto
+{
+	#Parigi - Charles De Gaulle
+	my ($nome_completo)=@_;
+	$nome_completo =~/([a-zA-Z.]+)([ \- ]+)([a-zA-Z. ]+)/;
+	return $3;
+}
 
 #dati recuperati dalle variabili di sessione
 
@@ -218,7 +224,6 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
 #print "$data_partenza $data_ritorno ".compareDate($data_partenza, $data_ritorno);

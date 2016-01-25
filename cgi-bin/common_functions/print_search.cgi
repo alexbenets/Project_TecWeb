@@ -76,13 +76,14 @@ my $testo= "
 							$testo.= "<optgroup label=\"$paese\">\n";
 							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
 							{
-								while ((my $id, my $nome_aereoporto) = each(@{$aereoporto}))
+								while ((my $id, my $dati_aereoporto) = each(@{$aereoporto}))
 								{
+									my @aer=@{$dati_aereoporto};
 									$testo.="<option";
-									if("$nome_citta - $nome_aereoporto" eq $partenza){
+									if("$nome_citta - @aer[0]" eq $partenza){
 										$testo.=" selected=\"selected\" ";
 									}
-									$testo.=">$nome_citta - $nome_aereoporto</option>";
+									$testo.=">$nome_citta - @aer[0]</option>";
 								}
 							}
 							$testo.= "</optgroup>";
@@ -98,13 +99,14 @@ my $testo= "
 							$testo.= "<optgroup label=\"$paese\"> \n";
 							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
 							{
-								while ((my $id, my $nome_aereoporto) = each(@{$aereoporto}))
+								while ((my $id, my $dati_aereoporto) = each(@{$aereoporto}))
 								{
+									my @aer=@{$dati_aereoporto};
 									$testo.="<option";
-									if("$nome_citta - $nome_aereoporto" eq $arrivo){
+									if("$nome_citta - @aer[0]" eq $arrivo){
 										$testo.=" selected=\"selected\" ";
 									}
-									$testo.=">$nome_citta - $nome_aereoporto</option>";
+									$testo.=">$nome_citta - @aer[0]</option>";
 								}
 							}
 							$testo.= "</optgroup>";

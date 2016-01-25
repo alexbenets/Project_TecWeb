@@ -97,6 +97,9 @@
 			<tratta idT="1" idApP="1" idApA="2">
 				<durata>12</durata>
 			</tratta>
+			<tratta idT="2" idApP="2" idApA="4">
+				<durata>123</durata>
+			</tratta>
 		</tabTratta>	
 
 		
@@ -114,13 +117,42 @@
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>
+			<volo idV="2" idT="1" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>08:00:00</oraPartenza>
+				<prezzo>14</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="3" idT="2" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:00:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>	
+			</volo>	
+			<volo idV="4" idT="2" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:80:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>	
+			<volo idV="5" idT="2" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:12:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
 		</tabVolo>
 		
 		
 		<tabPrenotazione>
-			<prenotazione idP="1" idUR="1" idU="1" idV="1">
-				<data>1902-02-12</data>
-				<dataPartenza>1902-02-12</dataPartenza>
+			<prenotazione idP="1" idUR="1" idU="[1,2]" idV="3">
+				<data>2016-02-12</data>
+				<dataPartenza>2016-03-12</dataPartenza>
+				<numeroBagagli>1</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="2" idUR="2" idU="" idV="4">
+				<data>2016-01-12</data>
+				<dataPartenza>2016-03-12</dataPartenza>
 				<numeroBagagli>1</numeroBagagli>
 			</prenotazione>
 		</tabPrenotazione>
