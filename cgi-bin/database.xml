@@ -20,8 +20,8 @@
 		
 		<tabUtenteRegistrato>
 			<utenteRegistrato idUR="1">
-				<flagBann>false</flagBann>
-				<mail>112</mail>
+				<flagBann>true</flagBann>
+				<mail>112@example.org</mail>
 				<password>12321234</password>
 				<domandaSegreta>fdvioa</domandaSegreta>
 				<rispostaSegreta>asdyfi</rispostaSegreta>
@@ -95,10 +95,10 @@
 				
 		<tabTratta>
 			<tratta idT="1" idApP="1" idApA="2">
-				<durata>12</durata>
+				<durata>160</durata>
 			</tratta>
 			<tratta idT="2" idApP="2" idApA="4">
-				<durata>123</durata>
+				<durata>165</durata>
 			</tratta>
 		</tabTratta>	
 
@@ -113,31 +113,31 @@
 		<tabVolo>
 			<volo idV="1" idT="1" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>00:00:00</oraPartenza>
+				<oraPartenza>00:00</oraPartenza>
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>
 			<volo idV="2" idT="1" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>08:00:00</oraPartenza>
+				<oraPartenza>08:00</oraPartenza>
 				<prezzo>14</prezzo>
 				<giorno>2</giorno>			
 			</volo>
 			<volo idV="3" idT="2" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>00:00:00</oraPartenza>
+				<oraPartenza>00:00</oraPartenza>
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>	
 			</volo>	
 			<volo idV="4" idT="2" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>00:80:00</oraPartenza>
+				<oraPartenza>00:08</oraPartenza>
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>	
 			<volo idV="5" idT="2" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>00:12:00</oraPartenza>
+				<oraPartenza>00:12</oraPartenza>
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>
@@ -145,7 +145,7 @@
 		
 		
 		<tabPrenotazione>
-			<prenotazione idP="1" idUR="1" idU="[1,2]" idV="3">
+			<prenotazione idP="1" idUR="1" idU="1,2" idV="3">
 				<data>2016-02-12</data>
 				<dataPartenza>2016-03-12</dataPartenza>
 				<numeroBagagli>1</numeroBagagli>
@@ -169,7 +169,7 @@
 		<tabTipoAereo>
 			<tipoAereo idTA="1" idPA="1">
 				<nome>aaa</nome>
-				<numeroPosti>123</numeroPosti>
+				<numeroPosti>3</numeroPosti>
 				<lunghezza>16</lunghezza>
 				<aperturaAlare>10</aperturaAlare>
 				<diametroFusoliera>8</diametroFusoliera>

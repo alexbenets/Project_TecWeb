@@ -209,7 +209,7 @@ if($num_passeggeri>0){
 					';
 }else{
 	$testo.="	<div>
-					<p>(Non si sono passeggeri aggiuntivi)</p>
+					<p>(Non ci sono passeggeri aggiuntivi)</p>
 				</div>";
 }
 $testo.='				

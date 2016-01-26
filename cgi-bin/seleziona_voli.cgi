@@ -23,6 +23,9 @@ sub compareDate{
 #controllo se la data "partenza" è inferiore o uguale alla data di "ritorno"
 #questa funzione viene utilizzata per evitare di selezionare una data di ritorno inferiore o uguale ad una data di partenza.
 	my($partenza, $ritorno)=@_;
+	if($ritorno==''){
+		return 1;
+	}
 	my $gma=check_form::regexp_data($partenza);
 	my $giorno=int($gma->[0]);
 	my $mese=int($gma->[1]);
@@ -36,6 +39,9 @@ sub compareDate{
       				day        => $giorno
       				);
     my $gma=check_form::regexp_data($ritorno);
+    if($gma==0){
+    	return 0;
+    }
 	$giorno=$gma->[0];
 	$mese=$gma->[1];
 	$anno=$gma->[2];
@@ -70,7 +76,7 @@ my $volo_andata=$form{"volo_andata"};
 my $volo_ritorno=$form{"volo_ritorno"};
 my $giorno_partenza=$form{"giorno_partenza"};
 my $giorno_ritorno=$form{"giorno_ritorno"};
-
+# n ospiti + 1 passeggero principale
 my $selezione=0;#se la pagina è stata caricata in seguito ad un back
 
 if($volo_andata eq ""){#forse sono tornato indietro o sono appena arrivato?
@@ -101,7 +107,7 @@ sub getVoli
 	my ($giorno, $partenza, $arrivo, $passeggeri)=@_;
 	my $aereoporto_partenza=get_aereoporto($partenza);
 	my $aereoporto_arrivo=get_aereoporto($arrivo);
-	my $voli=database::getVoli($aereoporto_partenza, $aereoporto_arrivo,1,$giorno);
+	my $voli=database::getVoli($aereoporto_partenza, $aereoporto_arrivo,$passeggeri,$giorno);
 	return $voli;
 }
 
@@ -147,6 +153,7 @@ if(!($form{"visitato"} eq "1")){
 	}
 	gestione_sessione::setParam("numero_selezioni_voli",$click);
 }
+
 
 if($andata==0){
 	if(compareDate($giorno_partenza, $giorno_ritorno)==0){
@@ -244,6 +251,8 @@ for(my $dd=-3; $dd<=3; $dd++){
 	$date_tabella.="		<th class=\"data\">Data: ".$dt2->strftime('%d/%m/%y')."</th>\n";
 }
 
+print "$giorno_partenza, $giorno_ritorno";
+
 my $testo='<div id="cerca_voli"><!-- sezione cerca voli -->
 				<h1 id="voli_trovati">Ecco i voli per te!</h1>
 				
@@ -282,7 +291,7 @@ for(my $dd=-3; $dd<=3; $dd++){
       				);
 	$dt2=$dt2->add(days =>$dd);
 	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
-	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, $select_passeggeri, $dd+4)};
+	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, int($select_passeggeri)+1, $dd+4)};
 	push @voli_settimana, $temp;
 	
 	if(scalar(@{$temp})>$max_altezza){
@@ -314,12 +323,9 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				$data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
 			}
 			my $classe_cella="seleziona_cella";
-			if($data_ok>0){
+			if($data_ok>0 and !(@elemento[$altezza]->[0] eq "")){
 				$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
-			}else {
-				$classe_cella=" disabled";
-			}	
-							$testo.='			<object>
+				$testo.='			<object>
 											<div class="'.$classe_cella.'">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
@@ -328,6 +334,10 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
 											</div>
 										</object>';
+			}else {
+				$classe_cella=" disabled";
+			}	
+							
 						if($data_ok>0){
 							$testo.='			</a>	';
 						}
@@ -433,20 +443,21 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				$testo.='<td class="'.$classe.' '.$selected.'">';
 				my $data_ok=compareDate($giorno_partenza,@elemento[$altezza]->[5]);	
 				my $classe_cella="seleziona_cella";
-				if($data_ok>0){
-					$testo.='	<a href="seleziona_voli.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&amp;giorno_ritorno='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;ritorno=1">';
-				}else{
-					$classe_cella="disabled";
-				}
+				my $classe_cella="seleziona_cella";
+			if($data_ok>0 and !(@elemento[$altezza]->[0] eq "")){
+				$testo.='		<a href="seleziona_voli.cgi?volo_ritorno='.@elemento[$altezza]->[0].'&amp;giorno_ritorno='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;ritorno=1">';
 				$testo.='			<object>
 											<div class="'.$classe_cella.'">
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
-												<p>Prezzo: '.@elemento[$altezza]->[3].'&euro;</p>
+												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
 											</div>
 										</object>';
+			}else {
+				$classe_cella=" disabled";
+			}	
 							if($data_ok>0){		
 								$testo.='</a>	';
 							}

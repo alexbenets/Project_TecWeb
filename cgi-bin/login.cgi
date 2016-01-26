@@ -15,7 +15,7 @@ require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/Session.cgi";
-
+require "common_functions/database.cgi";
 my %form;
 
 
@@ -32,7 +32,7 @@ my $titolo="Login";
 my $create=gestione_sessione::createSession();
 
 my $location=gestione_sessione::getParam("location"); #variabile che contiene la pagina a cui ero prima (per esempio, se mi chiede il login durante la registrazione, allora tornerò là.
-
+my $login_result;
 if($form{"logout"} eq '1'){
 	gestione_sessione::destroySession();
 	print "Location: index.cgi\n\n";
@@ -47,7 +47,8 @@ if (gestione_sessione::getParam("logged") == 1){
 		exit;
 }
 if(defined($email) and defined($password)){
-	if(1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
+	$login_result=database::login($email, $password);
+	if($login_result==1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
 		gestione_sessione::setParam("logged","1");
 		print "Location: $location\n\n";
 		exit;
@@ -96,10 +97,17 @@ my $testo="
 	<div class=\"sezione\">
 		<form action=\"login.cgi\" method=\"post\">
 			<fieldset>";
-			if(defined($email) or defined($password)){
+			if($login_result==-1){
 				$testo.="
 					<div>
 						<p class=\"errore\">E-MAIL O PASSWORD NON VALIDI</p>
+					</div>
+				";
+			}
+			if($login_result==-2){
+				$testo.="
+					<div>
+						<p class=\"errore\">UTENTE NON REGISTRATO O DISATTIVATO</p>
 					</div>
 				";
 			}

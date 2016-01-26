@@ -16,7 +16,7 @@ require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
-
+require "common_functions/database.cgi";
 
 my %form;
 
@@ -37,7 +37,8 @@ my $password=$form{"password"};
 
 
 sub registrati {
-	gestione_sessione::setParam("logged","1"); 
+	gestione_sessione::setParam("logged","0");
+	return database::registrati($nome, $cognome, $codice_fiscale, $nascita, $email, $password );
 	#imposto il parametro flag "logged", praticamente, alla registrazione, l'utente esegue il login automaticamente.
 
 }
@@ -68,11 +69,12 @@ if(defined ($nascita)){
 	}
 }
 my $create=gestione_sessione::createSession();
-
+my $reg_Result;
 if(($errore==0) & defined $form{"invia"}){#se il form è stato compilato correttamente
-	registrati();
-	print "Location: ../index.html\n\n";
-	exit;
+	$reg_Result=registrati();
+	$errore=0xff;
+	#print "Location: ../index.html\n\n";
+	#exit;
 }
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
@@ -124,7 +126,7 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-print " <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print "$reg_Result <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo="<div class=\"sezione\">
 					<form action=\"registrati.cgi\" method=\"post\">
 						<fieldset>";
