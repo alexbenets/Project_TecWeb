@@ -30,10 +30,11 @@ use CGI::Cookie;
 
 sub getSessionCookie{
 	my %cookies = CGI::Cookie->fetch;
-    if(!defined(%cookies)){
-    	return undef;#non c'è nulla da eliminare, visto che non esiste nemmeno il cookie di sessione.
+    if($cookies{'SESSION'}){
+     	return $cookies{'SESSION'}->value; #ritorno l'id sessione.
+    	
     }
-    return $cookies{'SESSION'}->value; #ritorno l'id sessione.
+   return undef;#non c'è nulla da eliminare, visto che non esiste nemmeno il cookie di sessione.
 }
 
 

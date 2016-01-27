@@ -38,6 +38,7 @@ my $password=$form{"password"};
 
 sub registrati {
 	gestione_sessione::setParam("logged","0");
+	#print "$nome, $cognome, $codice_fiscale, $nascita, $email, $password ";
 	return database::registrati($nome, $cognome, $codice_fiscale, $nascita, $email, $password );
 	#imposto il parametro flag "logged", praticamente, alla registrazione, l'utente esegue il login automaticamente.
 
@@ -72,9 +73,10 @@ my $create=gestione_sessione::createSession();
 my $reg_Result;
 if(($errore==0) & defined $form{"invia"}){#se il form è stato compilato correttamente
 	$reg_Result=registrati();
-	$errore=0xff;
-	#print "Location: ../index.html\n\n";
-	#exit;
+	if($reg_Result==1){
+		print "Location: index.cgi\n\n";
+		exit;
+	}
 }
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
@@ -126,12 +128,16 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-print "$reg_Result <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print " <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 my $testo="<div class=\"sezione\">
 					<form action=\"registrati.cgi\" method=\"post\">
 						<fieldset>";
-if($errore>0){
-	$testo.="<p class=\"errore\">Errore: devi compilare correttamente tutti i campi!</p>";
+if($reg_Result==-1){
+	$testo.="<p class=\"errore\">Errore: L'indirizzo email &egrave; gi&agrave; registrato!</p>";
+}else{
+	if($errore>0){
+		$testo.="<p class=\"errore\">Errore: devi compilare correttamente tutti i campi!</p>";
+	}
 }						
 $testo.="							<div>
 								<h3>Per acquistare i biglietti, registrati inserendo i tuoi dati!</h3>

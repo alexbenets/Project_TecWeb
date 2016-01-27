@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<database>
+<database>
 
 		
 		<tabUtente>
@@ -20,7 +20,7 @@
 		
 		<tabUtenteRegistrato>
 			<utenteRegistrato idUR="1">
-				<flagBann>true</flagBann>
+				<flagBann>false</flagBann>
 				<mail>112@example.org</mail>
 				<password>12321234</password>
 				<domandaSegreta>fdvioa</domandaSegreta>
@@ -33,7 +33,7 @@
 				<domandaSegreta>fdvioa</domandaSegreta>
 				<rispostaSegreta>asdyfi</rispostaSegreta>
 			</utenteRegistrato>
-		</tabUtenteRegistrato>
+		<utenteRegistrato idUR="3"><flagBann>false</flagBann><nome>Nome</nome><cognome>Cognome</cognome><codiceFiscale>pttmrc87a12l840w</codiceFiscale><dataNascita>12/01/1987</dataNascita><mail>info@example.org</mail><password>password</password></utenteRegistrato></tabUtenteRegistrato>
 
 		
 		<tabAmministratore>

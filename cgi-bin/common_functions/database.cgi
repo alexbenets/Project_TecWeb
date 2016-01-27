@@ -21,7 +21,7 @@ sub get{
 
 sub set{
 	my ($valore)=@_;
-	open (my $fh,'>',$filename) or die return 0;
+	open (my $fh,'>',$filename);
 	print $fh $valore;
 	close $fh;
 	return 1;
@@ -32,7 +32,7 @@ sub registrati{
 	my ($nome, $cognome, $cf, $nascita, $email, $password)=@_;
 	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato[mail="'.$email.'"]');
 	foreach my $utente ($utenti->get_nodelist){
-		return 0;
+		return -1;
 	}
 	my $max_id;
 	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato');
@@ -43,13 +43,21 @@ sub registrati{
 		}
 	}
 	$max_id++;
+				
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
 	my $tab_utenti=$db->findnodes('/database/tabUtenteRegistrato')->[0];
 	my $nodo=XML::LibXML::Element->new("utenteRegistrato");
 	$nodo->setAttribute("idUR",$max_id);
+	
+	my $nodo_ban=XML::LibXML::Element->new("flagBann");
+	my $n_n=XML::LibXML::Text->new("false");
+	$nodo_ban->appendChild($n_n);
+	$nodo->appendChild($nodo_ban);
+	
+	
 	my $nodo_nome=XML::LibXML::Element->new("nome");
-	my $n_n=XML::LibXML::Text->new($nome);
+	$n_n=XML::LibXML::Text->new($nome);
 	$nodo_nome->appendChild($n_n);
 	$nodo->appendChild($nodo_nome);
 	
@@ -68,7 +76,7 @@ sub registrati{
 	$nodo_nascita->appendChild($n_n);
 	$nodo->appendChild($nodo_nascita);
 	
-	my $nodo_email=XML::LibXML::Element->new("email");
+	my $nodo_email=XML::LibXML::Element->new("mail");
 	$n_n=XML::LibXML::Text->new($email);
 	$nodo_email->appendChild($n_n);
 	$nodo->appendChild($nodo_email);
@@ -80,8 +88,6 @@ sub registrati{
 	
 	$tab_utenti->addChild($nodo);
 	return set( $db->toString(1));
-	
-	
 }
 
 sub login{
