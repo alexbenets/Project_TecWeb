@@ -47,8 +47,10 @@ if (gestione_sessione::getParam("logged") == 1){
 		exit;
 }
 if(defined($email) and defined($password)){
-	$login_result=database::login($email, $password);
+	my @query=@{database::login($email, $password)};
+	$login_result=@query[0];
 	if($login_result==1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
+		gestione_sessione::setParam("nome", @query[1]." ".@query[2]);
 		gestione_sessione::setParam("logged","1");
 		print "Location: $location\n\n";
 		exit;
@@ -70,9 +72,9 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w
 ";
 
 my @menu_temp;
-my @menu=("Home", "../index.html", "1");
+my @menu=("Home", "index.cgi", "1");
 push @menu_temp, \@menu; 
-my @menu=("Home1", "index1.html", "0");
+my @menu=("Storia", "../storia.html", "0");
 push @menu_temp, \@menu;
 my @menu=("Contatti", "../contatti.html", "0");
 push @menu_temp, \@menu;
@@ -84,9 +86,9 @@ push @menu_temp, \@menu;
 print_header::setMenu(\@menu_temp);
 
 my @path_temp;
-my @path=("Home", "index.html");
+my @path=("Home", "index.cgi");
 push @path_temp, \@path;
-my @path=("Pagina principale", "index.html");
+my @path=("Login", "Login.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 

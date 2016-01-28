@@ -2,6 +2,9 @@
 package print_header;
 require      Exporter;
 
+require "common_functions/Session.cgi";
+
+
 our @ISA       = qw(Exporter);
 our $VERSION   = 1.00;         # Version number
 
@@ -20,12 +23,20 @@ sub setPath {#@p: array contenente i vari riferimenti al path
 }
 
 sub print { 
+		gestione_sessione::createSession();
 		$temp= "
 		<div id=\"header\">
 			<div id=\"banner\">
 				<h1>Vola con noi &copy;</h1>
-				<h2>Prenota il tuo volo per la destinazione che ti pare e piace :(</h2>
-			</div><!-- chiudo banner-->
+				<h2>Prenota il tuo volo per la destinazione che ti pare e piace :(</h2>";
+		if(gestione_sessione::getParam("logged")==1){
+			$temp.="<h3>Benvenuto, ".gestione_sessione::getParam("nome").' (<a href="login.cgi?logout=1">esci</a>)</h3>';
+		}		
+		else
+		{
+			$temp.='<h3>Benvenuto, per prenotare devi <a href="login.cgi">effettuare il login</a> o <a href="registrati.cgi">la registrazione</a>';
+		}
+		$temp.="	</div><!-- chiudo banner-->
 			
 			<div id=\"menu\">\n";
 				
@@ -56,8 +67,9 @@ sub print {
 					}
 				}
 				$temp.="
-			</div><!-- chiudo path-->
-		</div><!-- chiudo header-->
+			</div><!-- chiudo path-->";
+		
+		$temp.="</div><!-- chiudo header-->
 
 " ;
 	return $temp;

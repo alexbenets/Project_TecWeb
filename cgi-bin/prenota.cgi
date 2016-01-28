@@ -79,9 +79,9 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w
 ";
 
 my @menu_temp;
-my @menu=("Home", "../index.html", "1");
+my @menu=("Home", "index.cgi", "1");
 push @menu_temp, \@menu; 
-my @menu=("Home1", "index1.html", "0");
+my @menu=("Storia", "../storia.html", "0");
 push @menu_temp, \@menu;
 my @menu=("Contatti", "../contatti.html", "0");
 push @menu_temp, \@menu;

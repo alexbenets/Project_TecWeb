@@ -4,6 +4,7 @@ use XML::LibXML;
 use XML::XPath;
 use XML::XPath::XMLParser;
 require      Exporter;
+require 'common_functions/check_form.cgi';
 my @ISA       = qw(Exporter);
 my $VERSION   = 1.00;         # Version number
 
@@ -13,13 +14,17 @@ use strict;
 
 my $filename="database.xml";
 
+#funzioni base
+
 sub get{
+	#ritorna il nodo in base alla stringa xpath
 	my ($xpath)=@_;
 	my $xp = XML::XPath->new(filename => $filename);
 	return $xp->find($xpath); # find 
 }
 
 sub set{
+	#SOVRASCRIVE IL DATABASE in base a quanto inserito nella stringa
 	my ($valore)=@_;
 	open (my $fh,'>',$filename);
 	print $fh $valore;
@@ -27,22 +32,28 @@ sub set{
 	return 1;
 }
 
+
+## INIZIO FUNZIONI INERENTI AL LOGIN ED ALLA REGISTRAZIONE DELL'UTENTE
+##
+##
+
 sub registrati{
-	#ritorna 1 se la registrazione è avvenuta correttamente, 0 altrimenti
+	#ritorna:
+	#- 1 se la registrazione è avvenuta correttamente
+	# -1 se l'email esiste già nel database
 	my ($nome, $cognome, $cf, $nascita, $email, $password)=@_;
-	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato[mail="'.$email.'"]');
-	foreach my $utente ($utenti->get_nodelist){
+	#verifico se $email è già presente nel database
+	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato/mail="'.$email.'"');
+	if(int($utenti)==1){
 		return -1;
 	}
 	my $max_id;
-	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato');
-	foreach my $utente ($utenti->get_nodelist){
-		my $id=int($utente->getAttribute("idUR"));
-		if($max_id<$id){
-			$max_id=$id;
-		}
-	}
-	$max_id++;
+	#prima di creare un nuovo utente, devo sapere il massimo ID
+	#funzionamento: controllo se l'elemento attuale non è inferiore ai vari elementi @idUR presenti nell'utente Registrato
+	#utilizo //utenteRegistrato/@idUR, visto che la tabella utenteRegistrato non è ripetuta in altri nodi al di fuori di tabUtenteRegistrato
+	my $utenti=get('//utenteRegistrato/@idUR[ not (.<//utenteRegistrato/@idUR)]');
+	
+	$max_id=int($utenti)+1;
 				
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
@@ -96,14 +107,21 @@ sub login{
 	#ritorna -1 se password errata
 	my ($username, $password)=@_;
 	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato[mail="'.$username.'" and flagBann="false"]');
+	my @out;
 	foreach my $utente ($utenti->get_nodelist){
+	
 		my $psw="".$utente->find("password");
+		my $nome="".$utente->find("nome");
+		my $cognome="".$utente->find("cognome");
 		if($psw eq $password){
-			return 1;
+			@out=(1,$nome,$cognome);
+			return \@out;
 		}
-		return -1;
+		@out=(-1,"","");
+		return \@out;
 	}
-	return -2;
+	@out=(-2,"","");
+	return \@out;
 }
 
 sub getVoli{
@@ -113,9 +131,8 @@ sub getVoli{
 	#- elenco prenotazioni per quel volo
 	#- escludo se n°posti>posti disponibili per l'aereo
 	my ($nome_andata, $nome_ritorno, $passeggeri, $data)=@_;
-	
 	#ora mi recupero l'ID tratta
-	my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[nome="'.$nome_andata.'"][flagAttivo="true"]');
+	my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[nome="'.$nome_andata.'" and flagAttivo="true"]');
 	my $id_partenza=0;
 	foreach my $aereoporto ($aereoporto_partenza->get_nodelist){
 		$id_partenza=$aereoporto->getAttribute("idAp");
@@ -123,7 +140,7 @@ sub getVoli{
 	if($id_partenza==0){
 		return undef;
 	}
-	my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[nome="'.$nome_ritorno.'"][flagAttivo="true"]');
+	my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[nome="'.$nome_ritorno.'" and flagAttivo="true"]');
 	my $id_arrivo=0;
 	foreach my $aereoporto ($aereoporto_arrivo->get_nodelist){
 		$id_arrivo=$aereoporto->getAttribute("idAp");
@@ -146,17 +163,17 @@ sub getVoli{
 		}
 	}
 	
-	#visto che perl non è OOP, allora non posso riciclare il codice già definito in check_form
-	$data =~/^([\d]{1,2})([\/-:\.\\]{1})+([\d]{1,2})([\/-:\.\\]{1})+([\d]{4})$/;
-	my $giorno=$1;
+	#visto che ho già definito la funzione di recupero data in check_form, la riciclo qui.
+	my @gma=@{check_form::regexp_data($data)};
+	my $giorno=@gma[0];
 	if(int($giorno)<10){
 		$giorno="0$giorno";
 	}
-	my $mese=$3;
+	my $mese=@gma[1];
 	if(int($mese)<10){
 		$mese="0$mese";
 	}
-	my $anno=$5;
+	my $anno=@gma[2];
 	
 	my $voli_db=get('/database/tabVolo/volo[@idT='.$id_tratta.' and flagAttivo="true"]');
 	my @voli;
@@ -175,10 +192,7 @@ sub getVoli{
 		#mi ricavo i posti totali in base all'aereo che effettua il volo
 		foreach my $aereo ($aerei->get_nodelist){
 			my $id_tipo=int($aereo->getAttribute("idTA"));
-			my $tipologie_aerei=get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']');
-			foreach my $tipoAereo ($tipologie_aerei->get_nodelist){
-				$posti_disponibili=int($tipoAereo->find("numeroPosti"));
-			}
+			$posti_disponibili=int(get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']/numeroPosti'));
 		}
 		my $id_volo=int($volo->getAttribute("idV"));
 		#ora sottraggo i posti disponibili in base alle prenotazioni
@@ -188,8 +202,8 @@ sub getVoli{
 			my $idU=$prenotazione->getAttribute("idU");
 			my @id_utenti=split /,/ , $idU;
 			#ora ottengo un array contenente tutti gli utenti di quella prenotazione
-			$posti_disponibili -= scalar(@id_utenti);
-			#visto che non mi interessa sapere chi c'è in quel volo, allora sottraggo semplicemente la grandezza del vettore
+			$posti_disponibili -= (scalar(@id_utenti)+1);
+			#visto che non mi interessa sapere chi c'è in quel volo, allora sottraggo semplicemente la grandezza del vettore + 1, in quanto è presente pure il passeggero prenotante
 		}
 		#print "<p>$posti_disponibili - $passeggeri</p>";
 		my $orario="".$volo->find("oraPartenza");

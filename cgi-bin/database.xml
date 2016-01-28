@@ -33,7 +33,16 @@
 				<domandaSegreta>fdvioa</domandaSegreta>
 				<rispostaSegreta>asdyfi</rispostaSegreta>
 			</utenteRegistrato>
-		<utenteRegistrato idUR="3"><flagBann>false</flagBann><nome>Nome</nome><cognome>Cognome</cognome><codiceFiscale>pttmrc87a12l840w</codiceFiscale><dataNascita>12/01/1987</dataNascita><mail>info@example.org</mail><password>password</password></utenteRegistrato></tabUtenteRegistrato>
+		<utenteRegistrato idUR="3">
+			<flagBann>false</flagBann>
+			<nome>Nome</nome>
+			<cognome>Cognome</cognome>
+			<codiceFiscale>pttmrc87a12l840w</codiceFiscale>
+			<dataNascita>12/01/1987</dataNascita>
+			<mail>info@example.org</mail>
+			<password>password</password>
+			</utenteRegistrato>
+		</tabUtenteRegistrato>
 
 		
 		<tabAmministratore>
@@ -169,7 +178,7 @@
 		<tabTipoAereo>
 			<tipoAereo idTA="1" idPA="1">
 				<nome>aaa</nome>
-				<numeroPosti>3</numeroPosti>
+				<numeroPosti>120</numeroPosti>
 				<lunghezza>16</lunghezza>
 				<aperturaAlare>10</aperturaAlare>
 				<diametroFusoliera>8</diametroFusoliera>

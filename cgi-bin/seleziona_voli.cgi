@@ -76,6 +76,17 @@ my $volo_andata=$form{"volo_andata"};
 my $volo_ritorno=$form{"volo_ritorno"};
 my $giorno_partenza=$form{"giorno_partenza"};
 my $giorno_ritorno=$form{"giorno_ritorno"};
+
+#dati recuperati dalle variabili di sessione
+
+my $andata=gestione_sessione::getParam("AR");
+my $select_partenza=gestione_sessione::getParam("partenza");
+my $select_arrivo=gestione_sessione::getParam("arrivo");
+my $data_partenza=gestione_sessione::getParam("data_partenza");
+my $data_ritorno=gestione_sessione::getParam("data_ritorno");
+my $select_passeggeri=gestione_sessione::getParam("passeggeri");
+
+
 # n ospiti + 1 passeggero principale
 my $selezione=0;#se la pagina è stata caricata in seguito ad un back
 
@@ -85,7 +96,7 @@ if($volo_andata eq ""){#forse sono tornato indietro o sono appena arrivato?
 	gestione_sessione::setParam("volo_andata",$volo_andata);
 }
 if($giorno_partenza eq ""){#forse sono tornato indietro o sono appena arrivato?
-	$giorno_partenza=gestione_sessione::getParam("giorno_partenza");
+	$giorno_partenza=gestione_sessione::getParam("data_partenza");
 }else{
 	gestione_sessione::setParam("giorno_partenza",$giorno_partenza);
 }
@@ -97,7 +108,7 @@ if($volo_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
 }
 
 if($giorno_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
-	$giorno_ritorno=gestione_sessione::getParam("giorno_ritorno");
+	$giorno_ritorno=gestione_sessione::getParam("data_ritorno");
 }else{
 	gestione_sessione::setParam("giorno_ritorno",$giorno_ritorno);
 }
@@ -119,14 +130,6 @@ sub get_aereoporto
 	return $3;
 }
 
-#dati recuperati dalle variabili di sessione
-
-my $andata=gestione_sessione::getParam("AR");
-my $select_partenza=gestione_sessione::getParam("partenza");
-my $select_arrivo=gestione_sessione::getParam("arrivo");
-my $data_partenza=gestione_sessione::getParam("data_partenza");
-my $data_ritorno=gestione_sessione::getParam("data_ritorno");
-my $select_passeggeri=gestione_sessione::getParam("passeggeri");
 
 
 if(!($volo_andata eq "")){
@@ -206,9 +209,9 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w
 ";
 
 my @menu_temp;
-my @menu=("Home", "../index.html", "1");
+my @menu=("Home", "index.cgi", "1");
 push @menu_temp, \@menu; 
-my @menu=("Home1", "index1.html", "0");
+my @menu=("Storia", "../storia.html", "0");
 push @menu_temp, \@menu;
 my @menu=("Contatti", "../contatti.html", "0");
 push @menu_temp, \@menu;
@@ -332,6 +335,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
 												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
+												<p>Posti disponibili: '.@elemento[$altezza]->[6].'</p>
 											</div>
 										</object>';
 			}else {
@@ -453,6 +457,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
 												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
 												<p>Valutazione: '.@elemento[$altezza]->[4].'</p>
+												<p>Posti disponibili: '.@elemento[$altezza]->[6].'</p>
 											</div>
 										</object>';
 			}else {

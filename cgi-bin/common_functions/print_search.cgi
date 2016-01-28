@@ -3,9 +3,9 @@
 package print_search;
 
 use strict;
-
+use DateTime;  #utilizzato per validare la data inserita
+use Time::Piece;
 require      Exporter;
-
 
 
 my @ISA       = qw(Exporter);
@@ -25,10 +25,14 @@ sub print {
 	my ($errori, $andata, $partenza, $arrivo, $data_partenza, $data_ritorno, $passeggeri, $vuoto)=@_;
 	#vuoto:bypass per evitare di stampare errori nella pagina index.cgi
 	if(!defined $data_partenza | $data_partenza==0){
-		$data_partenza="Data partenza";
+		my $today = Time::Piece->new();
+		my $oggi=(($today->mday)+1)."/".$today->mon."/".$today->year;
+		$data_partenza=$oggi;
 	}
 	if(!defined $data_ritorno| $data_ritorno==0){
-		$data_ritorno="Data ritorno";
+		my $today = Time::Piece->new();
+		my $oggi=(($today->mday)+2)."/".$today->mon."/".$today->year;
+		$data_ritorno=$oggi;
 	}
 	if($vuoto==1){
 		$errori=0;
