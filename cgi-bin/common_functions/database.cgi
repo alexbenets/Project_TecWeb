@@ -32,6 +32,148 @@ sub set{
 	return 1;
 }
 
+### INIZIO FUNZIONI RELATIVE ALLA PRENOTAZIONE
+
+sub salva_utente{
+	my ($nome, $cognome, $cf, $nascita)=@_;
+	my $presente=int(get('//tabUtente/utente[codiceFiscale="'.$cf.'"]/@idU'));
+	if ($presente>0){ #è inutile aggiungere un utente con il codice fiscale duplicato!
+		return $presente;
+	}
+	my $id=int(get('//tabUtente/utente/@idU[ not (.<//tabUtente/utente/@idU)]'))+1;
+	
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	
+	my $tab_utenti=$db->findnodes('/database/tabUtente')->[0];
+	my $nodo=XML::LibXML::Element->new("utente");
+	$nodo->setAttribute("idU",$id);
+	
+	
+	
+	my $nodo_nome=XML::LibXML::Element->new("nome");
+	my $n_n=XML::LibXML::Text->new($nome);
+	$nodo_nome->appendChild($n_n);
+	$nodo->appendChild($nodo_nome);
+	
+	my $nodo_cognome=XML::LibXML::Element->new("cognome");
+	$n_n=XML::LibXML::Text->new($cognome);
+	$nodo_cognome->appendChild($n_n);
+	$nodo->appendChild($nodo_cognome);
+		
+	my $nodo_cf=XML::LibXML::Element->new("codiceFiscale");
+	$n_n=XML::LibXML::Text->new($cf);
+	$nodo_cf->appendChild($n_n);
+	$nodo->appendChild($nodo_cf);
+	
+	my $nodo_nascita=XML::LibXML::Element->new("dataNascita");
+	$n_n=XML::LibXML::Text->new($nascita);
+	$nodo_nascita->appendChild($n_n);
+	$nodo->appendChild($nodo_nascita);
+	$tab_utenti->addChild($nodo);
+	set($db->toString(1));
+	return $id;	
+}
+
+sub salvaServizio{
+	my ($id_prenotazione, $id_servizio)=@_;
+	my $id=int(get('/database/tabServizioPrenotato/servizioPrenotato[@idP="'.$id_prenotazione.'" and @idS="'.$id_servizio.'"]/@idSP'));
+	if($id>0){
+		#il servizio è già presente nella prenotazione.
+		#caso molto degenere, ma può capitare in caso di bug nel codice di prenotazione
+		#soprattutto, capita durante la fase di test delle funzionalità,
+		#così mantengo il database pulito da doppioni di idS.
+		return $id;
+	}
+	#idee: controllo se idS esiste o mi fido?
+	
+	$id=int(get('/database/tabServizioPrenotato/servizioPrenotato/@idSP[ not (.</database/tabServizioPrenotato/servizioPrenotato/@idSP)]'))+1;
+	#ottengo un nuovo id di servizio prenotato
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	
+	my $tab_servizi=$db->findnodes('/database/tabServizioPrenotato')->[0];
+	my $nodo=XML::LibXML::Element->new("servizioPrenotato");
+	#idP="1" idS="1"
+	$nodo->setAttribute("idSP",$id);
+	$nodo->setAttribute("idP",int($id_prenotazione));
+	$nodo->setAttribute("idS",int($id_servizio));
+	
+	$tab_servizi->addChild($nodo);
+	
+	set($db->toString(1));
+	return $id;#ritorno l'id della nuova entry nel database
+}
+
+#<tabPrenotazione>
+#			<prenotazione idP="1" idUR="1" idU="1,2">
+#				<data>2016-02-12</data>
+#				<dataPartenza>2016-03-12</dataPartenza>
+#				<numeroBagagli>1</numeroBagagli>
+#			</prenotazione>
+
+sub prenota{
+	my ($id_utente,$data, $id_volo, $passeggeri, $servizi, $bagagli)=@_;
+	my $id_prenotazione=int(get('/database/tabPrenotazione/prenotazione/@idP[ not (.</database/tabPrenotazione/prenotazione/@idP)]'))+1;
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	
+	my $tab_prenotazioni=$db->findnodes('/database/tabPrenotazione')->[0];
+	my $nodo=XML::LibXML::Element->new("prenotazione");
+	
+	my $today = Time::Piece->new();
+	my $oggi=(($today->year)+1)."-".$today->mon."-".$today->mday;
+	
+	my $nodo_data=XML::LibXML::Element->new("data");
+	my $n_n=XML::LibXML::Text->new($oggi);
+	$nodo_data->appendChild($n_n);
+	$nodo->appendChild($nodo_data);
+	
+	my $nodo_data_partenza=XML::LibXML::Element->new("dataPartenza");
+	my $n_n=XML::LibXML::Text->new($data);
+	$nodo_data_partenza->appendChild($n_n);
+	$nodo->appendChild($nodo_data_partenza);
+	
+	my $nodo_bagagli=XML::LibXML::Element->new("numeroBagagli");
+	my $n_n=XML::LibXML::Text->new($bagagli);
+	$nodo_bagagli->appendChild($n_n);
+	$nodo->appendChild($nodo_bagagli);
+	
+	$nodo->setAttribute("idP",$id_prenotazione);
+	$nodo->setAttribute("idUR",$id_utente);
+	$nodo->setAttribute("idV",$id_volo);
+	my @passeggeri_id;
+	if(defined($passeggeri)){
+		my @pass=@{$passeggeri};
+		foreach my $tmp (@pass){
+			my $nome=@{$tmp}[0];
+			my $cognome=@{$tmp}[1];
+			my $cf=@{$tmp}[2];
+			my $nascita=@{$tmp}[3];
+			my $id=salva_utente($nome,$cognome,$cf,$nascita);
+			push @passeggeri_id, $id;
+		}
+	}
+	my $string_passeggeri;
+	#mi genero la stringa contenuta in nel parametro idU di prenotazione: contiene i vari id utente inerenti alla prenotazione.
+	for (my $i=0; $i<scalar(@passeggeri_id); $i++){
+		$string_passeggeri.=@passeggeri_id[$i];
+		if($i<(scalar(@passeggeri_id)-1)){
+			$string_passeggeri.=",";
+		}
+	}
+	
+	$nodo->setAttribute("idU",$string_passeggeri);
+	my @ser=@{$servizi};
+	for (my $i=0; $i<scalar(@ser); $i++){
+		salvaServizio($id_prenotazione,@ser[$i]);
+	}
+	$tab_prenotazioni->addChild($nodo);
+	
+	set($db->toString(1));
+	return $id_prenotazione;
+}
+
 
 ## INIZIO FUNZIONI INERENTI AL LOGIN ED ALLA REGISTRAZIONE DELL'UTENTE
 ##
@@ -113,8 +255,9 @@ sub login{
 		my $psw="".$utente->find("password");
 		my $nome="".$utente->find("nome");
 		my $cognome="".$utente->find("cognome");
+		my $id="".$utente->getAttribute("idUR");
 		if($psw eq $password){
-			@out=(1,$nome,$cognome);
+			@out=(1,$nome,$cognome, $id);
 			return \@out;
 		}
 		@out=(-1,"","");
@@ -123,6 +266,8 @@ sub login{
 	@out=(-2,"","");
 	return \@out;
 }
+
+### INIZIO FUNZIONI INERENTI AI VOLI
 
 sub getVoli{
 
@@ -155,13 +300,13 @@ sub getVoli{
 		$durata=int($tratta_temp->find("durata"));
 		$id_tratta=$tratta_temp->getAttribute("idT");
 	}
-	if($durata==0){ #se, per esempio, è il ritorno
-		$tratta=get('/database/tabTratta/tratta[@idApP='.$id_arrivo.' and @idApA='.$id_partenza.']');
-		foreach my $tratta_temp ($tratta->get_nodelist){
-			$durata=$tratta_temp->find("durata");
-			$id_tratta=$tratta_temp->getAttribute("idT");
-		}
-	}
+	#if($durata==0){ #se, per esempio, è il ritorno
+	#	$tratta=get('/database/tabTratta/tratta[@idApP='.$id_arrivo.' and @idApA='.$id_partenza.']');
+	#	foreach my $tratta_temp ($tratta->get_nodelist){
+	#		$durata=$tratta_temp->find("durata");
+	#		$id_tratta=$tratta_temp->getAttribute("idT");
+	#	}
+	#}
 	
 	#visto che ho già definito la funzione di recupero data in check_form, la riciclo qui.
 	my @gma=@{check_form::regexp_data($data)};
@@ -216,7 +361,7 @@ sub getVoli{
 		my $orario_arrivo=($t_andata+int($durata)*60)->strftime('%H:%M');
 		#my $t_andata = Time::Piece->strptime('%T', $orario);
 		#my $t_arrivo=$t_andata;
-		my @v_temp=("I".$id_tratta."V".$id_volo."P".$id_partenza,$orario, $orario_arrivo,$prezzo,'4.3', $data, $posti_disponibili);
+		my @v_temp=("T".$id_tratta."V".$id_volo,$orario, $orario_arrivo,$prezzo,'4.3', $data, $posti_disponibili);
 		if($posti_disponibili>=($passeggeri)){
 			push @voli, \@v_temp;
 		}
@@ -270,14 +415,14 @@ my $nazioni_get= get('/database/tabNazione/nazione');
 foreach my $node ($nazioni_get->get_nodelist) {
         my $id=$node->getAttribute("idN");
         my $nome_nazione=$node->find('nome');
-        my $citta=get('/database/tabCitta/citta[@idN='.$id.'][flagServita="true"]');
+        my $citta=get('/database/tabCitta/citta[@idN='.$id.' and flagServita="true"]');
         my %citta_temp;
         my $count_stato=0;
         foreach my $node_citta($citta->get_nodelist){
         	my $count_citta=0;
         	my $id_citta= $node_citta->getAttribute("idC");
         	my $nome_citta= $node_citta->find('nome');
-        	my $aereoporti=get('/database/tabAereoporto/aereoporto[@idC='.$id_citta.'][flagAttivo="true"]');
+        	my $aereoporti=get('/database/tabAereoporto/aereoporto[@idC='.$id_citta.' and flagAttivo="true"]');
         	my @aereoporti_temp;
         	foreach my $aereoporto($aereoporti->get_nodelist){
         		$count_stato++;

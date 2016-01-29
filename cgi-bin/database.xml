@@ -109,6 +109,9 @@
 			<tratta idT="2" idApP="2" idApA="4">
 				<durata>165</durata>
 			</tratta>
+			<tratta idT="3" idApP="4" idApA="2">
+				<durata>165</durata>
+			</tratta>
 		</tabTratta>	
 
 		
@@ -150,6 +153,18 @@
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>
+			<volo idV="6" idT="3" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:12</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="7" idT="3" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>08:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
 		</tabVolo>
 		
 		
@@ -164,7 +179,7 @@
 				<dataPartenza>2016-03-12</dataPartenza>
 				<numeroBagagli>1</numeroBagagli>
 			</prenotazione>
-		</tabPrenotazione>
+		<prenotazione idP="3" idUR="3" idV="7" idU="3"><data>2017-1-29</data><dataPartenza>2016-1-30</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="4" idUR="3" idV="3" idU="3"><data>2017-1-29</data><dataPartenza>2016-1-31</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="5" idUR="3" idV="7" idU="3"><data>2017-1-29</data><dataPartenza>2016-1-30</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="6" idUR="3" idV="4" idU="3"><data>2017-1-29</data><dataPartenza>2016-2-1</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione></tabPrenotazione>
 
 		
 		<tabAereo>
@@ -217,12 +232,22 @@
 				<descrizione>ebodfsfbldjfb efioasfuo</descrizione>
 				<prezzo>111111</prezzo>  
 			</servizio>
+			<servizio idS="2">
+				<nome>Bus navetta</nome>
+				<descrizione>Bus navetta fino alla stazione ferroviaria</descrizione>
+				<prezzo>10</prezzo>  
+			</servizio>
+			<servizio idS="3">
+				<nome>Assicurazione</nome>
+				<descrizione>Assicurazione aggiuntiva sul biglietto (se non puoi venire, parte del prezzo verr&amp;agrave; rimborsata)</descrizione>
+				<prezzo>5</prezzo>  
+			</servizio>
 		</tabServizio>
 				
 
 		<tabServizioPrenotato>
 			<servizioPrenotato idSP="1" idP="1" idS="1"/>
-		</tabServizioPrenotato>
+		<servizioPrenotato idSP="2" idP="3" idS="1"/><servizioPrenotato idSP="3" idP="4" idS="1"/></tabServizioPrenotato>
 
 				
 		<tabNews>

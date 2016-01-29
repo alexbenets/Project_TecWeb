@@ -33,48 +33,6 @@ foreach my $p (param()) {
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/prenota.cgi");
 
-#sezione variabili inerenti al numero di bagagli
-my $bagagli=int($form{"bagagli"});
-if($bagagli==0){
-	if(int(gestione_sessione::getParam("bagagli"))==0){
-		$bagagli=1;
-		gestione_sessione::setParam("bagagli",$bagagli);
-	}else{
-		$bagagli=int(gestione_sessione::getParam("bagagli"));
-	}
-}else{
-	gestione_sessione::setParam("bagagli",$bagagli);
-}
-my $errore=0;
-my $max_bagagli=5;
-if($bagagli>$max_bagagli){
-	$errore=1;
-}
-#dati recuperati dalle variabili di sessione
-
-
-my $next=0;
-if(defined($form{"conferma"} ) and $errore==0){
-	$next=1;
-}
-my $logged=gestione_sessione::getParam("logged");
-if($next==1){ #se ho selezionato tutti i valori desiderati
-	if($logged==1){
-		print "Location: checkout.cgi\n\n";
-	}else {
-		print "Location: login.cgi\n\n";
-	}
-	exit;
-}
-
-#$andata=0;
-#$select_partenza="Milano - Linate";
-#$select_arrivo="Roma - Fiumicino";
-#$data_partenza="31/01/2016";
-#$data_ritorno="28/02/2016";
-#$select_passeggeri=2;
-
-
 
 my $titolo="Seleziona il tuo volo";
 
@@ -111,15 +69,7 @@ print_header::setMenu(\@menu_temp);
 my @path_temp;
 my @path=("Home", "index.cgi");
 push @path_temp, \@path;
-my @path=("Ricerca voli", "search.cgi");
-push @path_temp, \@path;
-my @path=("Seleziona i voli disponibili", "seleziona_voli.cgi");
-push @path_temp, \@path;
-my @path=("Inserisci i dati dei passeggeri", "dati_passeggeri.cgi");
-push @path_temp, \@path;
-my @path=("Seleziona i servizi aggiuntivi", "servizi_aggiuntivi.cgi");
-push @path_temp, \@path;
-my @path=("Riepilogo prenotazione", "prenota.cgi");
+my @path=("Riepilogo prenotazione", "checkout.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
@@ -163,12 +113,20 @@ for(my $i=1; $i<=$num_passeggeri; $i++){
 	push @passeggeri, \@temp;
 }
 
-
+my $bagagli=int(gestione_sessione::getParam("bagagli"));
 
 #sezione variabili inerenti ai servizi
 my @servizi=@{getServizi()};
+$id_volo_partenza=~/T([\d]+)V([\d]+)/;
+my @gma=@{check_form::regexp_data($giorno_partenza)};
+my $id_prenotazione_partenza=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
+my $id_prenotazione_ritorno=0;
+if($andata==0){
+	$id_volo_ritorno=~/T([\d]+)V([\d]+)/;
+	@gma=@{check_form::regexp_data($giorno_ritorno)};
+	$id_prenotazione_ritorno=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
 
-
+}
 
 #variabili generali
 
@@ -179,15 +137,15 @@ print print_header::print();
 
 
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+
 my $testo='
 	<div class="sezione">
-		<form action="prenota.cgi" method="post">
-			<fieldset>
 				<div><!-- div h2 -->
 					<h2>Riepilogo della prenotazione</h2>
 				</div><!-- fine h2-->
 				<div><!-- div partenza -->
-					<h3>Partenza:</h3>
+					<h2>PRENOTAZIONE N&deg; '.$id_prenotazione_partenza.' EFFETTUATA</h2>
+					<h2>Partenza:</h2>
 					<p>Volo N&deg; '.$id_volo_partenza.'</p>
 					<p>Partenza il: '.$giorno_partenza.'</p>
 					<p>Alle ore: '.$andata_orario_partenza.'</p>
@@ -195,13 +153,12 @@ my $testo='
 					<p>Arrivo alle ore: '.$andata_orario_arrivo.'</p>
 					<p>Nell\'aereoporto '.$select_arrivo.'</p>
 					<p>Prezzo del biglietto: '.$andata_prezzo.'&euro;</p>
-					<p>
-						<a href="search.cgi">modifica le date</a>
-					</p>
+					
 				</div><!-- fine partenza -->';
 if($andata==0){
 $testo.='				<div><!-- div ritorno -->
-					<h3>Ritorno:</h3>
+					<h2>PRENOTAZIONE N&deg; '.$id_prenotazione_ritorno.' EFFETTUATA</h2>
+					<h2>Ritorno:</h2>
 					<p>Volo N&deg; '.$id_volo_ritorno.'</p>
 					<p>Partenza il: '.$giorno_ritorno.'</p>
 					<p>Alle ore: '.$ritorno_orario_partenza.'</p>
@@ -209,14 +166,12 @@ $testo.='				<div><!-- div ritorno -->
 					<p>Arrivo alle ore: '.$ritorno_orario_arrivo.'</p>
 					<p>Nell\'aereoporto '.$select_partenza.'</p>
 					<p>Prezzo del biglietto: '.$ritorno_prezzo.'&euro;</p>
-					<p>
-						<a href="search.cgi">modifica le date</a>
-					</p>
+					
 				</div><!-- fine ritorno -->';
 }
 $testo.='				<div><!-- div passeggeri -->';
 if($num_passeggeri>0){
-	$testo.='				<h3>Passeggeri:</h3>
+	$testo.='				<h2>Passeggeri:</h2>
 					';
 
 	for(my $i=0; $i<$num_passeggeri; $i++){
@@ -231,10 +186,6 @@ if($num_passeggeri>0){
 				';
 	}
 					
-	$testo.='			<p>
-						<a href="dati_passeggeri.cgi">modifica i dati dei passeggeri</a>
-					</p>	
-					';
 }else{
 	$testo.="	<div>
 					<p>(Non ci sono passeggeri aggiuntivi)</p>
@@ -243,17 +194,13 @@ if($num_passeggeri>0){
 $testo.='				
 				</div><!-- fine div passeggeri -->
 				<div>
-					<h3>BAGAGLI</h3>';
-my $error_class="";
-if($errore>0){
-	$testo.='<p class="errore">Il numero di bagagli supera il numero massimo di '.$max_bagagli.' bagagli!</p>';
-	$error_class=' class="errore"';
-}
-$testo.='					<label for="bagagli">Numero di bagagli: </label>
-					<input type="text" id="bagagli" name="bagagli" value="'.$bagagli.'" '.$error_class.'></input>
+					<h2>BAGAGLI</h2>
+					<p>
+						<span>Numero di bagagli: </span>
+						<span>'.$bagagli.'</span>
 				</div>
 				<div><!-- div servizi -->
-					<h3>Servizi aggiuntivi:</h3>
+					<h2>Servizi aggiuntivi:</h2>
 					';
 for(my $i=0; $i<scalar(@servizi); $i++){
 	my @temp=@{@servizi[$i]};
@@ -262,26 +209,20 @@ for(my $i=0; $i<scalar(@servizi); $i++){
 		$prezzo_servizi+=int(@temp[2]);
 	}
 }
-$testo.='		
-				<p>
-					<a href="servizi_aggiuntivi.cgi">modifica i servizi aggiuntivi</a>
-				</p>	
+$testo.='			
 				</div><!-- fine div servizi -->
 				<div><!-- div costi -->
-					<h3>COSTO TOTALE:</h3>
+					<h2>COSTO TOTALE:</h2>
 					<p>Biglietti: '.$prezzo_biglietti.'&euro; </p>
 					<p>Servizi aggiuntivi: '.$prezzo_servizi.'&euro; </p>
 					<p></p>
-					<h3>Totale: '.($prezzo_biglietti+$prezzo_servizi).'&euro; </h3>
+					<h2>Totale: '.($prezzo_biglietti+$prezzo_servizi).'&euro; </h2>
 				</div><!-- fine div costi -->
 				
 				<div>
 					<span>
-						<a href="index.cgi">ANNULLA</a>
+						<a href="index.cgi">Torna alla homepage</a>
 					</span>
-					<button type="submit" id="conferma" name="conferma" value="1">
-						<span>conferma</span>
-					</button>
 				</div>
 			</fieldset>
 		</form>

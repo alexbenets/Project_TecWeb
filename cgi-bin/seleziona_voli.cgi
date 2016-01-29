@@ -415,7 +415,7 @@ for(my $dd=-3; $dd<=3; $dd++){
       				);
 	$dt2=$dt2->add(days =>$dd);
 	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
-	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, $select_passeggeri, 3)};
+	my $temp=\@{getVoli($data, $select_arrivo, $select_partenza, $select_passeggeri, 3)};
 	push @voli_settimana, $temp;
 	
 	if(scalar(@{$temp})>$max_altezza){
@@ -437,7 +437,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			if(((@elemento[$altezza]->[0]) eq $volo_ritorno) and ((@elemento[$altezza]->[5]) eq $giorno_ritorno)){
 				$selected="volo_selected";
 				gestione_sessione::setParam("Ritorno_id",@elemento[$altezza]->[0]);
-				gestione_sessione::setParam("Ritorno_data",$giorno_partenza);
+				gestione_sessione::setParam("Ritorno_data",$giorno_ritorno);
 				gestione_sessione::setParam("Ritorno_partenza",@elemento[$altezza]->[1]);
 				gestione_sessione::setParam("Ritorno_arrivo",@elemento[$altezza]->[2]);
 				gestione_sessione::setParam("Ritorno_prezzo",@elemento[$altezza]->[3]);

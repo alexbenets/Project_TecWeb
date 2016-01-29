@@ -20,4 +20,16 @@ require "common_functions/database.cgi";
 
 print CGI::header();#imposto il cookie di sessione
 
-print database::getVoli("Charles De Gaulle", "Fiumicino", 1, "12/03/2016")->[2]->[6];
+my @passeggeri;
+my @passeggero=("Marco","Pettenuzzo", "PTTMRC87A12L840W", "12/01/1987");
+push @passeggeri, \@passeggero;
+my @passeggero=("Test","Cognome", "CNMTST87A12L840W", "12/01/1987");
+push @passeggeri, \@passeggero;
+
+my @servizi;
+push @servizi, 1;
+
+my $id= database::prenota(1, "12/02/2016","T3V6", \@passeggeri,\@servizi);
+print $id;
+
+#print database::salvaServizio(1,2);
