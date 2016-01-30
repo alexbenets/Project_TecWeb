@@ -2,9 +2,8 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 <!--targetNamespace="" xmlns=""	elementFormDefault="qualified!!!"> -->
-<!--NB esistono piÃ¹ elementi con lo stesso nome (in particonare idFK, data, nome) se Ã¨ un problema in validazione modifica non Ã¨ un 		problema
-tag amministratore superadmin (sarÃ  solo 1) x cancellare amministratore/ha potere assoluto, gli altro POSSONO SOLO TOCCARE LE TABELLE 		CON UN CAMPO AMMINISTRATORE (cosi superadmin fa da grande fratello)
-What I'm trying to say here is that metadata (data about data) should be stored as attributes, and the data itself should be stored as elements.(eh tough luck seems impossible when you have more then one foreign key)
+<!--problema tag amministratore è ridondante e sostituibile da un campo flag su UR
+forse va aggiunto l'id dell Amministratore responsabile pe ogni cambiamento sulle tabelle utenteRegistrato, nazione, citta, aereoporto,tratta, volo 
 -->
 
 
@@ -14,21 +13,29 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="tabUtente" type="tTabUtente"/>
 		<xsd:element name="tabUtenteRegistrato" type="tTabUtenteRegistrato"/>
+	<!--
 		<xsd:element name="tabAmministratore" type="tTabAmministratore"/>
+	-->
 		<xsd:element name="tabNazione" type="tTabNazione"/>
 		<xsd:element name="tabCitta" type="tTabCitta"/>
 		<xsd:element name="tabAereoporto" type="tTabAereoporto"/>
 		<xsd:element name="tabTratta" type="tTabTratta"/>
+	<!--
 		<xsd:element name="tabProduttoreAereo" type="tTabProduttoreAereo"/>
+	-->
 		<xsd:element name="tabVolo" type="tTabVolo"/>
 		<xsd:element name="tabPrenotazione" type="tTabPrenotazione"/>
 		<xsd:element name="tabAereo" type="tTabAereo"/>
+	<!--
 		<xsd:element name="tabTipoAereo" type="tTabTipoAereo"/>
 		<xsd:element name="tabCommento" type="tTabCommento"/>
+	-->
 		<xsd:element name="tabServizio" type="tTabServizio"/>
 		<xsd:element name="tabServizioPrenotato" type="tTabServizioPrenotato"/>			
+	<!--	
 		<xsd:element name="tabNews" type="tTabNews"/>
 		<xsd:element name="tabFaq" type="tTabFaq"/>
+	-->
 	</xsd:sequence>	
 </xsd:complexType>
 
@@ -48,7 +55,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="nome" type="xsd:string"/>
 		<xsd:element name="cognome" type="xsd:string"/>
 		<xsd:element name="codiceFiscale" type="tCodiceFiscale"/>
-		<xsd:element name="dataNascita" type="xsd:date"/>
+		<xsd:element name="dataNascita" type="tData"/>
 	</xsd:sequence>
 	<xsd:attribute name="idU" type="tId"/>
 </xsd:complexType>
@@ -66,6 +73,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record utente registrato  -->
 <xsd:complexType name="tUtenteRegistrato">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagAmm" type="xsd:boolean"/><!--true=> è l'account di un amministratore; false=>è un account di un utente-->
 		<xsd:element name="flagBann" type="xsd:boolean"/><!--true=> non può accedere o prenotare; false=>è un account attivo-->
 		<xsd:element name="mail" type="xsd:string"/>
 		<xsd:element name="password" type="tPassword"/>
@@ -73,25 +81,32 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="rispostaSegreta" type="xsd:string"/>
 	</xsd:sequence>
 	<xsd:attribute name="idUR" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica-->
 </xsd:complexType>
 
 
 <!-- 		    AMMINISTRATORE          -->
 
 <!-- definizione tabella amministratore -->			
+<!--
 <xsd:complexType name="tTabAmministratore">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
 		<xsd:element name="amministratore" type="tAmministratore"/>
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record amministratore -->
+<!--
 <xsd:complexType name="tAmministratore">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="superAdmin" type="xsd:boolean"/> <!--true=superadmin false=non superdmin-->
+		<xsd:element name="superAdmin" type="xsd:boolean"/>
+-->
+		 <!--true=superadmin false=non superdmin-->
+	<!--
 	</xsd:sequence>	
 	<xsd:attribute name="idA" type="tId"/>	
 </xsd:complexType>
-
+-->
 
 <!-- 		    NAZIONE          -->
 
@@ -107,6 +122,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="nome" type="xsd:string"/>
 	</xsd:sequence>		
 	<xsd:attribute name="idN" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica-->
 </xsd:complexType>
 
 
@@ -126,6 +142,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	</xsd:sequence>
 	<xsd:attribute name="idAp" type="tId"/>
 	<xsd:attribute name="idC" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica-->
 </xsd:complexType>
 
 
@@ -145,6 +162,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	</xsd:sequence>	
 	<xsd:attribute name="idC" type="tId"/>
 	<xsd:attribute name="idN" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica-->
 </xsd:complexType>
 
 		
@@ -164,35 +182,42 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idT" type="tId"/>
 	<xsd:attribute name="idApP" type="tId"/>
 	<xsd:attribute name="idApA" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica-->
 </xsd:complexType>
 
 
 <!-- 			PRODUTTORE AEREO 		  -->
 
 <!-- descrizione tabella produttore aereo -->
+<!--
 <xsd:complexType name="tTabProduttoreAereo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="produttoreAereo" type="tProduttoreAereo"/>	
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record produttore aereo -->
+<!--
 <xsd:complexType name="tProduttoreAereo">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="nome" type="xsd:string"/>
 	</xsd:sequence>		
 	<xsd:attribute name="idPA" type="tId"/>
 </xsd:complexType>
-
+-->
 
 <!-- 			 TIPO AEREO 	    -->
 
 <!-- descrizione tabella tipo aereo -->
+<!--
 <xsd:complexType name="tTabTipoAereo">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="tipoAereo" type="tTipoAereo"/>
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record tipo aereo -->
+<!--
 <xsd:complexType name="tTipoAereo">	
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="nome" type="xsd:string"/>
@@ -216,7 +241,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idTA" type="tId"/>
 	<xsd:attribute name="idPA" type="tId"/>		
 </xsd:complexType>
-
+-->
 
 <!-- 		    AEREO  	       -->
 
@@ -249,13 +274,14 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <xsd:complexType name="tVolo">	
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="flagAttivo" type="xsd:boolean"/> <!--true=> è eseguito altrimenti non è piu attivo-->
-		<xsd:element name="oraPartenza" type="xsd:time"/>
+		<xsd:element name="oraPartenza" type="tOrario"/>
 		<xsd:element name="prezzo" type="xsd:float"/>
 		<xsd:element name="giorno" type="tGiorno"/> 
 	</xsd:sequence>		
 	<xsd:attribute name="idV" type="tId"/>
 	<xsd:attribute name="idT" type="tId"/>
-	<xsd:attribute name="idAe" type="tId"/> 	
+	<xsd:attribute name="idAe" type="tId"/>
+	<xsd:attribute name="idAmm" type="tId"/> <!--contiene l'id dell'amministratore che ha effettuato l'ultima modifica--> 	
 </xsd:complexType>
 
 
@@ -270,8 +296,8 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record prenotazione -->
 <xsd:complexType name="tPrenotazione">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="data" type="xsd:date"/>
-		<xsd:element name="dataPartenza" type="xsd:date"/>
+		<xsd:element name="data" type="tData"/>
+		<xsd:element name="dataPartenza" type="tData"/>
 		<xsd:element name="numeroBagagli" type="xsd:integer"/>	
 	</xsd:sequence>
 	<xsd:attribute name="idP" type="tId"/>
@@ -284,15 +310,21 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- 		  COMMENTO            -->
 
 <!-- descrizione tabella commento -->
+<!--
 <xsd:complexType name="tTabCommento">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="commento" type="tCommento"/>
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record commento -->
+<!--
 <xsd:complexType name="tCommento">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="abilitato" type="xsd:boolean"/><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
+		<xsd:element name="abilitato" type="xsd:boolean"/>
+-->
+		<!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
+<!--	
 		<xsd:element name="voto" type="xsd:integer"/> 
 		<xsd:element name="testo" type="tTesto"/>
 	</xsd:sequence>	
@@ -301,7 +333,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idUR" type="tId"/>
 	<xsd:attribute name="idA" type="tId"/>
 </xsd:complexType>
-
+-->
 
 
 <!-- 		  SERVIZIO            -->
@@ -342,12 +374,15 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- 		   NEWS          -->
 
 <!-- descrizione tabella news-->
+<!--
 <xsd:complexType name="tTabNews">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
  		<xsd:element name="news" type="tNews"/>
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record News -->
+<!-- 
 <xsd:complexType name="tNews">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="testo" type="tTesto"/>
@@ -355,18 +390,21 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idNe" type="tId"/>
 	<xsd:attribute name="idA" type="tId"/>	
 </xsd:complexType>
-
+-->
 
 
 <!-- 		   FAQ           -->
 
 <!-- descrizione tabella faq -->
+<!--
 <xsd:complexType name="tTabFaq">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="faq" type="tFaq"/>
 	</xsd:sequence>
 </xsd:complexType>
+-->
 <!-- definizione record Faq -->
+<!--
 <xsd:complexType name="tFaq">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="argomento" type="xsd:string"/>
@@ -375,16 +413,19 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idF" type="tId"/>
 	<xsd:attribute name="idA" type="tId"/>	
 </xsd:complexType>
-
+-->
 			
 <!-- definizione tipo testo -->
+
+<!--
 <xsd:complexType name="tTesto">
 	<xsd:sequence minOccurs="1" maxOccurs="1">	
-		<xsd:element name="data" type="xsd:date"/>
+		<xsd:element name="data" type="tData"/>
 		<xsd:element name="titolo" type="xsd:string"/>
 		<xsd:element name="contenuto" type="xsd:string"/>
 	</xsd:sequence>	
 </xsd:complexType>
+-->
 
 <!-- definizione tipo Id -->
 <xsd:simpleType name="tId">
@@ -433,5 +474,24 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:minLength value="8"/>
 	</xsd:restriction>
 </xsd:simpleType>
+
+
+<!--definizione tipo data-->
+<!--per usare data nel formato GG/MM/AAAA invece che AAAA/MM/GG come su xsd:date-->
+    <xsd:simpleType name="tData">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{2}[/]\d{2}[/]\d{4}"></xsd:pattern>
+            <xsd:length value="10"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+
+<!--definizione tipo orario-->
+<!--per usare orario nel formato OO:MM invece che OO:MM::SS come su xsd:time-->
+        <xsd:simpleType name="tOrario">
+            <xsd:restriction base="xsd:string">
+            	<xsd:pattern value="[0-2][0-3]\:[0-5][0-9]"></xsd:pattern>
+        	</xsd:restriction>
+      </xsd:simpleType>
 
 </xsd:schema>
