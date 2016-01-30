@@ -1,31 +1,41 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
 	<head>
-		<style type="text/css">
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		
+		<style type="text/css" media="screen">
 			@import url("style/main.css");
 		</style>
+		
 		<title>Login</title>
+		
+		<meta name="title" content="Login"/>
+		<meta name="description" content="Login page del sito della compagnia Aerea A-ir"/>
+		<meta name="keywords" content=" A-ir, compagnia, aereo, biglietto, volo, prenotazione, tratte, aeroporto"/>
+		<meta name="language" content="italian it"/>
+		<meta name="author" content="MarAlFraMar"/>
+		
 	</head>
 	
 	<body>
+		<!-- HEADER -->
 		<!-- HEADER -->
 		<div id="header">
 			<div id="logo">
 				
 			</div>
 			<div id="banner">
-				<h1>Vola con noi &copy;</h1>
-				<h2>Prenota il tuo volo per la destinazione che ti pare e piace :(</h2>
+				<h1>The A<span>-IR &copy;</span></h1>
+				<h2>Si alza il vento, vola con Noi!</h2>
 			</div><!-- chiudo banner-->
 			
 			<div id="menu">
-				<a href="index.html">Home</a>
-				<a href="#" >Compagnia</a>
-				<a href="#" >Pianifica</a>
-				<a href="#" >Gestisci</a>
-				<a href="#" >Servizi</a>
-				<a href="#" class="selected">Login</a>
-				<a href="#" >Commenti</a>
+				<a href="index.html" >Home</a>
+				<a href="compagnia.html" >Compagnia</a>
+				<a href="gestisci.html" >Gestisci</a>
+				<a href="servizi.html" >Servizi</a>
+				<a href="login.html" class="selected">Login</a>
 			</div><!-- chiudo menu -->
 			<div class="clearer"></div>
 			
@@ -46,6 +56,13 @@
 		<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
 			
 			<div id="contenuto">
+			
+				<div id="secondo_menu">
+					<ul>
+						<li><a href="registrati.html">Registrati</a></li>
+					</ul>
+				</div><!-- chiudo secondo menu -->
+				
 				<div class="sezione">
 					<form action="#" method="post">
 						<fieldset>
@@ -62,15 +79,17 @@
 								<input type="password" id="password" name="password" value="password"></input>
 								<div class="clearer"></div>
 							</div>
+							
 							<div>
-								<button type="submit">
+								<button type="submit" name="login" id="login">
 									<span>Login</span>
 								</button>
 							</div>
+							<div class="clearer"></div>
 						</fieldset>
 					</form>
 				</div>
-				<div class="clearer"></div>
+				
 			</div><!-- chiudo contenuto-->
 		</div><!-- chiudo main-->
 		
@@ -79,7 +98,7 @@
 				<a href="#">Mappa del sito</a>
 			</div> <!-- chiudo sitemap -->
 			<div id="dati_aziendali">
-				<p>Volare con noi soc. irresponsabilit&agrave; illimitata</p>
+				<p>Si alza il vento, vola con Noi!</p>
 				<p>P.IVA: Zanicchi</p>
 			</div><!-- chiudo dati aziendali -->
 			<div id="gruppo">

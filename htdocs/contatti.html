@@ -8,10 +8,10 @@
 			@import url("style/main.css");
 		</style>
 		
-		<title>Compagnia</title>
+		<title>Contatti</title>
 		
-		<meta name="title" content="Compagnia"/>
-		<meta name="description" content="compagnia page del sito della compagnia Aerea A-ir"/>
+		<meta name="title" content="Contatti"/>
+		<meta name="description" content="Home page del sito della compagnia Aerea A-ir"/>
 		<meta name="keywords" content="A-ir, compagnia, aereo, biglietto, volo, prenotazione, tratte, aeroporto"/>
 		<meta name="language" content="italian it"/>
 		<meta name="author" content="MarAlFraMar"/>
@@ -19,6 +19,7 @@
 	</head>
 	
 	<body>
+		<!-- HEADER -->
 		<div id="header">
 			<div id="logo">
 				
@@ -27,10 +28,10 @@
 				<h1>The A<span>-IR &copy;</span></h1>
 				<h2>Si alza il vento, vola con Noi!</h2>
 			</div><!-- chiudo banner-->
-			
-			<div id="menu">
-				<a href="index.html" >Home</a>
-				<a href="compagnia.html" class="selected">Compagnia</a>
+
+			<div id="menu"> <!--in che livello siamo? è giusto sia sotto compagnia?-->
+				<a href="index.html">Home</a>
+				<a href="compagnia.html" class="selected" >Compagnia</a> 
 				<a href="gestisci.html" >Gestisci</a>
 				<a href="servizi.html" >Servizi</a>
 				<a href="login.html" >Login</a>
@@ -44,47 +45,62 @@
 				<a href="index.html">Home</a>
 				<span class="separatore_path"> &gt;</span>
 				
-				<a href="index.html">Pagina boh</a>
+				<a href="compagnia.html">Compagnia</a>
 				<span class="separatore_path"> &gt;</span>
 				
-				<span>Pagina.bleah</span>
+				<span>Contatti</span>
 			</div><!-- chiudo path-->
 		</div><!-- chiudo header-->
 		
-		<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
+				<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
 			<div id="contenuto">
 				<div id="secondo_menu">
 					<ul>
-						<li><a href="storia.html">Storia</a></li>
-						<li><a href="flotta.html">Flotta</a></li>
-						<li><a href="personale.html">Personale</a></li>
-						<li><a href="terminiEcondizioni" >Termini e condizioni</a></li>
-						<li><a href="faq.html">FAQ</a></li>
-						<li><a href="contatti.html">Contatti</a></li>
+						<li><a href="#S1">Storia</a></li>
+						<li><a href="#S2">Flotta</a></li>
+						<li><a href="#S3">Personale</a></li>
+						<li><a href="#S4">Termini e condizioni</a></li>
+						<li><a href="#S5">FAQ</a></li>
+						<li><a href="#S6" class="selected">Contatti</a></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->
 				<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
+					<h3>Contatti</h3>
+					<h4>come trovarci</h4>
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell'articolo -->
-						<h3>La compagnia The A-ir</h3>
-						<p>Vi invitiamo a scoprire la nostra compagnia low cost! </p>
+						<h5>Mail</h5>
+						<p>A_ir.compagnia@mail.com</p>
 					</div><!-- chiudo sezione -->
-					
-					
+					<div class="sezione" id="S2"><!-- inizio div che contiene titolo e sezione dell'articolo -->
+						<h5>Telefono</h5>
+						<p>+39 041102013</p>
+						
+					</div><!-- chiudo sezione -->
+					<div class="sezione" id="S3"><!-- inizio div che contiene titolo e sezione dell'articolo -->
+						<h5>Fax</h5>
+						<p>+39 041102013</p>
+						</div><!-- chiudo sezione -->
+					<div class="sezione" id="S4"><!-- inizio div che contiene titolo e sezione dell'articolo -->
+						<h5>Indirizzo sede principale</h5>
+						<p>Via F.felice 300/A, Angora, Italia</p>
+					</div><!-- chiudo sezione -->
+					<div class="sezione" id="S5"><!-- inizio div che contiene titolo e sezione dell'articolo -->
+						<h5>Partita IVA</h5>
+						<p>0764352056C</p>
+					</div><!-- chiudo sezione -->				
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>
-				</div><!-- chiudo contenitore_sezioni -->	
-				
+				</div><!-- chiudo contenitore_sezioni -->
 				<div class="clearer"></div>
 			</div><!-- chiudo contenuto-->
-		</div><!-- chiudo main-->
-		
+		</div><!-- chiudo main-->	
 		<div id="footer">
 			<div id="sitemap">
 				<a href="#">Mappa del sito</a>
 			</div> <!-- chiudo sitemap -->
 			<div id="dati_aziendali">
-				<p>Si alza il vento, vola con Noi!</p>
+				<p>Volare con noi soc. irresponsabilit&agrave; illimitata</p>
 				<p>P.IVA: Zanicchi</p>
 			</div><!-- chiudo dati aziendali -->
 			<div id="gruppo">
