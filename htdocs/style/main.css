@@ -358,6 +358,17 @@
 /*FINE SEZIONE SECONDO MENU'*/
 
 /*INIZIO SEZIONE "contenitore_sezioni" (CON SEZIONI...)*/
+
+#contenitore_sezioni > h3 {
+	width:100%;
+	text-align:center;
+}
+
+#contenitore_sezioni > h4 {
+	width:100%;
+	text-align:center;
+}
+
 #contenuto p{
 	padding: 0.2em;
 }
