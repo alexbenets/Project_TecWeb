@@ -22,6 +22,6 @@ require "common_functions/menu.cgi";
 print CGI::header();#imposto il cookie di sessione
 
 
-menu::get();
+print database::aggiornaUtente(3, "Nome", "cognome", "CF", "32/02/1987", "password", "ajeje");
 
 #print database::salvaServizio(1,2);

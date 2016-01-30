@@ -35,10 +35,10 @@
 			</utenteRegistrato>
 		<utenteRegistrato idUR="3">
 			<flagBann>false</flagBann>
-			<nome>Nome</nome>
-			<cognome>Cognome</cognome>
+			<nome>Ajeje</nome>
+			<cognome>Brazorf</cognome>
 			<codiceFiscale>pttmrc87a12l840w</codiceFiscale>
-			<dataNascita>12/01/1987</dataNascita>
+			<dataNascita>12/02/1987</dataNascita>
 			<mail>info@example.org</mail>
 			<password>password</password>
 			</utenteRegistrato>

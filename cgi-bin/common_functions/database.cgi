@@ -75,6 +75,61 @@ sub salva_utente{
 	return $id;	
 }
 
+
+sub getUtente{
+	my ($id)=@_;
+	my @out;
+	push @out, get('//utenteRegistrato[@idUR='.$id.']/nome');
+	push @out, get('//utenteRegistrato[@idUR='.$id.']/cognome');
+	push @out, get('//utenteRegistrato[@idUR='.$id.']/codiceFiscale');
+	push @out, get('//utenteRegistrato[@idUR='.$id.']/dataNascita');
+	return \@out;
+}
+
+
+#ritorna 1 se la password iniziale è corretta (ed ha aggiornato il database)
+#ritorna 0 se la password è errata
+sub aggiornaUtente{
+	my ($id, $nome, $cognome, $cf, $nascita, $password, $nuova_password)=@_;
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	my $utente=$db->findnodes('/database/tabUtenteRegistrato/utenteRegistrato[@idUR='.$id.']')->[0];
+	
+	my $psw_database=$utente->findnodes('password/text()')->[0];
+	if(!($psw_database eq $password)){
+		return 0;
+	}
+	my $nome_database=$utente->findnodes('nome/text()')->[0];
+	if(!($nome_database eq $nome)){
+		$nome_database->setData($nome);
+	}
+	
+	my $cognome_database=$utente->findnodes('cognome/text()')->[0];
+	if(!($cognome_database eq $cognome)){
+		$cognome_database->setData($cognome);
+	}
+	
+	my $cf_database=$utente->findnodes('codiceFiscale/text()')->[0];
+	if(!($cf_database eq $cf)){
+		$cf_database->setData($cf);
+	}
+	
+	my $nascita_database=$utente->findnodes('dataNascita/text()')->[0];
+	if(!($nascita_database eq $nascita)){
+		$nascita_database->setData($nascita);
+	}
+	
+	$psw_database=$utente->findnodes('password/text()')->[0];
+	if(!($psw_database eq $nuova_password) and ! ($nuova_password eq "**********") and ! ($nuova_password eq "")){
+		$psw_database->setData($nuova_password);
+	}
+	
+	set($db->toString(1));
+	return 1;
+}
+
+#sezione inerenti ai servizi
+
 sub salvaServizio{
 	my ($id_prenotazione, $id_servizio)=@_;
 	my $id=int(get('/database/tabServizioPrenotato/servizioPrenotato[@idP="'.$id_prenotazione.'" and @idS="'.$id_servizio.'"]/@idSP'));
@@ -105,12 +160,7 @@ sub salvaServizio{
 	return $id;#ritorno l'id della nuova entry nel database
 }
 
-#<tabPrenotazione>
-#			<prenotazione idP="1" idUR="1" idU="1,2">
-#				<data>2016-02-12</data>
-#				<dataPartenza>2016-03-12</dataPartenza>
-#				<numeroBagagli>1</numeroBagagli>
-#			</prenotazione>
+
 
 sub prenota{
 	my ($id_utente,$data, $id_volo, $passeggeri, $servizi, $bagagli)=@_;
