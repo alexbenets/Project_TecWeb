@@ -39,15 +39,20 @@
 	height: 10em;
 }
 #banner h1 {
-	padding-top: 1em;
-	padding-left: 18em;
+	padding-top: 0.2em;
+	padding-left: 9em;
 	/*text-align:center;*/
+	font-size: 4em;
 	color:#00a000;
+}
+#banner h1 span{
+	font-size: 0.5em;
 }
 #banner h2 {
 	padding-top:0.5em;
-	padding-left:15em;
+	padding-left:15.5em;
 	/*text-align: center;*/
+	font-size: 2em;
 	color:#a00000;
 }
 /*FINE SEZIONE HEADER*/
@@ -57,6 +62,7 @@
 	height:3em;
 	/*background-color:#C0FFEE;*/
 	padding:0.1em 0.3em 0.4em 0.3em;
+	margin-left: 25em;
 }
 #menu a {
 	/*sezione per il pseudo contenitore*/
@@ -352,10 +358,17 @@
 /*FINE SEZIONE SECONDO MENU'*/
 
 /*INIZIO SEZIONE "contenitore_sezioni" (CON SEZIONI...)*/
+#contenuto p{
+	padding: 0.2em;
+}
 #contenitore_sezioni {
 	float:left;
 	width:70%;
 	display:block;
+}
+
+#presentazione{
+	text-align: center;
 }
 
 /*link per tornare in alto*/
