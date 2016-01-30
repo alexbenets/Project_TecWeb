@@ -21,7 +21,11 @@ require "common_functions/menu.cgi";
 
 print CGI::header();#imposto il cookie di sessione
 
+my @prenotazioni=@{database::getPrenotazioni(3)};
 
-print database::aggiornaUtente(3, "Nome", "cognome", "CF", "32/02/1987", "password", "ajeje");
+#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
+
+#foreach 
+print scalar(@prenotazioni);
 
 #print database::salvaServizio(1,2);

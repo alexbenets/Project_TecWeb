@@ -277,31 +277,15 @@ if($modifica_dati_utente==1){
 
 if($modifica_prenotazioni==1){
 	print "prenotazioni";	
-	$testo='<div id="contenitore_sezioni">';
 	my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"))};
 	foreach my $tmp (@prenotazioni)
 	{
 		$testo.="
 		<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 		my @prenotazione=@{$tmp};
-			$testo.='
-			<a href="gestisci_prenotazione.cgi?id='.@prenotazione[0].'">
-					<object>
-						<fieldset>
-							<p>Data:</p>
-							<p>Partenza: </p>
-							<p>Arrivo: </p>
-							<p>Orario partenza: </p>
-						</fieldset>
-					</object>
-				</a>';
 		#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
-		$testo.="</div><!-- chiudo prenotazione -->
-		<div class=\"clearer\"></div>";
+		$testo.="</div><!-- chiudo prenotazione -->";
 	}
-	$testo.='</div><!-- chiudo contenitore sezioni -->
-				
-			<div class="clearer"></div>';
 }
 print print_content::print($testo);
 print "		</div>"; #chiudo il div main

@@ -32,49 +32,7 @@ sub set{
 	return 1;
 }
 
-### INIZIO FUNZIONI RELATIVE ALLA PRENOTAZIONE
-
-sub salva_utente{
-	my ($nome, $cognome, $cf, $nascita)=@_;
-	my $presente=int(get('//tabUtente/utente[codiceFiscale="'.$cf.'"]/@idU'));
-	if ($presente>0){ #è inutile aggiungere un utente con il codice fiscale duplicato!
-		return $presente;
-	}
-	my $id=int(get('//tabUtente/utente/@idU[ not (.<//tabUtente/utente/@idU)]'))+1;
-	
-	my $parser = XML::LibXML->new();
-	my $db = $parser->parse_file($filename) or die;
-	
-	my $tab_utenti=$db->findnodes('/database/tabUtente')->[0];
-	my $nodo=XML::LibXML::Element->new("utente");
-	$nodo->setAttribute("idU",$id);
-	
-	
-	
-	my $nodo_nome=XML::LibXML::Element->new("nome");
-	my $n_n=XML::LibXML::Text->new($nome);
-	$nodo_nome->appendChild($n_n);
-	$nodo->appendChild($nodo_nome);
-	
-	my $nodo_cognome=XML::LibXML::Element->new("cognome");
-	$n_n=XML::LibXML::Text->new($cognome);
-	$nodo_cognome->appendChild($n_n);
-	$nodo->appendChild($nodo_cognome);
-		
-	my $nodo_cf=XML::LibXML::Element->new("codiceFiscale");
-	$n_n=XML::LibXML::Text->new($cf);
-	$nodo_cf->appendChild($n_n);
-	$nodo->appendChild($nodo_cf);
-	
-	my $nodo_nascita=XML::LibXML::Element->new("dataNascita");
-	$n_n=XML::LibXML::Text->new($nascita);
-	$nodo_nascita->appendChild($n_n);
-	$nodo->appendChild($nodo_nascita);
-	$tab_utenti->addChild($nodo);
-	set($db->toString(1));
-	return $id;	
-}
-
+###INIZIO FUNZIONI RELATIVE ALL'UTENTE
 
 sub getUtente{
 	my ($id)=@_;
@@ -126,6 +84,97 @@ sub aggiornaUtente{
 	
 	set($db->toString(1));
 	return 1;
+}
+### INIZIO FUNZIONI RELATIVE ALLA PRENOTAZIONE
+
+sub getPrenotazioni{
+	my ($id)=@_;
+	my $prenotazioni=get('//prenotazione[@idUR='.$id.']');
+	my @prenotazioni;
+	foreach my $prenotazione ($prenotazioni->get_nodelist){
+		#<prenotazione idP="1" idUR="1" idU="1,2" idV="3">
+		#<data>2016-02-12</data>
+		#		<dataPartenza>2016-03-12</dataPartenza>
+		#		<numeroBagagli>1</numeroBagagli>
+		my $id=$prenotazione->getAttribute("idP");
+		my $idU=$prenotazione->getAttribute("idU");
+		
+		my @id_utenti=split /,/ , $idU;
+		#ora ottengo un array contenente tutti gli utenti di quella prenotazione
+		my $posti_occupati = (scalar(@id_utenti)+1);
+		
+		my $id_volo=$prenotazione->getAttribute("idV");
+		my $data_prenotazione=$prenotazione->find("data");
+		my $data_partenza=$prenotazione->find("dataPartenza");
+		my $bagagli=$prenotazione->find("numeroBagagli");
+		
+		my $tratta=get('//volo[@idV='.$id_volo.']/@idT');
+		my $ora_partenza=get('//volo[@idV='.$id_volo.']/oraPartenza');
+		my $prezzo=get('//volo[@idV='.$id_volo.']/prezzo');
+		
+		my $aereoporto_partenza=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/@idC)]/nome) | (//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome)');
+		my $aereoporto_arrivo=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/@idC)]/nome) | (//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome)');
+		
+		my $servizi=get('//servizioPrenotato[@idP='.$id.']');
+		my @servizi_prenotati;
+		foreach my $temp ($servizi->get_nodelist){
+			my @s_temp=(get('//servizio[@idS='.$temp->getAttribute("idS").']/nome'),get('//servizio[@idS='.$temp->getAttribute("idS").']/prezzo'));
+			push @servizi_prenotati, \@s_temp;
+		}
+		#print "<p>$id, $posti_occupati, $tratta $id_volo, $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati</p>";
+		my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
+		push @prenotazioni, \@temp;
+		
+		#push @prenotazioni \@temp;
+		#<volo idV="7" idT="3" idAe="1">
+		#		<flagAttivo>true</flagAttivo>
+		#		<oraPartenza>08:00</oraPartenza>
+		#		<prezzo>12</prezzo>
+		#		<giorno>2</giorno>			
+		#	</volo>
+	}
+	return \@prenotazioni;
+}
+
+sub salva_utente{
+	my ($nome, $cognome, $cf, $nascita)=@_;
+	my $presente=int(get('//tabUtente/utente[codiceFiscale="'.$cf.'"]/@idU'));
+	if ($presente>0){ #è inutile aggiungere un utente con il codice fiscale duplicato!
+		return $presente;
+	}
+	my $id=int(get('//tabUtente/utente/@idU[ not (.<//tabUtente/utente/@idU)]'))+1;
+	
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	
+	my $tab_utenti=$db->findnodes('/database/tabUtente')->[0];
+	my $nodo=XML::LibXML::Element->new("utente");
+	$nodo->setAttribute("idU",$id);
+	
+	
+	
+	my $nodo_nome=XML::LibXML::Element->new("nome");
+	my $n_n=XML::LibXML::Text->new($nome);
+	$nodo_nome->appendChild($n_n);
+	$nodo->appendChild($nodo_nome);
+	
+	my $nodo_cognome=XML::LibXML::Element->new("cognome");
+	$n_n=XML::LibXML::Text->new($cognome);
+	$nodo_cognome->appendChild($n_n);
+	$nodo->appendChild($nodo_cognome);
+		
+	my $nodo_cf=XML::LibXML::Element->new("codiceFiscale");
+	$n_n=XML::LibXML::Text->new($cf);
+	$nodo_cf->appendChild($n_n);
+	$nodo->appendChild($nodo_cf);
+	
+	my $nodo_nascita=XML::LibXML::Element->new("dataNascita");
+	$n_n=XML::LibXML::Text->new($nascita);
+	$nodo_nascita->appendChild($n_n);
+	$nodo->appendChild($nodo_nascita);
+	$tab_utenti->addChild($nodo);
+	set($db->toString(1));
+	return $id;	
 }
 
 #sezione inerenti ai servizi
