@@ -17,19 +17,11 @@ require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
 require "common_functions/database.cgi";
+require "common_functions/menu.cgi";
 
 print CGI::header();#imposto il cookie di sessione
 
-my @passeggeri;
-my @passeggero=("Marco","Pettenuzzo", "PTTMRC87A12L840W", "12/01/1987");
-push @passeggeri, \@passeggero;
-my @passeggero=("Test","Cognome", "CNMTST87A12L840W", "12/01/1987");
-push @passeggeri, \@passeggero;
 
-my @servizi;
-push @servizi, 1;
-
-my $id= database::prenota(1, "12/02/2016","T3V6", \@passeggeri,\@servizi);
-print $id;
+menu::get();
 
 #print database::salvaServizio(1,2);

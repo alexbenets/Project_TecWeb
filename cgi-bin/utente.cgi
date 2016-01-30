@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 
-package index_page;
+package pagina_utente;
 
 use strict;
 use CGI::Carp qw(fatalsToBrowser);
@@ -17,19 +17,12 @@ require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
-my $titolo="Home";
+my $titolo="Area utente";
 
 
 my $create=gestione_sessione::createSession();
-gestione_sessione::setParam("location","/cgi-bin/index.cgi");
+gestione_sessione::setParam("location","/cgi-bin/utente.cgi");
 
-
-my $ar=gestione_sessione::getParam("AR");
-my $select_partenza=gestione_sessione::getParam("partenza");
-my $select_arrivo=gestione_sessione::getParam("arrivo");
-my $data_partenza=check_form::leggi_data(gestione_sessione::getParam("data_partenza"));
-my $data_ritorno=check_form::leggi_data(gestione_sessione::getParam("data_ritorno"));
-my $select_passeggeri=gestione_sessione::getParam("passeggeri");
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
@@ -60,12 +53,36 @@ print_search::set_tratte(%tratte);
 my @path_temp;
 my @path=("Home", "index.cgi");
 push @path_temp, \@path;
+my @path=("Area utente", "utente.cgi");
+push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print print_search::print(0, $ar, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri,1);
-print print_content::print("ciao");
+
+my $testo='<div id="secondo_menu">
+					<ul>
+						<li><a href="#S1">Paragrafo 1</a></li>
+						<li><a href="#S2">Paragrafo 2</a></li>
+						<li><a href="#S3">Paragrafo 2</a></li>
+						<li><a href="#S4">Paragrafo 2</a></li>
+						<li><a href="#S5">Paragrafo 2</a></li>
+						<li><a href="#S6">Paragrafo 2</a></li>
+					</ul>
+				</div><!-- chiudo secondo menu -->
+				<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
+					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
+						<h3>Paragrafo</h3>
+						<p>Qui ci v&agrave; qualcosa come un contenuto statico, automaticamente generato, form di prenotazione, ecc...</p>
+						<p>Qui ci v&agrave; qualcosa come un contenuto statico, automaticamente generato, form di prenotazione, ecc...</p>
+						<p>Qui ci v&agrave; qualcosa come un contenuto statico, automaticamente generato, form di prenotazione, ecc...</p>
+						<p>Qui ci v&agrave; qualcosa come un contenuto statico, automaticamente generato, form di prenotazione, ecc...</p>
+						<p>Qui ci v&agrave; qualcosa come un contenuto statico, automaticamente generato, form di prenotazione, ecc...</p>
+					</div><!-- chiudo sezione -->
+				</div>
+				';
+
+print print_content::print($testo);
 print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>

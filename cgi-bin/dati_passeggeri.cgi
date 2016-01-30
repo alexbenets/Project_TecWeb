@@ -15,8 +15,8 @@ require "common_functions/print_search.cgi";
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
-
 require "common_functions/Session.cgi";
+require "common_functions/menu.cgi";
 
 my $create=gestione_sessione::createSession();
 gestione_sessione::setParam("location","/cgi-bin/dati_passeggeri.cgi");
@@ -130,19 +130,12 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w
 	<body>
 ";
 
-my @menu_temp;
-my @menu=("Home", "../index.html", "1");
-push @menu_temp, \@menu; 
-my @menu=("Home1", "index1.html", "0");
-push @menu_temp, \@menu;
-my @menu=("Contatti", "../contatti.html", "0");
-push @menu_temp, \@menu;
 
 #funzionamento: la funzione riceve un riferimento ad un array di riferimenti di array.
 # esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
-print_header::setMenu(\@menu_temp);
+print_header::setMenu(menu::get());
 
 my @path_temp;
 my @path=("Home", "index.cgi");

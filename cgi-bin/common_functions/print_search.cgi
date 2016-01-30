@@ -26,12 +26,17 @@ sub print {
 	#vuoto:bypass per evitare di stampare errori nella pagina index.cgi
 	if(!defined $data_partenza | $data_partenza==0){
 		my $today = Time::Piece->new();
-		my $oggi=(($today->mday)+1)."/".$today->mon."/".$today->year;
+		#si può partire solo da domani
+		$today+= Time::Piece::ONE_DAY;
+		my $oggi=$today->mday."/".$today->mon."/".$today->year;
 		$data_partenza=$oggi;
 	}
 	if(!defined $data_ritorno| $data_ritorno==0){
 		my $today = Time::Piece->new();
-		my $oggi=(($today->mday)+2)."/".$today->mon."/".$today->year;
+		#aggiungo due giorni alla data odierna
+		$today+= Time::Piece::ONE_DAY;
+		$today+= Time::Piece::ONE_DAY;
+		my $oggi=$today->mday."/".$today->mon."/".$today->year;
 		$data_ritorno=$oggi;
 	}
 	if($vuoto==1){

@@ -17,7 +17,7 @@ require "common_functions/print_footer.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/Session.cgi";
 require "common_functions/database.cgi";
-
+require "common_functions/menu.cgi";
 
 sub compareDate{
 #controllo se la data "partenza" è inferiore o uguale alla data di "ritorno"
@@ -208,19 +208,12 @@ print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w
 	<body>
 ";
 
-my @menu_temp;
-my @menu=("Home", "index.cgi", "1");
-push @menu_temp, \@menu; 
-my @menu=("Storia", "../storia.html", "0");
-push @menu_temp, \@menu;
-my @menu=("Contatti", "../contatti.html", "0");
-push @menu_temp, \@menu;
 
 #funzionamento: la funzione riceve un riferimento ad un array di riferimenti di array.
 # esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
-print_header::setMenu(\@menu_temp);
+print_header::setMenu(menu::get());
 
 my @path_temp;
 my @path=("Home", "index.cgi");
@@ -254,7 +247,7 @@ for(my $dd=-3; $dd<=3; $dd++){
 	$date_tabella.="		<th class=\"data\">Data: ".$dt2->strftime('%d/%m/%y')."</th>\n";
 }
 
-print "$giorno_partenza, $giorno_ritorno";
+# print "$giorno_partenza, $giorno_ritorno"; #per il debug
 
 my $testo='<div id="cerca_voli"><!-- sezione cerca voli -->
 				<h1 id="voli_trovati">Ecco i voli per te!</h1>

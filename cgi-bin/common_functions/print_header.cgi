@@ -34,7 +34,7 @@ sub print {
 		}		
 		else
 		{
-			$temp.='<h3>Benvenuto, per prenotare devi <a href="login.cgi">effettuare il login</a> o <a href="registrati.cgi">la registrazione</a>';
+			$temp.='<h3>Benvenuto, per prenotare devi <a href="login.cgi">effettuare il login</a> o <a href="registrati.cgi">la registrazione</a></h3>';
 		}
 		$temp.="	</div><!-- chiudo banner-->
 			
