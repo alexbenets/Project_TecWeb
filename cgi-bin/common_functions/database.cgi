@@ -112,8 +112,8 @@ sub getPrenotazioni{
 		my $ora_partenza=get('//volo[@idV='.$id_volo.']/oraPartenza');
 		my $prezzo=get('//volo[@idV='.$id_volo.']/prezzo');
 		
-		my $aereoporto_partenza=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/@idC)]/nome) | (//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome)');
-		my $aereoporto_arrivo=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/@idC)]/nome) | (//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome)');
+		my $aereoporto_partenza=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/@idC)])/nome')." ".get('//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/nome');
+		my $aereoporto_arrivo=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/@idC)])/nome')." ".get('//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome');
 		
 		my $servizi=get('//servizioPrenotato[@idP='.$id.']');
 		my @servizi_prenotati;
@@ -125,13 +125,6 @@ sub getPrenotazioni{
 		my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
 		push @prenotazioni, \@temp;
 		
-		#push @prenotazioni \@temp;
-		#<volo idV="7" idT="3" idAe="1">
-		#		<flagAttivo>true</flagAttivo>
-		#		<oraPartenza>08:00</oraPartenza>
-		#		<prezzo>12</prezzo>
-		#		<giorno>2</giorno>			
-		#	</volo>
 	}
 	return \@prenotazioni;
 }
@@ -221,7 +214,7 @@ sub prenota{
 	my $nodo=XML::LibXML::Element->new("prenotazione");
 	
 	my $today = Time::Piece->new();
-	my $oggi=(($today->year)+1)."-".$today->mon."-".$today->mday;
+	my $oggi=(($today->year))."-".$today->mon."-".$today->mday;
 	
 	my $nodo_data=XML::LibXML::Element->new("data");
 	my $n_n=XML::LibXML::Text->new($oggi);
@@ -288,13 +281,11 @@ sub registrati{
 	if(int($utenti)==1){
 		return -1;
 	}
-	my $max_id;
-	#prima di creare un nuovo utente, devo sapere il massimo ID
-	#funzionamento: controllo se l'elemento attuale non è inferiore ai vari elementi @idUR presenti nell'utente Registrato
-	#utilizo //utenteRegistrato/@idUR, visto che la tabella utenteRegistrato non è ripetuta in altri nodi al di fuori di tabUtenteRegistrato
-	my $utenti=get('//utenteRegistrato/@idUR[ not (.<//utenteRegistrato/@idUR)]');
-	
-	$max_id=int($utenti)+1;
+	$utenti=get('//utente/codiceFiscale="'.$cf.'"');
+	if(int($utenti)==1){
+		return -2;
+	}
+	my $max_id=salva_utente($nome, $cognome, $cf, $nascita);
 				
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
@@ -307,26 +298,6 @@ sub registrati{
 	$nodo_ban->appendChild($n_n);
 	$nodo->appendChild($nodo_ban);
 	
-	
-	my $nodo_nome=XML::LibXML::Element->new("nome");
-	$n_n=XML::LibXML::Text->new($nome);
-	$nodo_nome->appendChild($n_n);
-	$nodo->appendChild($nodo_nome);
-	
-	my $nodo_cognome=XML::LibXML::Element->new("cognome");
-	$n_n=XML::LibXML::Text->new($cognome);
-	$nodo_cognome->appendChild($n_n);
-	$nodo->appendChild($nodo_cognome);
-		
-	my $nodo_cf=XML::LibXML::Element->new("codiceFiscale");
-	$n_n=XML::LibXML::Text->new($cf);
-	$nodo_cf->appendChild($n_n);
-	$nodo->appendChild($nodo_cf);
-	
-	my $nodo_nascita=XML::LibXML::Element->new("dataNascita");
-	$n_n=XML::LibXML::Text->new($nascita);
-	$nodo_nascita->appendChild($n_n);
-	$nodo->appendChild($nodo_nascita);
 	
 	my $nodo_email=XML::LibXML::Element->new("mail");
 	$n_n=XML::LibXML::Text->new($email);
@@ -350,11 +321,11 @@ sub login{
 	my $utenti=get('/database/tabUtenteRegistrato/utenteRegistrato[mail="'.$username.'" and flagBann="false"]');
 	my @out;
 	foreach my $utente ($utenti->get_nodelist){
-	
-		my $psw="".$utente->find("password");
-		my $nome="".$utente->find("nome");
-		my $cognome="".$utente->find("cognome");
+		
 		my $id="".$utente->getAttribute("idUR");
+		my $psw="".$utente->find("password");
+		my $nome="".get('//utente[@idU='.$id.']/nome');
+		my $cognome="".get('//utente[@idU='.$id.']/cognome');
 		if($psw eq $password){
 			@out=(1,$nome,$cognome, $id);
 			return \@out;
@@ -439,13 +410,16 @@ sub getVoli{
 			$posti_disponibili=int(get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']/numeroPosti'));
 		}
 		my $id_volo=int($volo->getAttribute("idV"));
+		#print '//prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]';
 		#ora sottraggo i posti disponibili in base alle prenotazioni
-		my $prenotazioni=get('/database/tabPrenotazione/prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]');
+		my $prenotazioni=get('//prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]');
+		#print $prenotazioni;
 		foreach my $prenotazione ($prenotazioni->get_nodelist){
 			#ora mi ricavo il numero di passeggeri + il prenotante.
 			my $idU=$prenotazione->getAttribute("idU");
 			my @id_utenti=split /,/ , $idU;
 			#ora ottengo un array contenente tutti gli utenti di quella prenotazione
+			#print "<p>".(scalar(@id_utenti)+1)."</p>";
 			$posti_disponibili -= (scalar(@id_utenti)+1);
 			#visto che non mi interessa sapere chi c'è in quel volo, allora sottraggo semplicemente la grandezza del vettore + 1, in quanto è presente pure il passeggero prenotante
 		}
@@ -460,7 +434,21 @@ sub getVoli{
 		my $orario_arrivo=($t_andata+int($durata)*60)->strftime('%H:%M');
 		#my $t_andata = Time::Piece->strptime('%T', $orario);
 		#my $t_arrivo=$t_andata;
-		my @v_temp=("T".$id_tratta."V".$id_volo,$orario, $orario_arrivo,$prezzo,'4.3', $data, $posti_disponibili);
+		#<commento idCo="1" idUR="1" idA="2" idV="1">
+		my $commenti=get('//commento[@idV='.$id_volo.']');
+		my $valutazione=0;
+		my $contatore=0;
+		foreach my $commento ($commenti->get_nodelist){
+			$contatore++;
+			$valutazione+=int($commento->find("voto"));
+		}
+		if($contatore>0){
+			$valutazione=int($valutazione/$contatore);
+		}
+		if($valutazione==0){
+			$valutazione="";
+		}
+		my @v_temp=("T".$id_tratta."V".$id_volo,$orario, $orario_arrivo,$prezzo,$valutazione, $data, $posti_disponibili);
 		if($posti_disponibili>=($passeggeri)){
 			push @voli, \@v_temp;
 		}
@@ -514,7 +502,7 @@ my $nazioni_get= get('/database/tabNazione/nazione');
 foreach my $node ($nazioni_get->get_nodelist) {
         my $id=$node->getAttribute("idN");
         my $nome_nazione=$node->find('nome');
-        my $citta=get('/database/tabCitta/citta[@idN='.$id.' and flagServita="true"]');
+        my $citta=get('/database/tabCitta/citta[@idN='.$id.']');
         my %citta_temp;
         my $count_stato=0;
         foreach my $node_citta($citta->get_nodelist){

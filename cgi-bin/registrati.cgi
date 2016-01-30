@@ -37,11 +37,17 @@ my $password=$form{"password"};
 
 
 sub registrati {
-	gestione_sessione::setParam("logged","0");
 	#print "$nome, $cognome, $codice_fiscale, $nascita, $email, $password ";
-	return database::registrati($nome, $cognome, $codice_fiscale, $nascita, $email, $password );
+	my $r=database::registrati($nome, $cognome, $codice_fiscale, $nascita, $email, $password );
 	#imposto il parametro flag "logged", praticamente, alla registrazione, l'utente esegue il login automaticamente.
-
+	my @query=@{database::login($email, $password)};
+	my $login_result=@query[0];
+	if($login_result==1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
+		gestione_sessione::setParam("nome", @query[1]." ".@query[2]);
+		gestione_sessione::setParam("id", @query[3]);
+		gestione_sessione::setParam("logged","1");
+	}
+	return $r;
 }
 
 my $errore= (($nome eq "" & defined ($nome))?1:0)+
@@ -128,6 +134,9 @@ my $testo="<div class=\"sezione\">
 if($reg_Result==-1){
 	$testo.="<p class=\"errore\">Errore: L'indirizzo email &egrave; gi&agrave; registrato!</p>";
 }else{
+	if($reg_Result==-2){
+	$testo.="<p class=\"errore\">Errore: questo codice fiscale &egrave; gi&agrave; presente nell'archivio!</p>";
+	}
 	if($errore>0){
 		$testo.="<p class=\"errore\">Errore: devi compilare correttamente tutti i campi!</p>";
 	}

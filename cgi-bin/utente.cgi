@@ -288,10 +288,10 @@ if($modifica_prenotazioni==1){
 			<a href="gestisci_prenotazione.cgi?id='.@prenotazione[0].'">
 					<object>
 						<fieldset>
-							<p>Data:</p>
-							<p>Partenza: </p>
-							<p>Arrivo: </p>
-							<p>Orario partenza: </p>
+							<p>Data: '.@prenotazione[6].'</p>
+							<p>Partenza: '.@prenotazione[3].'</p>
+							<p>Arrivo: '.@prenotazione[4].'</p>
+							<p>Orario partenza: '.@prenotazione[7].'</p>
 						</fieldset>
 					</object>
 				</a>';

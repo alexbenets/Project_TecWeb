@@ -112,6 +112,12 @@ my $bagagli=int(gestione_sessione::getParam("bagagli"));
 my @servizi=@{getServizi()};
 $id_volo_partenza=~/T([\d]+)V([\d]+)/;
 my @gma=@{check_form::regexp_data($giorno_partenza)};
+if(int(@gma[1])<10){
+	@gma[1]="0".@gma[1];
+}
+if(int(@gma[0])<10){
+	@gma[0]="0".@gma[0];
+}
 my $id_prenotazione_partenza=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
 my $id_prenotazione_ritorno=0;
 if($andata==0){
