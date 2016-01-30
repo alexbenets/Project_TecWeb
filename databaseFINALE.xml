@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<database>
+
+		
+		<tabUtente>
+			<utente idU="1"> 
+				<nome>pinco</nome>
+				<cognome>pallino</cognome>
+				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
+				<dataNascita>12/02/1990</dataNascita>
+			</utente>
+			<utente idU="2"> 
+				<nome>pinco</nome>
+				<cognome>pallino</cognome>
+				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
+				<dataNascita>01/05/2010</dataNascita>
+			</utente>
+		</tabUtente> 
+		
+		
+		<tabUtenteRegistrato>
+			<utenteRegistrato idUR="1">
+				<flagBann>false</flagBann>
+				<mail>112</mail>
+				<password>12321234</password>
+				<domandaSegreta>fdvioa</domandaSegreta>
+				<rispostaSegreta>asdyfi</rispostaSegreta>
+			</utenteRegistrato>
+			<utenteRegistrato idUR="2">
+				<flagBann>false</flagBann>
+				<mail>112</mail>
+				<password>12321234</password>
+				<domandaSegreta>fdvioa</domandaSegreta>
+				<rispostaSegreta>asdyfi</rispostaSegreta>
+			</utenteRegistrato>
+		</tabUtenteRegistrato>
+		
+
+                <tabAmministratore>
+			<amministratore idA="1"> 
+				<superAdmin>false</superAdmin>
+			</amministratore>
+			<amministratore idA="2"> 
+				<superAdmin>false</superAdmin>
+			</amministratore>
+		</tabAmministratore> 
+
+
+		<tabAereoporto>
+			<aereoporto idAp="1" idC="1">
+				<flagAttivo>true</flagAttivo> 
+				<nome>qqq</nome>		
+			</aereoporto>
+			<aereoporto idAp="2" idC="2">
+				<flagAttivo>true</flagAttivo>
+				<nome>aaa</nome>		
+			</aereoporto>
+		</tabAereoporto>
+
+
+		<tabCitta>
+			<citta idC="1" idN="1">
+				<nome>lll</nome>
+			</citta>
+			<citta idC="2" idN="1">
+				<nome>lal</nome>
+			</citta>
+		</tabCitta>
+
+
+
+		<tabNazione>
+			<nazione idN="1">
+				<nome>fdso</nome>
+			</nazione>
+		</tabNazione>
+	
+		
+		<tabTratta>
+			<tratta idT="1" idApP="1" idApA="2">
+				<durata>12</durata>
+			</tratta>
+		</tabTratta>	
+
+
+		<tabVolo>
+			<volo idV="1" idT="1" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+		</tabVolo>
+		
+
+		<tabPrenotazione>
+			<prenotazione idP="1" idUR="1" idU="1" idV="1">
+				<data>16/11/2013</data>
+				<dataPartenza>07/12/2013</dataPartenza>
+				<numeroBagagli>1</numeroBagagli>
+			</prenotazione>
+		</tabPrenotazione>
+
+
+		<tabAereo>
+			<aereo idAe="1" idTA="1">
+				<stato>true</stato> 
+				<noteVarie>cfiya</noteVarie>
+			</aereo>
+		</tabAereo>
+		
+
+		<tabTipoAereo>
+			<tipoAereo idTA="1" idPA="1">
+				<nome>aaa</nome>
+				<numeroPosti>123</numeroPosti>
+				<lunghezza>16</lunghezza>
+				<aperturaAlare>10</aperturaAlare>
+				<diametroFusoliera>8</diametroFusoliera>
+				<altezza>1</altezza>
+				<superficieAlare>13</superficieAlare>
+				<pesoVuoto>1278</pesoVuoto>
+				<pesoMaxDecollo>323</pesoMaxDecollo>
+				<CapacitaCombustibile>224</CapacitaCombustibile>
+				<numeroMotori>3</numeroMotori>
+				<tipoMotori>ydjd</tipoMotori>
+				<spintaMotori>8</spintaMotori>
+				<velocitaMax>5</velocitaMax>
+				<velocitaCrociera>1</velocitaCrociera> 
+				<autonomia>19</autonomia>
+				<infoSediliFile>12 jckgh</infoSediliFile>	
+				</tipoAereo>
+		</tabTipoAereo>
+
+
+		<tabProduttoreAereo>
+			<produttoreAereo idPA="1">
+				<nome>klh</nome>
+			</produttoreAereo>
+		</tabProduttoreAereo>
+		
+		
+		<tabCommento>
+			<commento idCo="1" idUR="1" idA="2" idV="1">
+				<abilitato>1</abilitato>
+				<voto>5</voto> 
+				<testo>
+					<data>28/12/2013</data>
+					<titolo>wes</titolo>
+					<contenuto>asjb</contenuto>
+				</testo>
+			</commento>
+		</tabCommento>
+
+		
+		<tabServizio>
+			<servizio idS="1">
+				<nome>ljsa</nome>
+				<descrizione>ebodfsfbldjfb efioasfuo</descrizione>
+				<prezzo>111111</prezzo>  
+			</servizio>
+		</tabServizio>
+				
+
+		<tabServizioPrenotato>
+			<servizioPrenotato idSP="1" idP="1" idS="1"/>
+		</tabServizioPrenotato>
+
+				
+		<tabNews>
+			<news idNe="1" idA="2">
+				<testo>
+					<data>12/01/2010</data>
+					<titolo>13</titolo>
+					<contenuto>3w</contenuto>
+				</testo>
+			</news>
+		</tabNews>
+		
+
+		<tabFaq>
+			<faq idF="1" idA="2">
+				<argomento>allk</argomento>
+				<testo>
+					<data>03/08/2015</data>
+					<titolo>1eqsfa</titolo>
+					<contenuto>1ewaef</contenuto>
+				</testo>
+			</faq>
+		</tabFaq>
+
+	
+	</database>
