@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<!--targetNamespace="" xmlns=""	elementFormDefault="qualified!!!"> -->
+<!--NB esistono piÃ¹ elementi con lo stesso nome (in particonare idFK, data, nome) se Ã¨ un problema in validazione modifica non Ã¨ un 		problema
+tag amministratore superadmin (sarÃ  solo 1) x cancellare amministratore/ha potere assoluto, gli altro POSSONO SOLO TOCCARE LE TABELLE 		CON UN CAMPO AMMINISTRATORE (cosi superadmin fa da grande fratello)
+What I'm trying to say here is that metadata (data about data) should be stored as attributes, and the data itself should be stored as elements.(eh tough luck seems impossible when you have more then one foreign key)
+-->
+
+<!-- 		      DATABASE              -->
+	
+
+
+<!--   definizione elemento Database    -->
+<xsd:element name="database" type="tDatabase">
+	<!-- 		      CHIAVI            -->
+	<!-- 		      UTENTE            -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKU">
+	    <xsd:selector xpath="database/tabUtente/utente"/>
+	    <xsd:field xpath="@idU"/>  <!--provo a mettere nome uguale nome del campo -->
+    </xsd:key>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      UTENTE REGISTRATO -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKUR">
+		<xsd:selector xpath="database/tabUtenteRegistrato/utenteRegistrato"/>
+		<xsd:field xpath="@idUR"/>
+	</xsd:key>
+	<!-- chiave esterna per vincolo ISA -->
+	<!-- utente -->
+	<xsd:keyref name="idFKU_UR" refer="idPKU">
+		<xsd:selector xpath="database/tabUtenteRegistrato/utenteRegistrato"/>
+		<xsd:field xpath="@idUR"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      AMMINISTRATORE    -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKA">
+		<xsd:selector xpath="amministratore"/>
+		<xsd:field xpath="@idA"/>
+	</xsd:key>
+	<!-- chiave esterna per vincolo ISA -->
+	<!-- utente -->
+	<xsd:keyref name="idFKUR_A" refer="idPKUR">
+		<xsd:selector xpath="amministratore"/>
+		<xsd:field xpath="@idA"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      NAZIONE           -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKN">
+		<xsd:selector xpath="nazione"/>
+		<xsd:field xpath="@idN"/>
+	</xsd:key>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      AEREOPORTO        -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKAp">
+		<xsd:selector xpath="aereoporto"/>
+		<xsd:field xpath="@idAp"/>
+	</xsd:key>
+	<!-- chiave esterna per vincolo 1:N -->
+	<!-- citta -->
+	<xsd:keyref name="idFKC_Ae" refer="idPKC">
+		<xsd:selector xpath="aereoporto"/>
+		<xsd:field xpath="@idC"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      CITTA             -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKC">
+		<xsd:selector xpath="citta"/>
+		<xsd:field xpath="@idC"/>
+	</xsd:key>
+	<!-- chiave esterna -->
+	<!-- nazione -->
+	<xsd:keyref name="idFKN_C" refer="idPKN">
+		<xsd:selector xpath="citta"/>
+		<xsd:field xpath="@idN"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      TRATTA            -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKT">
+		<xsd:selector xpath="tratta"/>
+		<xsd:field xpath="@idT"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- aereoporto partenza -->
+	<xsd:keyref name="idFKApP_T" refer="idPKAp">
+		<xsd:selector xpath="tratta"/>
+		<xsd:field xpath="@idApP"/>
+	</xsd:keyref>
+	<!-- aereoporto ritorno -->
+	<xsd:keyref name="idFKApA_T" refer="idPKAp">
+		<xsd:selector xpath="tratta"/>
+		<xsd:field xpath="@idApA"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      PRODUTTORE AEREO  -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKPA">
+		<xsd:selector xpath="produttoreAereo"/>
+		<xsd:field xpath="@idPA"/>
+	</xsd:key>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      TIPO AEREO        -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKTA">
+		<xsd:selector xpath="tipoAereo"/>
+		<xsd:field xpath="@idTA"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<xsd:keyref name="idFKPA_TA" refer="idPKPA">
+		<xsd:selector xpath="tipoAereo"/>
+		<xsd:field xpath="@idPA"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      AEREO             -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKAe">
+		<xsd:selector xpath="aereo"/>
+		<xsd:field xpath="@idAe"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<xsd:keyref name="idFKTA_Ae" refer="idPKTA">
+		<xsd:selector xpath="aereo"/>
+		<xsd:field xpath="@idTA"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      VOLO              -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKV">
+		<xsd:selector xpath="volo"/>
+		<xsd:field xpath="@idV"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- tratta -->
+	<xsd:keyref name="idFKT_V" refer="idPKT">
+		<xsd:selector xpath="volo"/>
+		<xsd:field xpath="@idT"/>
+	</xsd:keyref>
+	<!-- aereo -->
+	<xsd:keyref name="idFKAe_V" refer="idPKAe">
+		<xsd:selector xpath="aereo"/>
+		<xsd:field xpath="@idAe"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      PRENOTAZIONE      -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKP">
+		<xsd:selector xpath="prenotazione"/>
+		<xsd:field xpath="@idP"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- autore prenotazione -->
+	<xsd:keyref name="idFKUR_P" refer="idPKUR">
+		<xsd:selector xpath="prenotazione"/>
+		<xsd:field xpath="@idUR"/>
+	</xsd:keyref>
+	<!-- nominativo prenotazione -->
+	<xsd:keyref name="idFKU_P" refer="idPKU">
+		<xsd:selector xpath="prenotazione"/>
+		<xsd:field xpath="@idU"/>
+	</xsd:keyref>
+	<!-- volo prenotazione -->
+	<xsd:keyref name="idFKV_P" refer="idPKV">
+		<xsd:selector xpath="prenotazione"/>
+		<xsd:field xpath="@idV"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      COMMENTO          -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKCo">
+		<xsd:selector xpath="commento"/>
+		<xsd:field xpath="@idCo"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- utente autore-->
+	<xsd:keyref name="idFKUR_Co" refer="idPKUR">
+		<xsd:selector xpath="commento"/>
+		<xsd:field xpath="@idUR"/>
+	</xsd:keyref>
+	<!-- amministratore moderatore -->
+	<xsd:keyref name="idFKA_Co" refer="idPKA">
+		<xsd:selector xpath="commento"/>
+		<xsd:field xpath="@idA"/>
+	</xsd:keyref>
+	<!-- volo -->
+	<xsd:keyref name="idFKV_Co" refer="idPKV">
+		<xsd:selector xpath="commento"/>
+		<xsd:field xpath="@idV"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		      SERVIZIO          -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKS">
+		<xsd:selector xpath="servizio"/>
+		<xsd:field xpath="@idS"/>
+	</xsd:key>
+	<!-- 		      CHIAVI            -->
+	<!-- 		 SERVIZIO PRENOTATO     -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKSP">
+		<xsd:selector xpath="servizioPrenotato"/>
+		<xsd:field xpath="@idSP"/>
+	</xsd:key>
+	<!--chiavi esterne-->
+	<!--prenotazione-->
+	<xsd:keyref name="idFKP_SP" refer="idPKP">
+		<xsd:selector xpath="servizioPrenotato"/>
+		<xsd:field xpath="@idP"/>
+	</xsd:keyref>
+	<!--servizio-->
+	<xsd:keyref name="idFKS_SP" refer="idPKS">
+		<xsd:selector xpath="servizioPrenotato"/>
+		<xsd:field xpath="@idS"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		 	   NEWS             -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKNe">
+		<xsd:selector xpath="news"/>
+		<xsd:field xpath="@idNe"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- amministratore autore-->
+	<xsd:keyref name="idFKA_Ne" refer="idPKA">
+		<xsd:selector xpath="news"/>
+		<xsd:field xpath="@idA"/>
+	</xsd:keyref>
+	<!-- 		      CHIAVI            -->
+	<!-- 		 	   FAQ              -->
+	<!-- chiave primaria -->
+	<xsd:key name="idPKF">
+		<xsd:selector xpath="faq"/>
+		<xsd:field xpath="@idF"/>
+	</xsd:key>
+	<!-- chiavi esterne -->
+	<!-- amministratore autore-->
+	<xsd:keyref name="idFKA_F" refer="idPKA">
+		<xsd:selector xpath="faq"/>
+		<xsd:field xpath="@idA"/>
+	</xsd:keyref>
+</xsd:element>
+
+<!-- definizione Database -->
+<xsd:complexType name="tDatabase">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="tabUtente" type="tTabUtente"/>
+		<xsd:element name="tabUtenteRegistrato" type="tTabUtenteRegistrato"/>
+		<xsd:element name="tabAmministratore" type="tTabAmministratore"/>
+		<xsd:element name="tabAereoporto" type="tTabAereoporto"/>
+		<xsd:element name="tabCitta" type="tTabCitta"/>
+		<xsd:element name="tabNazione" type="tTabNazione"/>
+		<xsd:element name="tabTratta" type="tTabTratta"/>
+		<xsd:element name="tabVolo" type="tTabVolo"/>
+		<xsd:element name="tabPrenotazione" type="tTabPrenotazione"/>
+		<xsd:element name="tabAereo" type="tTabAereo"/>
+		<xsd:element name="tabTipoAereo" type="tTabTipoAereo"/>
+		<xsd:element name="tabProduttoreAereo" type="tTabProduttoreAereo"/>
+		<xsd:element name="tabCommento" type="tTabCommento"/>
+		<xsd:element name="tabServizio" type="tTabServizio"/>
+		<xsd:element name="tabServizioPrenotato" type="tTabServizioPrenotato"/>			
+		<xsd:element name="tabNews" type="tTabNews"/>
+		<xsd:element name="tabFaq" type="tTabFaq"/>
+	</xsd:sequence>	
+</xsd:complexType>
+
+
+
+<!-- 		    UTENTE          -->
+
+<!-- definizione tabella utente -->			
+<xsd:complexType name="tTabUtente">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
+		<xsd:element name="utente" type="tUtente"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record utente  -->
+<xsd:complexType name="tUtente">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+		<xsd:element name="cognome" type="xsd:string"/>
+		<xsd:element name="codiceFiscale" type="tCodiceFiscale"/>
+		<xsd:element name="dataNascita" type="tData"/>
+	</xsd:sequence>
+	<xsd:attribute name="idU" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 		    UTENTE REGISTRATO         -->
+		
+<!-- definizione tabella utente registrato -->			
+<xsd:complexType name="tTabUtenteRegistrato">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
+		<xsd:element name="utenteRegistrato" type="tUtenteRegistrato"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record utente registrato  -->
+<xsd:complexType name="tUtenteRegistrato">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagBann" type="xsd:boolean"/>
+		<xsd:element name="mail" type="xsd:string"/>
+		<xsd:element name="password" type="tPassword"/>
+		<xsd:element name="domandaSegreta" type="xsd:string"/>
+		<xsd:element name="rispostaSegreta" type="xsd:string"/>
+	</xsd:sequence>
+	<xsd:attribute name="idUR" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 		    AMMINISTRATORE          -->
+
+<!-- definizione tabella amministratore -->			
+<xsd:complexType name="tTabAmministratore">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
+		<xsd:element name="amministratore" type="tAmministratore"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record amministratore -->
+<xsd:complexType name="tAmministratore">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="superAdmin" type="xsd:boolean"/> <!--true=superadmin false=non superdmin-->
+	</xsd:sequence>	
+	<xsd:attribute name="idA" type="tId"/>	
+</xsd:complexType>
+
+
+<!-- 		    NAZIONE          -->
+
+<!-- definizione tabella nazione -->
+<xsd:complexType name="tTabNazione">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="nazione" type="tNazione"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record nazione -->
+<xsd:complexType name="tNazione">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+	</xsd:sequence>		
+	<xsd:attribute name="idN" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 		    AEREOPORTO         -->
+
+<!-- definizione tabella aereoporto -->
+<xsd:complexType name="tTabAereoporto">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
+		<xsd:element name="aereoporto" type="tAereoporto"/>
+	</xsd:sequence>	
+</xsd:complexType>
+<!-- definizione record aereoporto -->
+<xsd:complexType name="tAereoporto">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagAttivo" type="xsd:boolean"/>
+		<xsd:element name="nome" type="xsd:string"/>
+	</xsd:sequence>
+	<xsd:attribute name="idAp" type="tId"/>
+	<xsd:attribute name="idC" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 		    CITTA           -->
+
+<!-- definizione tabella citta  -->
+<xsd:complexType name="tTabCitta">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded"> 
+		<xsd:element name="citta" type="tCitta"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record citta -->
+<xsd:complexType name="tCitta">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+	</xsd:sequence>	
+	<xsd:attribute name="idC" type="tId"/>
+	<xsd:attribute name="idN" type="tId"/>
+</xsd:complexType>
+
+		
+<!-- 		    TRATTA          -->
+
+<!-- descrizione tabella tratta -->			
+<xsd:complexType name="tTabTratta">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="tratta" type="tTratta"/>
+	</xsd:sequence>	
+</xsd:complexType>
+<!-- definizione record tratta -->
+<xsd:complexType name="tTratta">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="durata" type="xsd:integer"/>
+	</xsd:sequence>		
+	<xsd:attribute name="idT" type="tId"/>
+	<xsd:attribute name="idApP" type="tId"/>
+	<xsd:attribute name="idApA" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 			PRODUTTORE AEREO 		  -->
+
+<!-- descrizione tabella produttore aereo -->
+<xsd:complexType name="tTabProduttoreAereo">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="produttoreAereo" type="tProduttoreAereo"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record produttore aereo -->
+<xsd:complexType name="tProduttoreAereo">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+	</xsd:sequence>		
+	<xsd:attribute name="idPA" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 			 TIPO AEREO 	    -->
+
+<!-- descrizione tabella tipo aereo -->
+<xsd:complexType name="tTabTipoAereo">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="tipoAereo" type="tTipoAereo"/> 
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record tipo aereo -->
+<xsd:complexType name="tTipoAereo">	
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/>
+		<xsd:element name="numeroPosti" type="xsd:integer"/>
+		<xsd:element name="lunghezza" type="xsd:integer"/>
+		<xsd:element name="aperturaAlare" type="xsd:integer"/>
+		<xsd:element name="diametroFusoliera" type="xsd:integer"/>
+		<xsd:element name="altezza" type="xsd:integer"/>
+		<xsd:element name="superficieAlare" type="xsd:integer"/>
+		<xsd:element name="pesoVuoto" type="xsd:integer"/>
+		<xsd:element name="pesoMaxDecollo" type="xsd:integer"/>
+		<xsd:element name="CapacitaCombustibile" type="xsd:integer"/>
+		<xsd:element name="numeroMotori" type="xsd:integer"/>
+		<xsd:element name="tipoMotori" type="xsd:string"/>
+		<xsd:element name="spintaMotori" type="xsd:integer"/>
+		<xsd:element name="velocitaMax" type="xsd:integer"/>
+		<xsd:element name="velocitaCrociera" type="xsd:integer"/> 
+		<xsd:element name="autonomia" type="xsd:integer"/>
+		<xsd:element name="infoSediliFile" type="xsd:string"/>
+	</xsd:sequence>
+	<xsd:attribute name="idTA" type="tId"/>
+	<xsd:attribute name="idPA" type="tId"/>		
+</xsd:complexType>
+
+
+<!-- 		    AEREO  	       -->
+
+<!-- descrizione tabella aereo -->
+<xsd:complexType name="tTabAereo">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="aereo" type="tAereo"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record aereo -->
+<xsd:complexType name="tAereo">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="stato" type="xsd:boolean"/> 
+		<xsd:element name="noteVarie" type="xsd:string"/>
+	</xsd:sequence>
+	<xsd:attribute name="idAe" type="tId"/>
+	<xsd:attribute name="idTA" type="tId"/>	
+</xsd:complexType>
+
+
+<!-- 		  VOLO  	     -->
+
+<!-- descrizione tabella volo-->
+<xsd:complexType name="tTabVolo">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="volo" type="tVolo"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record volo -->
+<xsd:complexType name="tVolo">	
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="flagAttivo" type="xsd:boolean"/>
+                <xsd:element name="oraPartenza" type="tOrario"/>
+		<xsd:element name="prezzo" type="xsd:float"/>
+		<xsd:element name="giorno" type="tGiorno"/> 
+	</xsd:sequence>		
+	<xsd:attribute name="idV" type="tId"/>
+	<xsd:attribute name="idT" type="tId"/>
+	<xsd:attribute name="idAe" type="tId"/> 	
+</xsd:complexType>
+
+
+<!-- 		  PRENOTAZIONE            -->
+
+<!-- descrizione tabella prenotazione -->
+<xsd:complexType name="tTabPrenotazione">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="prenotazione" type="tPrenotazione"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record prenotazione -->
+<xsd:complexType name="tPrenotazione">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="data" type="tData"/>
+		<xsd:element name="dataPartenza" type="tData"/>
+		<xsd:element name="numeroBagagli" type="xsd:integer"/>	
+	</xsd:sequence>
+	<xsd:attribute name="idP" type="tId"/>
+	<xsd:attribute name="idUR" type="tId"/>
+	<xsd:attribute name="idU" type="tId"/>
+	<xsd:attribute name="idV" type="tId"/>	
+</xsd:complexType>
+
+
+<!-- 		  COMMENTO            -->
+
+<!-- descrizione tabella commento -->
+<xsd:complexType name="tTabCommento">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="commento" type="tCommento"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record commento -->
+<xsd:complexType name="tCommento">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="abilitato" type="xsd:boolean"/><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
+		<xsd:element name="voto" type="xsd:integer"/> 
+		<xsd:element name="testo" type="tTesto"/>
+	</xsd:sequence>	
+	<xsd:attribute name="idCo" type="tId"/>
+	<xsd:attribute name="idV" type="tId"/>
+	<xsd:attribute name="idUR" type="tId"/>
+	<xsd:attribute name="idA" type="tId"/>
+</xsd:complexType>
+
+
+
+<!-- 		  SERVIZIO            -->
+
+<!-- descrizione tabella servizio -->			
+<xsd:complexType name="tTabServizio">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="servizio" type="tServizio"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record servizio -->
+<xsd:complexType name="tServizio">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="nome" type="xsd:string"/><!--serve il nome del servizio eh!-->
+		<xsd:element name="descrizione" type="xsd:string"/>
+		<xsd:element name="prezzo" type="xsd:float"/>
+	</xsd:sequence>
+	<xsd:attribute name="idS" type="tId"/>  
+</xsd:complexType>
+
+
+<!-- 		   SERVIZIO PRENOTATO           -->
+
+<!-- descrizione tabella servizio  prenotato--> 
+<xsd:complexType name="tTabServizioPrenotato">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="servizioPrenotato" type="tServizioPrenotato"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record servizio prenotato-->
+<xsd:complexType name="tServizioPrenotato">
+	<xsd:attribute name="idSP" type="tId"/>
+	<xsd:attribute name="idP" type="tId"/>
+	<xsd:attribute name="idS" type="tId"/>
+</xsd:complexType>
+
+
+<!-- 		   NEWS          -->
+
+<!-- descrizione tabella news-->
+<xsd:complexType name="tTabNews">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+ 		<xsd:element name="news" type="tNews"/>
+ 	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record News -->
+<xsd:complexType name="tNews">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="testo" type="tTesto"/>
+
+	</xsd:sequence>	
+	<xsd:attribute name="idNe" type="tId"/>
+	<xsd:attribute name="idA" type="tId"/>	
+</xsd:complexType>
+
+
+
+<!-- 		   FAQ           -->
+
+<!-- descrizione tabella faq -->
+<xsd:complexType name="tTabFaq">
+	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+		<xsd:element name="faq" type="tFaq"/>
+	</xsd:sequence>
+</xsd:complexType>
+<!-- definizione record Faq -->
+<xsd:complexType name="tFaq">
+	<xsd:sequence minOccurs="1" maxOccurs="1">
+		<xsd:element name="argomento" type="xsd:string"/>
+		<xsd:element name="testo" type="tTesto"/>
+	</xsd:sequence>
+	<xsd:attribute name="idF" type="tId"/>
+	<xsd:attribute name="idA" type="tId"/>	
+</xsd:complexType>
+
+			
+<!-- definizione tipo testo -->
+<xsd:complexType name="tTesto">
+	<xsd:sequence minOccurs="1" maxOccurs="1">	
+		<xsd:element name="data" type="tData"/>
+		<xsd:element name="titolo" type="xsd:string"/>
+		<xsd:element name="contenuto" type="xsd:string"/>
+	</xsd:sequence>	
+</xsd:complexType>
+
+<!-- definizione tipo Id -->
+<xsd:simpleType name="tId">
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="1"/>
+	</xsd:restriction>
+</xsd:simpleType>	
+
+<!-- definizione tipo Giorno -->
+<xsd:simpleType name="tGiorno">
+	<xsd:union memberTypes="tNumGiorno tnomeGiorno" />
+</xsd:simpleType>
+
+<!-- definizione tipo NumGiorno -->
+<xsd:simpleType name="tNumGiorno">
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="1"/>
+		<xsd:maxExclusive value="7"/>
+	</xsd:restriction>
+</xsd:simpleType>	
+
+<!-- definizione tipo nomeGiorno -->
+<xsd:simpleType name="tnomeGiorno">
+	<xsd:restriction base="xsd:string">
+		<xsd:enumeration value="lunedi"/>
+		<xsd:enumeration value="martedi"/>				
+		<xsd:enumeration value="mercoledi"/>
+		<xsd:enumeration value="giovedi"/>
+		<xsd:enumeration value="venerdi"/>				
+		<xsd:enumeration value="sabato"/>
+		<xsd:enumeration value="domenica"/>
+	</xsd:restriction>
+</xsd:simpleType>
+			
+<!-- definizione tipo CodiceFiscale -->
+<xsd:simpleType name="tCodiceFiscale" >
+	<xsd:restriction base="xsd:string">
+		<xsd:pattern value="[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]"/>
+	</xsd:restriction>
+</xsd:simpleType>
+			
+<!-- definizione tipo Password -->
+<xsd:simpleType name="tPassword" >
+	<xsd:restriction base="xsd:string" >
+		<xsd:pattern value="[a-zA-Z]*[0-9][a-zA-Z0-9]*"/>
+		<xsd:minLength value="8"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<!--definizione tipo data-->
+<!--per usare data nel formato GG/MM/AAAA invece che AAAA/MM/GG come su xsd:date-->
+    <xsd:simpleType name="tData">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{2}[/]\d{2}[/]\d{4}"></xsd:pattern>
+            <xsd:length value="10"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+
+<!--definizione tipo orario-->
+<!--per usare orario nel formato OO:MM invece che OO:MM::SS come su xsd:time-->
+        <xsd:simpleType name="tOrario">
+            <xsd:restriction base="xsd:string">
+            	<xsd:pattern value="[0-2][0-3]\:[0-5][0-9]"></xsd:pattern>
+        	</xsd:restriction>
+      </xsd:simpleType>
+
+</xsd:schema>
