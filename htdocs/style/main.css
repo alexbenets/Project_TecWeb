@@ -55,9 +55,13 @@
 	font-size: 2em;
 	color:#a00000;
 }
+#description{
+	margin-top: 1em;
+}
 #description span{
-	padding-left: 17.5em;
-	font-size: 0.9em;
+	margin-top: 200em;
+	padding-left: 14.3em;
+	font-size: 1em;
 }
 /*FINE SEZIONE HEADER*/
 
