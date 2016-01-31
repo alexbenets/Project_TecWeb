@@ -24,18 +24,20 @@ sub setPath {#@p: array contenente i vari riferimenti al path
 
 sub print { 
 		gestione_sessione::createSession();
-		$temp= "
-		<div id=\"header\">
-			<div id=\"banner\">
-				<h1>Vola con noi &copy;</h1>
-				<h2>Prenota il tuo volo per la destinazione che ti pare e piace :(</h2>";
-		if(gestione_sessione::getParam("logged")==1){
-			$temp.="<h3>Benvenuto, ".gestione_sessione::getParam("nome").' (<a href="login.cgi?logout=1">esci</a>)</h3>';
-		}		
-		else
-		{
-			$temp.='<h3>Benvenuto, per prenotare devi <a href="login.cgi">effettuare il login</a> o <a href="registrati.cgi">la registrazione</a></h3>';
-		}
+		$temp= '
+		<div id="header">
+			<div id="logo">
+				
+			</div>
+			<div id="banner">
+				<h1>The A<span>-IR &copy;</span></h1>
+				<h2>Si alza il vento, vola con Noi!</h2>
+				
+				<div id="description">
+					<span>Sito web adibito alla prenotazione di un volo aereo low cost</span>
+				</div>
+			';
+		
 		$temp.="	</div><!-- chiudo banner-->
 			
 			<div id=\"menu\">\n";

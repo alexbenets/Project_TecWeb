@@ -40,7 +40,7 @@ if(gestione_sessione::getParam("logged")!=1){
 	exit;
 }
 
-gestione_sessione::setParam("location","/cgi-bin/utente.cgi");
+gestione_sessione::setParam("location","utente.cgi");
 
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);

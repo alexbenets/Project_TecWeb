@@ -4,10 +4,10 @@
 		
 		<tabUtente>
 			<utente idU="1"> 
-				<nome>pinco</nome>
-				<cognome>pallino</cognome>
-				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
-				<dataNascita>12/02/1990</dataNascita>
+				<nome>Marco</nome>
+				<cognome>Pettenuzzo</cognome>
+				<codiceFiscale>pttmrc87a12l840w</codiceFiscale>
+				<dataNascita>12/01/1987</dataNascita>
 			</utente>
 			<utente idU="2"> 
 				<nome>pinco</nome>
@@ -94,11 +94,7 @@
 		
 
 		<tabPrenotazione>
-			<prenotazione idP="1" idUR="1" idU="1" idV="1">
-				<data>2013-01-30</data>
-				<dataPartenza>2013-03-30</dataPartenza>
-				<numeroBagagli>1</numeroBagagli>
-			</prenotazione>
+			
 		<prenotazione idP="2" idUR="3" idV="1" idU="1,2">
 			<data>2016-01-30</data>
 			<dataPartenza>2016-1-31</dataPartenza>
@@ -109,7 +105,7 @@
 			<dataPartenza>2016-2-01</dataPartenza>
 			<numeroBagagli>1</numeroBagagli>
 		</prenotazione>
-	<prenotazione idP="4" idUR="3" idV="1" idU="3,3,3"><data>2016-1-30</data><dataPartenza>2016-1-31</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione></tabPrenotazione>
+	<prenotazione idP="4" idUR="3" idV="1" idU="3,3,3"><data>2016-1-30</data><dataPartenza>2016-1-31</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="5" idUR="1" idV="1" idU="4,5"><data>2016-1-31</data><dataPartenza>2016-02-02</dataPartenza><numeroBagagli>4</numeroBagagli></prenotazione></tabPrenotazione>
 
 
 		<tabAereo>
@@ -173,7 +169,7 @@
 				
 
 		<tabServizioPrenotato>
-			<servizioPrenotato idSP="1" idP="1" idS="1"/>
+			
 		</tabServizioPrenotato>
 
 				

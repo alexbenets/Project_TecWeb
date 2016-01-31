@@ -22,7 +22,8 @@ require "common_functions/menu.cgi";
 print CGI::header();#imposto il cookie di sessione
 #my ($nome, $cognome, $cf, $nascita, $email, $password)=@_;
 #my ($nome_andata, $nome_ritorno, $passeggeri, $data)=@_;
-print @{database::getVoli("Malpensa", "Fiumicino", 10, "31/01/2016")}[0]->[6];
+#print database::aggiornaUtente(1,"Nome", "Cognome", "CF", "nascita", "password", "nuova password");
+#	my ($id, $nome, $cognome, $cf, $nascita, $password, $nuova_password)=@_;
 #my @prenotazioni=@{database::getPrenotazioni(3)};
 
 #my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 

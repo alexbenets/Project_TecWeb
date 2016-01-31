@@ -37,10 +37,10 @@ sub set{
 sub getUtente{
 	my ($id)=@_;
 	my @out;
-	push @out, get('//utenteRegistrato[@idUR='.$id.']/nome');
-	push @out, get('//utenteRegistrato[@idUR='.$id.']/cognome');
-	push @out, get('//utenteRegistrato[@idUR='.$id.']/codiceFiscale');
-	push @out, get('//utenteRegistrato[@idUR='.$id.']/dataNascita');
+	push @out, get('//utente[@idU='.$id.']/nome');
+	push @out, get('//utente[@idU='.$id.']/cognome');
+	push @out, get('//utente[@idU='.$id.']/codiceFiscale');
+	push @out, get('//utente[@idU='.$id.']/dataNascita');
 	return \@out;
 }
 
@@ -51,11 +51,16 @@ sub aggiornaUtente{
 	my ($id, $nome, $cognome, $cf, $nascita, $password, $nuova_password)=@_;
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
-	my $utente=$db->findnodes('/database/tabUtenteRegistrato/utenteRegistrato[@idUR='.$id.']')->[0];
-	
-	my $psw_database=$utente->findnodes('password/text()')->[0];
+	my $utente=$db->findnodes('//utente[@idU='.$id.']')->[0];
+	if ($utente->toString(1) eq ""){
+		return -1;
+		#utente non trovato
+	}
+	my $utente_registrato=$db->findnodes('//utenteRegistrato[@idUR='.$id.']')->[0];
+	my $psw_database=$utente_registrato->findnodes('password/text()')->[0];
 	if(!($psw_database eq $password)){
 		return 0;
+		#password errata
 	}
 	my $nome_database=$utente->findnodes('nome/text()')->[0];
 	if(!($nome_database eq $nome)){
@@ -77,7 +82,7 @@ sub aggiornaUtente{
 		$nascita_database->setData($nascita);
 	}
 	
-	$psw_database=$utente->findnodes('password/text()')->[0];
+	$psw_database=$utente_registrato->findnodes('password/text()')->[0];
 	if(!($psw_database eq $nuova_password) and ! ($nuova_password eq "**********") and ! ($nuova_password eq "")){
 		$psw_database->setData($nuova_password);
 	}
@@ -266,6 +271,32 @@ sub prenota{
 	return $id_prenotazione;
 }
 
+sub modificaPrenotazione{
+	my ($id_utente, $id_prenotazione, $rimuovi)=@_;
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+	my $test=get('//prenotazione[@idP='.$id_prenotazione.' and @idUR='.$id_utente.']/data');
+	if("".$test eq ""){
+		return -1;
+		#l'id non è stato trovato o l'utente non è lo stesso che ha prenotato
+	}
+	my $prenotazione=$db->findnodes('//prenotazione[@idP='.$id_prenotazione.']')->[0];#rimuovo la prenotazione
+	if($rimuovi==1){ 
+		
+		my $tab_p=$db->findnodes('//tabPrenotazione')->[0];
+		$tab_p->removeChild($prenotazione);
+		
+		#ora rimuovo i vari servizi relativi alla prenotazione
+		#in questo modo ottengo un database consistente, senza "sporcizia" causata da parziali rimozioni
+		my $servizi=$db->findnodes('//servizioPrenotato[@idP='.$id_prenotazione.']');
+		my $tab_servizi=$db->findnodes('//tabServizioPrenotato')->[0];
+		foreach my $servizio ($servizi->get_nodelist){
+			$tab_servizi->removeChild($servizio);
+		}
+	}
+	#print $db->toString(1);
+	return set( $db->toString(1));
+}
 
 ## INIZIO FUNZIONI INERENTI AL LOGIN ED ALLA REGISTRAZIONE DELL'UTENTE
 ##
@@ -435,19 +466,19 @@ sub getVoli{
 		#my $t_andata = Time::Piece->strptime('%T', $orario);
 		#my $t_arrivo=$t_andata;
 		#<commento idCo="1" idUR="1" idA="2" idV="1">
-		my $commenti=get('//commento[@idV='.$id_volo.']');
-		my $valutazione=0;
-		my $contatore=0;
-		foreach my $commento ($commenti->get_nodelist){
-			$contatore++;
-			$valutazione+=int($commento->find("voto"));
-		}
-		if($contatore>0){
-			$valutazione=int($valutazione/$contatore);
-		}
-		if($valutazione==0){
-			$valutazione="";
-		}
+		#my $commenti=get('//commento[@idV='.$id_volo.']');
+		my $valutazione="N/D";
+		#my $contatore=0;
+		#foreach my $commento ($commenti->get_nodelist){
+		#	$contatore++;
+		#	$valutazione+=int($commento->find("voto"));
+		#}
+		#if($contatore>0){
+		#	$valutazione=int($valutazione/$contatore);
+		#}
+		#if($valutazione==0){
+		#	$valutazione="";
+		#}
 		my @v_temp=("T".$id_tratta."V".$id_volo,$orario, $orario_arrivo,$prezzo,$valutazione, $data, $posti_disponibili);
 		if($posti_disponibili>=($passeggeri)){
 			push @voli, \@v_temp;
