@@ -37,10 +37,10 @@ sub set{
 sub getUtente{
 	my ($id)=@_;
 	my @out;
-	push @out, get('//utente[@idU='.$id.']/nome');
-	push @out, get('//utente[@idU='.$id.']/cognome');
-	push @out, get('//utente[@idU='.$id.']/codiceFiscale');
-	push @out, get('//utente[@idU='.$id.']/dataNascita');
+	push @out, get('//utente[@idU='.$id.']/nome/text()');
+	push @out, get('//utente[@idU='.$id.']/cognome/text()');
+	push @out, get('//utente[@idU='.$id.']/codiceFiscale/text()');
+	push @out, get('//utente[@idU='.$id.']/dataNascita/text()');
 	return \@out;
 }
 
