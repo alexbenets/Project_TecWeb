@@ -31,14 +31,25 @@ print CGI::header();#imposto il cookie di sessione
 #	print "<p>".@stato[0]." - ".@stato[1]."</p>";
 #}
 
-my @tratte=@{database::getTratta()};
-foreach my $tratta (@tratte){
-	my @tmp=@{$tratta};
-	my $testo="@tmp[0]: @tmp[1] - @tmp[2], @tmp[3] minuti";
-	$testo =~/([0-9]+)([\s:\s])([a-zA-Z\s]+)([\s-\s])([a-zA-Z\s]+)([,])([\s]*)([0-9]+)/;
-	print "<p>$testo</p><p>$1, $3, $5, $8</p>";
-}
+#my @tratte=@{database::getTratta()};
+#foreach my $tratta (@tratte){
+#	my @tmp=@{$tratta};
+#	my $testo="@tmp[0]: @tmp[1] - @tmp[2], @tmp[3] minuti";
+#	$testo =~/([0-9]+)([\s:\s])([a-zA-Z\s]+)([\s-\s])([a-zA-Z\s]+)([,])([\s]*)([0-9]+)/;
+#	print "<p>$testo</p><p>$1, $3, $5, $8</p>";
+#}
 
+my @tmp=@{check_form::regexp_data("1/2/2016")};
+print "@tmp[0]/@tmp[1]/@tmp[2]";
+#my @voli=@{database::getVoli()};
+#foreach my $volo (@voli){
+#	my @v=@{$volo};
+	#$id_volo,
+	#		$orario,
+	#		$aereoporto_partenza,
+	#		$aereoporto_arrivo
+#	print "<p>id:@v[0] ora partenza: @v[1], partenza: @v[2] arrivo: @v[3]</p>";
+#}
 #print database::addStato("Francia", 2);
 
 #print database::getTratta("Malpensa", "Fiumicino");

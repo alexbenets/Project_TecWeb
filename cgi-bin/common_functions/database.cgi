@@ -859,7 +859,7 @@ sub getTratta{
 					
 					my $cittaA=get('//aereoporto[@idAp='.$id_arrivo.']/nome');
 					my $durata=get('//tratta[@idT='.$tratta->getAttribute("idT").']/durata');
-					print "$id_partenza";
+					#print "$id_partenza";
 					my @temp=(
 						$tratta->getAttribute("idT"),
 						$cittaP,
@@ -988,6 +988,27 @@ sub addVolo{
 	}
 }
 
+sub getVoli_totali{
+	my @voli;
+	my $tab_voli=get('//volo');
+	foreach my $volo ($tab_voli->get_nodelist){
+		my $id_volo=$volo->getAttribute("idV");
+		my $id_tratta=$volo->getAttribute("idT");
+		my $orario=$volo->find("oraPartenza");
+		my $aereoporto_partenza=get('//aereoporto[@idAp=(//tratta[@idT='.$id_tratta.']/@idApP)]/nome');
+		my $aereoporto_arrivo=get('//aereoporto[@idAp=(//tratta[@idT='.$id_tratta.']/@idApA)]/nome');
+		my $prezzo=$volo->find('prezzo');
+		my @v_t=(
+			$id_volo,
+			$orario,
+			$aereoporto_partenza,
+			$aereoporto_arrivo,
+			$prezzo
+		);
+		push @voli, \@v_t;
+	}
+	return \@voli;
+}
 
 sub addServizio{
 	my ($nome, $descrizione, $prezzo, $id)=@_;
@@ -997,7 +1018,7 @@ sub addServizio{
 		}
 		#aggiungo da zero
 		
-			my $id_servizio=int(get('/database/tabServizio/servizio/@idS[ not (.</database/tabServizio/ervizio/@idS)]'))+1;
+			my $id_servizio=int(get('/database/tabServizio/servizio/@idS[ not (.</database/tabServizio/servizio/@idS)]'))+1;
 			
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;

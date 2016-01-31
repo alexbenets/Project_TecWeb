@@ -86,11 +86,14 @@
 		<tabVolo>
 			<volo idV="1" idT="1" idAe="1">
 				<flagAttivo>true</flagAttivo>
-				<oraPartenza>00:00</oraPartenza>
-				<prezzo>12</prezzo>
+				<oraPartenza>08:00</oraPartenza>
+				<prezzo>34</prezzo>
 				<giorno>2</giorno>			
 			</volo>
-		<volo idV="2" idT="1" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>18:00</oraPartenza><prezzo>125</prezzo><giorno>2</giorno></volo></tabVolo>
+		<volo idV="2" idT="1" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>18:00</oraPartenza><prezzo>125</prezzo><giorno>2</giorno></volo>
+		<volo idV="3" idT="3" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>08:00</oraPartenza><prezzo>125</prezzo><giorno>2</giorno></volo>
+		<volo idV="4" idT="4" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>08:00</oraPartenza><prezzo>120</prezzo><giorno>2</giorno></volo>
+		</tabVolo>
 		
 
 		<tabPrenotazione>
@@ -161,11 +164,11 @@
 		
 		<tabServizio>
 			<servizio idS="1">
-				<nome>ljsa</nome>
-				<descrizione>ebodfsfbldjfb efioasfuo</descrizione>
-				<prezzo>111111</prezzo>  
+				<nome>Bus navetta</nome>
+				<descrizione>Bus</descrizione>
+				<prezzo>15</prezzo>  
 			</servizio>
-		</tabServizio>
+		<servizio idS="2"><nome>Servizio</nome><descrizione>Descrizione</descrizione><prezzo>10</prezzo></servizio><servizio idS="3"><nome>Servizio</nome><descrizione>Descrizione</descrizione><prezzo>10</prezzo></servizio></tabServizio>
 				
 
 		<tabServizioPrenotato>
