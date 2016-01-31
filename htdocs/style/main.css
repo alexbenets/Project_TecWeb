@@ -62,11 +62,12 @@
 /*FINE SEZIONE HEADER*/
 
 /*SEZIONE MENU'*/
+
 #menu {
 	height:3em;
 	/*background-color:#C0FFEE;*/
 	padding:0.1em 0.3em 0.4em 0.3em;
-	margin-left: 25em;
+	margin-left: 28em;
 }
 #menu a {
 	/*sezione per il pseudo contenitore*/
@@ -393,13 +394,12 @@
 }
 
 #personale{
-	float: left;
 	background-position: center;
 	background-image: url(../images/equipaggio.jpg);
-	width: 50em;
-	height: 25em;
+	width: 723px;
+	height: 410px;
 	background-repeat: no-repeat;
-	padding-left: 10em;
+	padding-left: 4em;
 }
 
 /*link per tornare in alto*/
