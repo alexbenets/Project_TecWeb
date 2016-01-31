@@ -448,7 +448,6 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
 												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
-												<p>Valutazione: '.@elemento[$altezza]->[4].'/5</p>
 												<p>Posti disponibili: '.@elemento[$altezza]->[6].'</p>
 											</div>
 										</object>';

@@ -23,7 +23,17 @@ print CGI::header();#imposto il cookie di sessione
 #my ($nome, $cognome, $cf, $nascita, $email, $password)=@_;
 #my ($nome_andata, $nome_ritorno, $passeggeri, $data)=@_;
 #my ($tratta, $orario_partenza, $prezzo, $attivo,$id)=@_;
-print database::addVolo(1,"18:00", "125", 1,2);
+#print database::addServizio("Bus navetta","Bus navetta per la stazione dei treni pi&ugrave; vicina", "10", 2);
+#my @lista=@{database::listAereoporti("Milano")};
+#print scalar(@lista);
+#foreach my $tmp (@lista){
+#	my @stato=@{$tmp};
+#	print "<p>".@stato[0]." - ".@stato[1]."</p>";
+#}
+
+print database::getTratta("Malpensa", "Fiumicino");
+
+#print database::removeServizio(2);
 #print database::aggiornaUtente(1,"Nome", "Cognome", "CF", "nascita", "password", "nuova password");
 #	my ($id, $nome, $cognome, $cf, $nascita, $password, $nuova_password)=@_;
 #my @prenotazioni=@{database::getPrenotazioni(3)};
