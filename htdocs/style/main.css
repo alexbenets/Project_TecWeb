@@ -392,6 +392,16 @@
 	padding-left: 4em;
 }
 
+#personale{
+	float: left;
+	background-position: center;
+	background-image: url(../images/equipaggio.jpg);
+	width: 50em;
+	height: 25em;
+	background-repeat: no-repeat;
+	padding-left: 10em;
+}
+
 /*link per tornare in alto*/
 #torna_su {
 	display:block;
