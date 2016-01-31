@@ -354,11 +354,15 @@ sub login{
 	foreach my $utente ($utenti->get_nodelist){
 		
 		my $id="".$utente->getAttribute("idUR");
+		my $admin=int(get('//amministratore[@idA='.$id.']/@idA'));
+		if($admin > 0){
+			$admin=1;
+		}
 		my $psw="".$utente->find("password");
 		my $nome="".get('//utente[@idU='.$id.']/nome');
 		my $cognome="".get('//utente[@idU='.$id.']/cognome');
 		if($psw eq $password){
-			@out=(1,$nome,$cognome, $id);
+			@out=(1,$nome,$cognome, $id, $admin);
 			return \@out;
 		}
 		@out=(-1,"","");
@@ -671,11 +675,16 @@ sub addCitta
 }
 sub listCitta{
 	my ($stato)=@_;
+	my @list_citta;
 	my $id_stato=int(get('//nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
 	if($id_stato==0){
-		return -1;
+		my $db_citta=get('//citta');
+		foreach my $citta ($db_citta->get_nodelist){
+		my @tmp=($citta->getAttribute("idC"), $citta->find("nome"));
+		push @list_citta, \@tmp;
+		}
+		return \@list_citta;
 	}
-	my @list_citta;
 	my $db_citta=get('//citta[@idN='.$id_stato.']');
 	foreach my $citta ($db_citta->get_nodelist){
 		my @tmp=($citta->getAttribute("idC"), $citta->find("nome"));
@@ -744,11 +753,16 @@ sub addAereoporto
 }
 sub listAereoporti{
 	my ($citta)=@_;
+	my @list_aereoporti;
 	my $id_citta=int(get('//citta[nome="'.$citta.'"]/@idC')); #mi ricavo l'id dello stato
 	if($id_citta==0){
-		return -1;
+		my $db_aereoporti=get('//aereoporto');
+		foreach my $aereoporto ($db_aereoporti->get_nodelist){
+			my @tmp=($aereoporto->getAttribute("idAp"), $aereoporto->find("nome"));
+			push @list_aereoporti, \@tmp;
+		}
+		return \@list_aereoporti;
 	}
-	my @list_aereoporti;
 	my $db_aereoporti=get('//aereoporto[@idC='.$id_citta.']');
 	foreach my $aereoporto ($db_aereoporti->get_nodelist){
 		my @tmp=($aereoporto->getAttribute("idAp"), $aereoporto->find("nome"));
@@ -835,6 +849,27 @@ sub addTratta{
 }
 sub getTratta{
 			my ($partenza, $arrivo)=@_;
+			if(($partenza eq "") and ($arrivo eq "")){
+				my $tratte=get('//tratta');
+				my @list_tratte;
+				foreach my $tratta ($tratte->get_nodelist){
+					my $id_partenza=$tratta->getAttribute("idApP");
+					my $id_arrivo=$tratta->getAttribute("idApA");
+					my $cittaP=get('//aereoporto[@idAp='.$id_partenza.']/nome');
+					
+					my $cittaA=get('//aereoporto[@idAp='.$id_arrivo.']/nome');
+					my $durata=get('//tratta[@idT='.$tratta->getAttribute("idT").']/durata');
+					print "$id_partenza";
+					my @temp=(
+						$tratta->getAttribute("idT"),
+						$cittaP,
+						$cittaA,
+						$durata
+					);
+					push @list_tratte, \@temp;
+				}
+				return \@list_tratte;
+			}
 			my $id_aereoporto_partenza=int(get('//aereoporto[nome="'.$partenza.'"]/@idAp'));
 			if($id_aereoporto_partenza==0){
 				return -8; #l'aereoporto non esiste

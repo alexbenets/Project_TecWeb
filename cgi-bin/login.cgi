@@ -53,6 +53,7 @@ if(defined($email) and defined($password)){
 	if($login_result==1){ #se la combinazione di nome utente e password esistono o l'utente ha già effettuato l'accesso
 		gestione_sessione::setParam("nome", @query[1]." ".@query[2]);
 		gestione_sessione::setParam("id", @query[3]);
+		gestione_sessione::setParam("admin", @query[4]);
 		gestione_sessione::setParam("logged","1");
 		print "Location: $location\n\n";
 		exit;

@@ -31,7 +31,17 @@ print CGI::header();#imposto il cookie di sessione
 #	print "<p>".@stato[0]." - ".@stato[1]."</p>";
 #}
 
-print database::getTratta("Malpensa", "Fiumicino");
+my @tratte=@{database::getTratta()};
+foreach my $tratta (@tratte){
+	my @tmp=@{$tratta};
+	my $testo="@tmp[0]: @tmp[1] - @tmp[2], @tmp[3] minuti";
+	$testo =~/([0-9]+)([\s:\s])([a-zA-Z\s]+)([\s-\s])([a-zA-Z\s]+)([,])([\s]*)([0-9]+)/;
+	print "<p>$testo</p><p>$1, $3, $5, $8</p>";
+}
+
+#print database::addStato("Francia", 2);
+
+#print database::getTratta("Malpensa", "Fiumicino");
 
 #print database::removeServizio(2);
 #print database::aggiornaUtente(1,"Nome", "Cognome", "CF", "nascita", "password", "nuova password");

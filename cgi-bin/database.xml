@@ -28,7 +28,7 @@
 			</utenteRegistrato>
 			<utenteRegistrato idUR="2">
 				<flagBann>false</flagBann>
-				<mail>112</mail>
+				<mail>info@test.it</mail>
 				<password>12321234</password>
 				<domandaSegreta>fdvioa</domandaSegreta>
 				<rispostaSegreta>asdyfi</rispostaSegreta>
@@ -39,9 +39,6 @@
         <tabAmministratore>
 			<amministratore idA="1"> 
 				<superAdmin>true</superAdmin>
-			</amministratore>
-			<amministratore idA="2"> 
-				<superAdmin>false</superAdmin>
 			</amministratore>
 		</tabAmministratore> 
 
@@ -55,7 +52,7 @@
 				<flagAttivo>true</flagAttivo>
 				<nome>Fiumicino</nome>		
 			</aereoporto>
-		<aereoporto idAp="3" idC="1"><flagAttivo>true</flagAttivo><nome>Linate</nome></aereoporto></tabAereoporto>
+		<aereoporto idAp="3" idC="1"><flagAttivo>true</flagAttivo><nome>Linate</nome></aereoporto><aereoporto idAp="4" idC="5"><flagAttivo>true</flagAttivo><nome>Charles De Gaulle</nome></aereoporto></tabAereoporto>
 
 
 		<tabCitta>
@@ -65,7 +62,7 @@
 			<citta idC="2" idN="1">
 				<nome>Roma</nome>
 			</citta>
-		<citta idN="1" idC="3"><nome>Firenze</nome></citta></tabCitta>
+		<citta idN="1" idC="3"><nome>Firenze</nome></citta><citta idN="1" idC="4"><nome>Salerno</nome></citta><citta idN="2" idC="5"><nome>Parigi</nome></citta></tabCitta>
 
 
 
@@ -74,16 +71,16 @@
 				<nome>Italia</nome>
 			</nazione>
 			<nazione idN="2">
-				<nome>Germania</nome>
+				<nome>Francia</nome>
 			</nazione>
-		</tabNazione>
+		<nazione idN="3"><nome>Svezia</nome></nazione><nazione idN="5"><nome>Spagna</nome></nazione><nazione idN="6"><nome>Austria</nome></nazione><nazione idN="7"><nome>Portogallo</nome></nazione></tabNazione>
 	
 		
 		<tabTratta>
 			<tratta idT="1" idApP="1" idApA="2">
-				<durata>12</durata>
+				<durata>120</durata>
 			</tratta>
-		<tratta idT="2" idApP="2" idApA="1"><durata>12</durata></tratta></tabTratta>	
+		<tratta idT="2" idApP="2" idApA="1"><durata>12</durata></tratta><tratta idT="3" idApP="3" idApA="4"><durata>120</durata></tratta><tratta idT="4" idApP="4" idApA="3"><durata>150</durata></tratta></tabTratta>	
 
 
 		<tabVolo>

@@ -51,6 +51,11 @@ sub get{
 	}
 	push @menu_temp, add("Compagnia", "../compagnia.html");
 	push @menu_temp, add("Servizi", "../servizi.html");
+	
+	if(gestione_sessione::getParam("admin")==1){
+		push @menu_temp, add("Amministrazione", "admin.cgi");
+	}
+	
 	if($logged==1){
 		push @menu_temp, add("Logout", "login.cgi?logout=1");
 	}else{
