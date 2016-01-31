@@ -38,7 +38,7 @@
 
         <tabAmministratore>
 			<amministratore idA="1"> 
-				<superAdmin>false</superAdmin>
+				<superAdmin>true</superAdmin>
 			</amministratore>
 			<amministratore idA="2"> 
 				<superAdmin>false</superAdmin>
@@ -55,7 +55,7 @@
 				<flagAttivo>true</flagAttivo>
 				<nome>Fiumicino</nome>		
 			</aereoporto>
-		</tabAereoporto>
+		<aereoporto idAp="3" idC="1"><flagAttivo>true</flagAttivo><nome>Linate</nome></aereoporto></tabAereoporto>
 
 
 		<tabCitta>
@@ -65,13 +65,16 @@
 			<citta idC="2" idN="1">
 				<nome>Roma</nome>
 			</citta>
-		</tabCitta>
+		<citta idN="1" idC="3"><nome>Firenze</nome></citta></tabCitta>
 
 
 
 		<tabNazione>
 			<nazione idN="1">
 				<nome>Italia</nome>
+			</nazione>
+			<nazione idN="2">
+				<nome>Germania</nome>
 			</nazione>
 		</tabNazione>
 	
@@ -80,7 +83,7 @@
 			<tratta idT="1" idApP="1" idApA="2">
 				<durata>12</durata>
 			</tratta>
-		</tabTratta>	
+		<tratta idT="2" idApP="2" idApA="1"><durata>12</durata></tratta></tabTratta>	
 
 
 		<tabVolo>
@@ -90,7 +93,7 @@
 				<prezzo>12</prezzo>
 				<giorno>2</giorno>			
 			</volo>
-		</tabVolo>
+		<volo idV="2" idT="1" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>18:00</oraPartenza><prezzo>125</prezzo><giorno>2</giorno></volo></tabVolo>
 		
 
 		<tabPrenotazione>
