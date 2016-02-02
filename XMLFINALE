@@ -160,10 +160,12 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:field xpath="@idUR"/>
 	</xsd:keyref>
 	<!-- nominativo prenotazione -->
+	<!-- NON PIU VALIDO IN QUANTO UNA PRENOTAZIONE CONTIENE DA 1 A INFINITI PASSEGGERI
 	<xsd:keyref name="idFKU_P" refer="idPKU">
 		<xsd:selector xpath="prenotazione"/>
 		<xsd:field xpath="@idU"/>
 	</xsd:keyref>
+	-->
 	<!-- volo prenotazione -->
 	<xsd:keyref name="idFKV_P" refer="idPKV">
 		<xsd:selector xpath="prenotazione"/>
@@ -623,8 +625,8 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 
 <!-- definizione tipo Id -->
 <xsd:simpleType name="tId">
-	<xsd:restriction base="xsd:integer">
-		<xsd:minInclusive value="1"/>
+	<xsd:restriction base="xsd:string">
+		<xsd:pattern value="([0-9]*,{0, 1})+"/>
 	</xsd:restriction>
 </xsd:simpleType>	
 
