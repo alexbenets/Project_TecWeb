@@ -249,7 +249,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 
 <!-- definizione Database -->
 <xsd:complexType name="tDatabase">
-	<xsd:sequence minOccurs="1" maxOccurs="1">
+	<xsd:all minOccurs="1" maxOccurs="1">
 		<xsd:element name="tabUtente" type="tTabUtente"/>
 		<xsd:element name="tabUtenteRegistrato" type="tTabUtenteRegistrato"/>
 		<xsd:element name="tabAmministratore" type="tTabAmministratore"/>
@@ -267,7 +267,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="tabServizioPrenotato" type="tTabServizioPrenotato"/>			
 		<xsd:element name="tabNews" type="tTabNews"/>
 		<xsd:element name="tabFaq" type="tTabFaq"/>
-	</xsd:sequence>	
+	</xsd:all>	
 </xsd:complexType>
 
 
