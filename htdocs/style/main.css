@@ -43,7 +43,9 @@
 	padding-left: 9em;
 	/*text-align:center;*/
 	font-size: 4em;
-	color:#00a000;
+	/*color:#00a000;*/
+	color: #000000;
+	
 }
 #banner h1 span{
 	font-size: 0.5em;
@@ -53,7 +55,8 @@
 	padding-left:15.5em;
 	/*text-align: center;*/
 	font-size: 2em;
-	color:#a00000;
+	/*color:#a00000;*/
+	color: #000000;
 }
 #description{
 	margin-top: 1em;
@@ -635,7 +638,27 @@
 	background-color:#e4edf2;
 	/*border-radius: 0px 20px 20px 0px;*/
 }
-/*FINE terzo SECONDO MENU'*/
+/*FINE TERZO MENU'*/
+
+/*LINK*/
+/* link da visitare */
+a:link{ 
+	color: #000099; 
+}
+/* link attivo */
+a:active{ 
+	color: #000; 
+} 
+/* link visitato */
+a:visited{ 
+	color: #AA00AA; 
+} 
+/* link al passaggio del mouse */
+a:hover{ 
+	color: #000; 
+}
+
+/*FINE SEZIONE LINK*/
 
 /*FINE SEZIONE CONTENUTO*/
 
