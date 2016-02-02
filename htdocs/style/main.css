@@ -244,7 +244,7 @@
 	max-width:99%;
 	background-color:#fff;
 	/*sezione text*/
-	color:#000000;
+	color:#778899;
 	font-size:1.1em;
 }
 #prenota form .casella_dataArrivo input[type="text"]{
@@ -253,7 +253,7 @@
 	max-width:99%;
 	background-color:#fff;
 	/*sezione text*/
-	color:#000000;
+	color:#778899;
 	font-size:1.1em;
 }
 /*fine casella _date*/
