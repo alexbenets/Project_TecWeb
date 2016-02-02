@@ -21,6 +21,7 @@
 	border-radius: 0px 0px 20px 20px;
 }
 /*logo*/
+/*
 #logo{
 	float: left;
 	display: block;
@@ -33,6 +34,7 @@
 	height: 188px;
 	background-repeat: no-repeat;
 }
+*/
 /*fine sezione logo*/
 #banner {
 	/*background-color:#dddddd;*/
@@ -68,7 +70,7 @@
 /*SEZIONE MENU'*/
 
 #menu {
-	margin-left: 30%;
+	margin-left: 33%;
 	margin-top: 2.5em;
 	height:3em;
 	/*background-color:#C0FFEE;*/
@@ -431,17 +433,6 @@
 	font-size:1.2em;
 	line-height:2.4em;
 }
-
-#mappaSito {
-	font-size: 1.2em;
-}
-#mappaSito  ul ul{
-	margin-left: 2em;
-	
-}
-#mappaSito a{
-	text-decoration: none;
-}
 /*FINE SEZIONE "contenitore_sezioni"*/
 
 /*INIZIO "SEZIONE"*/
@@ -636,6 +627,56 @@
 	/*border-radius: 0px 20px 20px 0px;*/
 }
 /*FINE terzo SECONDO MENU'*/
+
+/*INIZIO SEZIONE NEWS*/
+/*
+#news {
+	float:left;
+	width:15%;
+	display:block;
+	margin-top: 1em;
+	background-color:#f7fcff;
+}
+#news ul {	
+	list-style:none;
+}
+#news ul li {
+	background-color:#00cc99;
+	border-radius: 5px 0px 0px 5px;
+}
+#news ul li a {
+	width:100%;
+	text-decoration:none;
+	display:block;
+	/*sezione font*//*
+	color:#000;
+	border-radius: 5px 0px 0px 5px;
+}
+#news ul li a:hover {
+	background-color:#e4edf2;
+}
+#news ul li a .riquadro_news {
+	display:block;
+	margin-bottom:0.3em;
+	padding-left:0.2em;
+	padding-top:0.2em;
+	border:1px solid #000;
+	border-radius: 5px 0px 0px 5px;
+	/*inizio sezione font*//*
+}
+#news ul li a .riquadro_news .titolo_news {
+	display:block;
+	margin-bottom:0.2em;
+	font-size:1.5em;
+}
+
+#news ul li a .riquadro_news .descrizione_news_breve{
+	display:block;
+	padding-left:1em;
+	padding-bottom:0.5em;
+}*/
+/*FINE SEZIONE NEWS*/
+
 
 /*FINE SEZIONE CONTENUTO*/
 
