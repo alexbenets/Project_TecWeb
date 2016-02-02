@@ -1064,7 +1064,7 @@ sub addServizio{
 		my $parser = XML::LibXML->new();
 		my $db = $parser->parse_file($filename) or die;
 			
-		my $servizio=$db->findnodes('/database/tabServizio/servizio[@idS='.$id_servizio.']')->[0];
+		my $servizio=$db->findnodes('/database/tabServizio/servizio[@idS='.$id.']')->[0];
 		
 		my $nodo_nome=$servizio->findnodes('nome/text()')->[0];
 		$nodo_nome->setData($nome);
