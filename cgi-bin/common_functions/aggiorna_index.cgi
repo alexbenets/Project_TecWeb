@@ -83,12 +83,13 @@ sub aggiorna{
 	my $index;
 	my $testo= get();
 	$testo =~ s/([a-zA-Z_.]+.cgi)/cgi-bin\/$1/g;
-	gestione_sessione::setParam("logged",$loggato);
-	gestione_sessione::setParam("admin",$admin);
 	my $filename="../public_html/index.html";
 	open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
 	print $fh $testo;
 	close $fh;
+	
+	gestione_sessione::setParam("logged",$loggato);
+	gestione_sessione::setParam("admin",$admin);
     #my $ricerca=$p->getElementById("prenota");
     #print $ricerca;
    # my $ricerca=$p->get_tag('<div id="prenota">');
