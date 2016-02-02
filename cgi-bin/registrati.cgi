@@ -77,6 +77,8 @@ if(defined ($nascita)){
 }
 my $create=gestione_sessione::createSession();
 my $reg_Result;
+
+
 if(($errore==0) & defined $form{"invia"}){#se il form è stato compilato correttamente
 	$reg_Result=registrati();
 	if($reg_Result==1){
@@ -85,6 +87,7 @@ if(($errore==0) & defined $form{"invia"}){#se il form è stato compilato corrett
 	}
 }
 
+gestione_sessione::setParam("location", "registrati.cgi");
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
@@ -101,7 +104,7 @@ if($errore==0){#se il campo non è ancora stato compilato...
 my $titolo="Home";
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>$titolo</title>
@@ -128,6 +131,11 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 print " <div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print '<div id="secondo_menu">
+					<ul>
+						<li><a href="login.cgi">Login</a></li>
+					</ul>
+				</div><!-- chiudo secondo menu -->';
 my $testo="<div class=\"sezione\">
 					<form action=\"registrati.cgi\" method=\"post\">
 						<fieldset>";

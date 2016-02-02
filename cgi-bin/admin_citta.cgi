@@ -63,7 +63,7 @@ print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>$titolo</title>
@@ -96,7 +96,12 @@ print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print '<div id="secondo_menu">
 					<ul>
-						<li><span>Gestione citt&agrave;</span></li>
+						<li><a href="admin_nazioni.cgi" >Gestione Nazioni</a></li>
+						<li><a href="admin_citta.cgi" class="selected">Gestione Citt&agrave;</a></li>
+						<li><a href="admin_aereoporti.cgi" >Gestione Aereoporti</a></li>
+						<li><a href="admin_tratte.cgi">Gestione Tratte</a></li>
+						<li><a href="admin_voli.cgi">Gestione Voli</a></li>
+						<li><a href="admin_servizi.cgi">Gestione Servizi</a></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
