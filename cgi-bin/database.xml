@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<database>
+<database>
 		<tabUtente>
 			<utente idU="1"> 
 				<nome>Andrea</nome>
@@ -25,7 +25,7 @@
 				<codiceFiscale>MSFSFV00S19L702V</codiceFiscale>
 				<dataNascita>01/05/2010</dataNascita>
 			</utente>
-		</tabUtente> 
+		<utente idU="5"><nome>Nome</nome><cognome>Cognome</cognome><codiceFiscale>pttmrc87a12l840w</codiceFiscale><dataNascita>12/01/1987</dataNascita></utente></tabUtente> 
 		
 		
 		<tabUtenteRegistrato>
@@ -50,14 +50,17 @@
 				<domandaSegreta>come si chiama tuo fratello?</domandaSegreta>
 				<rispostaSegreta>Aldo</rispostaSegreta>
 			</utenteRegistrato>
-		</tabUtenteRegistrato>
+		<utenteRegistrato idUR="5"><flagBann>false</flagBann><mail>info@example.org</mail><password>password</password></utenteRegistrato></tabUtenteRegistrato>
 		
 
-                <tabAmministratore>
+        <tabAmministratore>
 			<amministratore idA="1"> 
 				<superAdmin>false</superAdmin>
 			</amministratore>
 			<amministratore idA="3"> 
+				<superAdmin>false</superAdmin>
+			</amministratore>
+			<amministratore idA="5"> 
 				<superAdmin>false</superAdmin>
 			</amministratore>
 		</tabAmministratore> 
@@ -74,11 +77,11 @@
 			</aereoporto>
 			<aereoporto idAp="3" idC="3">
 				<flagAttivo>true</flagAttivo> 
-				<nome>Ciampino/nome>		
+				<nome>Ciampino</nome>		
 			</aereoporto>
 			<aereoporto idAp="4" idC="3">
 				<flagAttivo>true</flagAttivo> 
-				<nome>Fiumicino/nome>		
+				<nome>Fiumicino</nome>		
 			</aereoporto>
 			<aereoporto idAp="5" idC="4">
 				<flagAttivo>true</flagAttivo> 
@@ -92,7 +95,7 @@
 				<flagAttivo>true</flagAttivo> 
 				<nome>London Heathrow</nome>		
 			</aereoporto>
-		</tabAereoporto>
+		<aereoporto idAp="7" idC="6"><flagAttivo>true</flagAttivo><nome>Catullo</nome></aereoporto></tabAereoporto>
 
 
 		<tabCitta>
@@ -112,7 +115,7 @@
 				<nome>Londra</nome>
 			</citta>
 			
-		</tabCitta>
+		<citta idN="1" idC="6"><nome>Verona</nome></citta></tabCitta>
 
 
 
@@ -154,7 +157,7 @@
 			<tratta idT="8" idApP="4" idApA="5">
 				<durata>630</durata>
 			</tratta>
-		</tabTratta>	
+		<tratta idT="9" idApP="5" idApA="2"><durata>1250</durata></tratta><tratta idT="10" idApP="7" idApA="1"><durata>120</durata></tratta></tabTratta>	
 
 
 		<tabVolo>
@@ -348,7 +351,7 @@
 			</aereo>
 			<aereo idAe="3" idTA="1">
 				<stato>true</stato> 
-				<noteVarie>un anno di servizio, comprato usato (3 anni di et&egrave)</noteVarie>
+				<noteVarie>un anno di servizio, comprato usato (3 anni di et&amp;amp;egrave)</noteVarie>
 			</aereo>
 			<aereo idAe="4" idTA="1">
 				<stato>true</stato> 
@@ -374,12 +377,12 @@
 				<pesoMaxDecollo>377842</pesoMaxDecollo>
 				<CapacitaCombustibile>183380</CapacitaCombustibile>
 				<numeroMotori>4</numeroMotori>
-				<tipoMotori></tipoMotori>
+				<tipoMotori/>
 				<spintaMotori>4</spintaMotori>
 				<velocitaMax>945</velocitaMax>
 				<velocitaCrociera>895</velocitaCrociera> 
-				<autonomia></autonomia>
-				<infoSediliFile></infoSediliFile>	
+				<autonomia/>
+				<infoSediliFile/>	
 				</tipoAereo>
 		</tabTipoAereo>
 
@@ -408,7 +411,7 @@
 			<servizio idS="1">
 				<nome>assistenza speciale</nome>
 				<descrizione>
-				in caso di necessit&agrave;
+				in caso di necessit&amp;agrave;
 				ai passeggeri disabili o con ridotta mobilità non verrà rifiutato il trasporto a causa di tali disabilità
 				o ridotte capacità di mobilità. Il trasporto di passeggeri giovani che viaggiano da soli, persone disabili,
 				donne in stato interessante, ammalati, non vedenti o passeggeri con danni alla vista o altre persone che richiedano 
@@ -433,7 +436,7 @@
 				<nome>noleggio auto</nome>
 				<descrizione>
 				noleggia un auto: 
-				prenota la possibilit&agrave di richiedere un'auto a prezzi vantaggiosi una volta arrivato a destinazione!
+				prenota la possibilit&amp;agrave di richiedere un'auto a prezzi vantaggiosi una volta arrivato a destinazione!
 				con un piccolo acconto da pagare all'aereoporto di partenza un risparmio del 30% su qualsiasi veicolo!
 				</descrizione>
 				<prezzo>15</prezzo>  

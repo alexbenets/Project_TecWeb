@@ -46,6 +46,7 @@ my $testo= "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
 				<form action=\"../cgi-bin/search.cgi\" method=\"post\">
 					<fieldset>
+					<legend>Dati del volo:</legend>
 						";
 						if(($errori & 3)>0){
 							$testo.="<div>
@@ -59,20 +60,20 @@ my $testo= "
 									</div>";
 						}
 						$testo.="<div class=\"casella_AR\">
-							<label for=\"andata\">solo andata</label>
-							<input type=\"radio\" name=\"AR\" id=\"andata\" value=\"andata\"  ";
+							
+							<input type=\"radio\" id=\"andata\" name=\"AR\"  value=\"andata\"  ";
 							if($andata==1){
 								$testo.="checked=\"checked\"";
 							}
-							$testo.="/>
+							$testo.="/><label for=\"andata\">solo andata</label>
 						</div>
 						<div class=\"casella_AR\">
-							<label for=\"ritorno\">andata e ritorno</label>
+							
 							<input type=\"radio\" name=\"AR\" id=\"ritorno\" value=\"ritorno\"  ";
 							if($andata==0){
 								$testo.="checked=\"checked\"";
 							}
-							$testo.="/>
+							$testo.="/><label for=\"ritorno\">andata e ritorno</label>
 						</div>
 						<div class=\"clearer\"></div>";
 						

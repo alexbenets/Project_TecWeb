@@ -37,7 +37,7 @@ print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>$titolo</title>
@@ -65,7 +65,14 @@ print_header::setPath(\@path_temp);
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print print_search::print(0, $ar, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri,1);
-print print_content::print("ciao");
+my $testo='
+				<div id="presentazione">
+					
+					<p>Benvenuto nel sito ufficiale della compagnia aerea low cost A-ir</p>
+					<p>Qui potrai trovare tutte le informazioni riguardanti la nostra compagnia, il nostro personale, la nostra flotta e scoprire tutte le destinazioni che puoi scegliere per la tua vacanza o per il tuo viaggio di affari!</p>
+					<p>Cosa stai aspettando? Prenota subito il tuo volo!!</p>
+				</div>';
+print print_content::print($testo);
 print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>

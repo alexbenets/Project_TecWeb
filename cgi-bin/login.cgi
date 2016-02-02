@@ -44,6 +44,9 @@ if(!defined($location)){#se la variabile di sessione non è definita
 	$location="index.cgi";
 }
 if (gestione_sessione::getParam("logged") == 1){
+		if($location eq "login.cgi"){
+			$location="index.cgi";
+		}
 		print "Location: $location\n\n";
 		exit;
 }
@@ -59,13 +62,13 @@ if(defined($email) and defined($password)){
 		exit;
 	}
 }
-
+gestione_sessione::setParam("location", "login.cgi");
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
-<html xmlns=\"http://www.w3.org/1999/xhtml\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
 		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>$titolo</title>
@@ -93,6 +96,11 @@ print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 
 my $testo="
+		<div id=\"secondo_menu\">
+					<ul>
+						<li><a href=\"registrati.cgi\">Registrati</a></li>
+					</ul>
+				</div><!-- chiudo secondo menu -->
 	<div class=\"sezione\">
 		<form action=\"login.cgi\" method=\"post\">
 			<fieldset>";
@@ -138,10 +146,7 @@ $testo.="		<div>
 					</button>
 				</div>
 				<div>
-					<p>
-						<span>Non sei ancora registrato?</span>
-						<a href=\"registrati.cgi\">Registrati!</a>
-					</p>
+					
 				</div>
 			</fieldset>
 		</form>

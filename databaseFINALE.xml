@@ -84,11 +84,11 @@
 				<flagAttivo>true</flagAttivo> 
 				<nome>Fiorello La Guardia</nome>		
 			</aereoporto>
-			<aereoporto idAp="5" idC="4">
+			<aereoporto idAp="6" idC="4">
 				<flagAttivo>true</flagAttivo> 
 				<nome>JFK</nome>		
 			</aereoporto>
-			<aereoporto idAp="6" idC="5">
+			<aereoporto idAp="7" idC="5">
 				<flagAttivo>true</flagAttivo> 
 				<nome>London Heathrow</nome>		
 			</aereoporto>
