@@ -1,31 +1,17 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
 	<head>
-		
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		
-		<style type="text/css" media="screen">
-			@import url("style/main.css");
-		</style>
-		
-		
+		<link rel="stylesheet" href="../style/main.css" type="text/css" media="screen" charset="utf-8"/>
 		<title>Home</title>
-		
-		<meta name="title" content="Compagnia Aerea A-ir - Home Page"/>
-		<meta name="description" content="Compagnia Aerea A-ir"/>
-		<meta name="keywords" content="A-ir, compagnia, aereo, biglietto, volo, prenotazione, tratte, aeroporto"/>
-		<meta name="language" content="italian it"/>
-		<meta name="author" content="MarAlFraMar"/>
-		
 	</head>
 	
 	<body>
-		<!-- HEADER -->
+
 		<div id="header">
 			<div id="logo">
 				
 			</div>
-			
 			<div id="banner">
 				<h1>The A<span>-IR &copy;</span></h1>
 				<h2>Si alza il vento, vola con Noi!</h2>
@@ -33,87 +19,62 @@
 				<div id="description">
 					<span>Sito web adibito alla prenotazione di un volo aereo low cost</span>
 				</div>
-			</div><!-- chiudo banner-->
+				</div><!-- chiudo banner-->
 			
 			<div id="menu">
-				<a href="index.html" class="selected">Home</a>
-				<a href="compagnia.html" >Compagnia</a>
-				<a href="servizi.html" >Servizi</a>
-				<a href="cgi-bin/login.cgi" >Area utente</a>
+				<a href="cgi-bin/index.cgi"  >Home</a>
+				<a href="cgi-bin/admin_tratte.cgi" class="selected"  >admin tratte</a>
+				<a href="../compagnia.html"  >Compagnia</a>
+				<a href="../servizi.html"  >Servizi</a>
+				<a href="cgi-bin/login.cgi"  >Login</a>
 			</div><!-- chiudo menu -->
-
 			<div class="clearer"></div>
 			
 			<div id="path">
 				<span>Ti trovi in: </span>
-				<!-- span class separatore_path &gt sara' la stringa aggiunta dal codice perl per la creazione
-				del path -->
-				<a href="index.html">Home</a>
-				<span class="separatore_path"> &gt;</span>
-				
-				<a href="index.html">Pagina boh</a>
-				<span class="separatore_path"> &gt;</span>
-				
-				<span>Pagina.bleah</span>
-			</div><!-- chiudo path-->
-		</div><!-- chiudo header-->
-		
-		<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
-			<div id="prenota"><!-- div che contiene il box per la prenotazione-->
-				<form action="cgi-bin/search.cgi" method="post">
-					<fieldset>
-						<div class="casella_AR">
-							<label for="andata">solo andata</label>
-							<input type="radio" name="AR" id="andata" value="andata"  checked="checked"/>
-						</div>
-						<div class="casella_AR">
-							<label for="ritorno">andata e ritorno</label>
-							<input type="radio" name="AR" id="ritorno" value="ritorno"/>
-						</div>
-						<div class="clearer"></div>
+				<span>Home</span>
+			</div><!-- chiudo path--></div><!-- chiudo header-->
 
-						<div class="casella_partenza">
+		<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
+		<div id="prenota"><!-- div che contiene il box per la prenotazione-->
+				<form action="cgi-bin/../cgi-bin/cgi-bin/search.cgi" method="post">
+					<fieldset>
+					<legend>Dati del volo:</legend>
+						<div class="casella_AR">
+							
+							<input type="radio" id="andata" name="AR"  value="andata"  /><label for="andata">solo andata</label>
+						</div>
+						<div class="casella_AR">
+							
+							<input type="radio" name="AR" id="ritorno" value="ritorno"  checked="checked"/><label for="ritorno">andata e ritorno</label>
+						</div>
+						<div class="clearer"></div><div class="casella_partenza">
 							<label for="partenza">Partenza:</label>
-							<select name="partenza" id="partenza" class="partenza">
-								<optgroup label="ITALIA">
-									<option>Milano - Malpensa</option>
-									<option>Milano - Linate</option>
-								</optgroup>
-							</select>
+							<select id="partenza" name="partenza" class="partenza"><optgroup label="Italia">
+<option>Venezia - Marco Polo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Verona - Catullo</option><option>Genova - Cristoforo Colombo</option></optgroup><optgroup label="Inghilterra">
+<option>Londra - London Heathrow</option></optgroup><optgroup label="Stati Uniti d'America">
+<option>NewYork - Fiorello La Guardia</option><option>NewYork - JFK</option></optgroup></select>
 						</div>
 						<div class="casella_arrivo">					
 							<label for="arrivo">Arrivo:</label>
-							<select name="arrivo" id="arrivo" class="arrivo">
-								<optgroup label="ITALIA">
-									<option>Milano - Malpensa</option>
-									<option>Milano - Linate</option>
-								</optgroup>
-							</select>
+							<select id="arrivo" name="arrivo" class="arrivo"><optgroup label="Italia">
+<option>Venezia - Marco Polo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Verona - Catullo</option><option>Genova - Cristoforo Colombo</option></optgroup><optgroup label="Inghilterra">
+<option>Londra - London Heathrow</option></optgroup><optgroup label="Stati Uniti d'America">
+<option>NewYork - Fiorello La Guardia</option><option>NewYork - JFK</option></optgroup></select>
 						</div>
 						
 						<div class="casella_dataPartenza">
 							<label for="data_partenza">Data Partenza:</label>
-							<input type="text" name="data_partenza" id="data_partenza" value="Data Partenza"></input>
+							<input type="text" name="data_partenza" id="data_partenza" value="3/2/2016" class=""></input>
 						</div>
 						<div class="casella_dataArrivo">
 							<label for="data_ritorno">Data Ritorno:</label>
-							<input type="text" name="data_ritorno" id="data_ritorno" value="Data Ritorno"></input>
+							<input type="text" name="data_ritorno" id="data_ritorno" value="4/2/2016" class=""></input>
 						</div>
 
 						<div class="casella_passeggeri">
 							<label for="n_passeggeri">numero Passeggeri:</label>
-							<select name="passeggeri" id="n_passeggeri" class="passeggeri">
-								<option>1 passeggero</option>
-								<option>2 passeggeri</option>
-								<option>3 passeggeri</option>
-								<option>4 passeggeri</option>
-								<option>5 passeggeri</option>
-								<option>6 passeggeri</option>
-								<option>7 passeggeri</option>
-								<option>8 passeggeri</option>
-								<option>9 passeggeri</option>
-								<option>10 passeggeri</option>
-							</select>
+							<select id="n_passeggeri" name="passeggeri" class="passeggeri"><option selected="selected">Nessun passeggero</option><option>1 passeggero</option><option>2 passeggeri</option><option>3 passeggeri</option><option>4 passeggeri</option><option>5 passeggeri</option><option>6 passeggeri</option><option>7 passeggeri</option><option>8 passeggeri</option><option>9 passeggeri</option><option>10 passeggeri</option></select>
 						</div>
 
 						<div class="button_form">									
@@ -125,22 +86,21 @@
 					</fieldset>
 				</form>
 			</div><!-- chiudo prenota -->
-			<div id="contenuto">
-				
+
+
+		<div id="contenuto">
+		
 				<div id="presentazione">
 					
 					<p>Benvenuto nel sito ufficiale della compagnia aerea low cost A-ir</p>
 					<p>Qui potrai trovare tutte le informazioni riguardanti la nostra compagnia, il nostro personale, la nostra flotta e scoprire tutte le destinazioni che puoi scegliere per la tua vacanza o per il tuo viaggio di affari!</p>
 					<p>Cosa stai aspettando? Prenota subito il tuo volo!!</p>
-				</div>
-				
-				<div class="clearer"></div>
-			</div><!-- chiudo contenuto-->
-		</div><!-- chiudo main-->
-		
+				</div></div><!-- chiudo contenuto-->
+
+		</div>
 		<div id="footer">
 			<div id="sitemap">
-				<a href="siteMap.html">Mappa del sito</a>
+				<a href="../siteMap.html">Mappa del sito</a>
 			</div> <!-- chiudo sitemap -->
 			<div id="dati_aziendali">
 				<p>Si alza il vento, vola con Noi!</p>
@@ -163,5 +123,6 @@
 				<div class="clearer"></div> <!-- chiudo i float -->
 			</div><!-- chiudo div validazione -->
 		</div><!-- chiudo footer-->
+
 	</body>
 </html>

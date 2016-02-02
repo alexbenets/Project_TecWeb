@@ -85,7 +85,7 @@ sub aggiorna{
 	$testo =~ s/([a-zA-Z_.]+.cgi)/cgi-bin\/$1/g;
 	gestione_sessione::setParam("logged",$loggato);
 	gestione_sessione::setParam("admin",$admin);
-	my $filename="../Documents/index.html";
+	my $filename="../public_html/index.html";
 	open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
 	print $fh $testo;
 	close $fh;
