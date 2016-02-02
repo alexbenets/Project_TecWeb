@@ -102,6 +102,9 @@ push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 print print_header::print();
+
+my @tratte=@{database::getTratta()};
+my @voli=@{database::getVoli_totali()};
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print '<div id="secondo_menu">
 					<ul>
@@ -128,7 +131,6 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 									<label for="volo1">Volo:</label>
 									<select id="volo1" name="volo">
 										<option>-</option>';
-										my @voli=@{database::getVoli_totali()};
 										foreach my $volo (@voli){
 											my @v=@{$volo};
 											$testo.= "<option>@v[0]: ora partenza: @v[1], partenza: @v[2] arrivo: @v[3], @v[4]&euro;</option>";
@@ -140,7 +142,6 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 									<label for="tratta1">Tratta:</label>
 									<select id="tratta1" name="tratta">
 										<option>-</option>';
-										my @tratte=@{database::getTratta()};
 								foreach my $tratta (@tratte){
 									my @tmp=@{$tratta};
 										$testo.="<option>@tmp[0]: @tmp[1] - @tmp[2], @tmp[3] minuti</option>";
@@ -186,7 +187,6 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 									<label for="tratta">Tratta:</label>
 									<select id="tratta" name="tratta">
 										<option>-</option>';
-										my @tratte=@{database::getTratta()};
 										foreach my $tratta (@tratte){
 											my @tmp=@{$tratta};
 										$testo.="<option>@tmp[0]: @tmp[1] - @tmp[2], @tmp[3] minuti</option>";

@@ -15,16 +15,19 @@ use strict;
 my $filename="database.xml";
 
 #funzioni base
-
+my $xp=0;
 sub get{
 	#ritorna il nodo in base alla stringa xpath
 	my ($xpath)=@_;
-	my $xp = XML::XPath->new(filename => $filename);
+	if($xp==0){
+		$xp = XML::XPath->new(filename => $filename);
+	}
 	return $xp->find($xpath); # find 
 }
 
 sub set{
 	#SOVRASCRIVE IL DATABASE in base a quanto inserito nella stringa
+	$xp=0;
 	my ($valore)=@_;
 	open (my $fh,'>',$filename);
 	print $fh $valore;
@@ -37,10 +40,10 @@ sub set{
 sub getUtente{
 	my ($id)=@_;
 	my @out;
-	push @out, get('//utente[@idU='.$id.']/nome/text()');
-	push @out, get('//utente[@idU='.$id.']/cognome/text()');
-	push @out, get('//utente[@idU='.$id.']/codiceFiscale/text()');
-	push @out, get('//utente[@idU='.$id.']/dataNascita/text()');
+	push @out, get('/database/tabUtente/utente[@idU='.$id.']/nome/text()');
+	push @out, get('/database/tabUtente/utente[@idU='.$id.']/cognome/text()');
+	push @out, get('/database/tabUtente/utente[@idU='.$id.']/codiceFiscale/text()');
+	push @out, get('/database/tabUtente/utente[@idU='.$id.']/dataNascita/text()');
 	return \@out;
 }
 
@@ -51,12 +54,12 @@ sub aggiornaUtente{
 	my ($id, $nome, $cognome, $cf, $nascita, $password, $nuova_password)=@_;
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
-	my $utente=$db->findnodes('//utente[@idU='.$id.']')->[0];
+	my $utente=$db->findnodes('/database/tabUtente/utente[@idU='.$id.']')->[0];
 	if ($utente->toString(1) eq ""){
 		return -1;
 		#utente non trovato
 	}
-	my $utente_registrato=$db->findnodes('//utenteRegistrato[@idUR='.$id.']')->[0];
+	my $utente_registrato=$db->findnodes('/database/tabUtente/utenteRegistrato[@idUR='.$id.']')->[0];
 	my $psw_database=$utente_registrato->findnodes('password/text()')->[0];
 	if(!($psw_database eq $password)){
 		return 0;
@@ -96,9 +99,9 @@ sub getPrenotazioni{
 	my ($id, $id_P)=@_;
 	my $prenotazioni;
 	if($id_P eq ''){
-		$prenotazioni=get('//prenotazione[@idUR='.$id.']');
+		$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.']');
 	}else{
-		$prenotazioni=get('//prenotazione[@idUR='.$id.' and @idP='.int($id_P).']');
+		$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.' and @idP='.int($id_P).']');
 	}
 	my @prenotazioni;
 	foreach my $prenotazione ($prenotazioni->get_nodelist){
@@ -123,17 +126,17 @@ sub getPrenotazioni{
 		my $data_partenza=$prenotazione->find("dataPartenza");
 		my $bagagli=$prenotazione->find("numeroBagagli");
 		
-		my $tratta=get('//volo[@idV='.$id_volo.']/@idT');
-		my $ora_partenza=get('//volo[@idV='.$id_volo.']/oraPartenza');
-		my $prezzo=get('//volo[@idV='.$id_volo.']/prezzo');
+		my $tratta=get('/database/tabVolo/volo[@idV='.$id_volo.']/@idT');
+		my $ora_partenza=get('/database/tabVolo/volo[@idV='.$id_volo.']/oraPartenza');
+		my $prezzo=get('/database/tabVolo/volo[@idV='.$id_volo.']/prezzo');
 		
-		my $aereoporto_partenza=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/@idC)])/nome')." ".get('//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApP)]/nome');
-		my $aereoporto_arrivo=get('(//citta[@idC=(//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/@idC)])/nome')." ".get('//aereoporto[@idAp=(//tratta[@idT='.$tratta.']/@idApA)]/nome');
+		my $aereoporto_partenza=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApP)]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApP)]/nome');
+		my $aereoporto_arrivo=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApA)]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApA)]/nome');
 		
-		my $servizi=get('//servizioPrenotato[@idP='.$id.']');
+		my $servizi=get('/database/tabServizio/servizioPrenotato[@idP='.$id.']');
 		my @servizi_prenotati;
 		foreach my $temp ($servizi->get_nodelist){
-			my @s_temp=(get('//servizio[@idS='.$temp->getAttribute("idS").']/nome'),get('//servizio[@idS='.$temp->getAttribute("idS").']/prezzo'));
+			my @s_temp=(get('/database/tabServizio/servizio[@idS='.$temp->getAttribute("idS").']/nome'),get('/database/tabServizio/servizio[@idS='.$temp->getAttribute("idS").']/prezzo'));
 			push @servizi_prenotati, \@s_temp;
 		}
 		#print "<p>$id, $posti_occupati, $tratta $id_volo, $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati</p>";
@@ -146,11 +149,11 @@ sub getPrenotazioni{
 
 sub salva_utente{
 	my ($nome, $cognome, $cf, $nascita)=@_;
-	my $presente=int(get('//tabUtente/utente[codiceFiscale="'.$cf.'"]/@idU'));
+	my $presente=int(get('/database/tabUtente/utente[codiceFiscale="'.$cf.'"]/@idU'));
 	if ($presente>0){ #è inutile aggiungere un utente con il codice fiscale duplicato!
 		return $presente;
 	}
-	my $id=int(get('//tabUtente/utente/@idU[ not (.<//tabUtente/utente/@idU)]'))+1;
+	my $id=int(get('/database/tabUtente/utente/@idU[ not (.</database/tabUtente/utente/@idU)]'))+1;
 	
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
@@ -195,7 +198,7 @@ sub salvaServizio{
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
 	
-	my $tab_servizi=$db->findnodes('//tabServizioPrenotato')->[0];
+	my $tab_servizi=$db->findnodes('/database/tabServizioPrenotato')->[0];
 	my $nodo=XML::LibXML::Element->new("servizioPrenotato");
 	#idP="1" idS="1"
 	$nodo->setAttribute("idSP",$id);
@@ -279,21 +282,21 @@ sub modificaPrenotazione{
 	my ($id_utente, $id_prenotazione, $rimuovi)=@_;
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
-	my $test=get('//prenotazione[@idP='.$id_prenotazione.' and @idUR='.$id_utente.']/data');
+	my $test=get('/database/tabPrenotazione/prenotazione[@idP='.$id_prenotazione.' and @idUR='.$id_utente.']/data');
 	if("".$test eq ""){
 		return -1;
 		#l'id non è stato trovato o l'utente non è lo stesso che ha prenotato
 	}
-	my $prenotazione=$db->findnodes('//prenotazione[@idP='.$id_prenotazione.']')->[0];#rimuovo la prenotazione
+	my $prenotazione=$db->findnodes('/database/tabPrenotazione/prenotazione[@idP='.$id_prenotazione.']')->[0];#rimuovo la prenotazione
 	if($rimuovi==1){ 
 		
-		my $tab_p=$db->findnodes('//tabPrenotazione')->[0];
+		my $tab_p=$db->findnodes('/database/tabPrenotazione')->[0];
 		$tab_p->removeChild($prenotazione);
 		
 		#ora rimuovo i vari servizi relativi alla prenotazione
 		#in questo modo ottengo un database consistente, senza "sporcizia" causata da parziali rimozioni
-		my $servizi=$db->findnodes('//servizioPrenotato[@idP='.$id_prenotazione.']');
-		my $tab_servizi=$db->findnodes('//tabServizioPrenotato')->[0];
+		my $servizi=$db->findnodes('/database/tabServizio/servizioPrenotato[@idP='.$id_prenotazione.']');
+		my $tab_servizi=$db->findnodes('/database/tabServizioPrenotato')->[0];
 		foreach my $servizio ($servizi->get_nodelist){
 			$tab_servizi->removeChild($servizio);
 		}
@@ -317,7 +320,7 @@ sub registrati{
 	if(int($utenti)==1){
 		return -1;
 	}
-	$utenti=get('//utente/codiceFiscale="'.$cf.'"');
+	$utenti=get('/database/tabUtente/utente/codiceFiscale="'.$cf.'"');
 	if(int($utenti)==1){
 		return -2;
 	}
@@ -359,13 +362,13 @@ sub login{
 	foreach my $utente ($utenti->get_nodelist){
 		
 		my $id="".$utente->getAttribute("idUR");
-		my $admin=int(get('//amministratore[@idA='.$id.']/@idA'));
+		my $admin=int(get('/database/tabAmministratore/amministratore[@idA='.$id.']/@idA'));
 		if($admin > 0){
 			$admin=1;
 		}
 		my $psw="".$utente->find("password");
-		my $nome="".get('//utente[@idU='.$id.']/nome');
-		my $cognome="".get('//utente[@idU='.$id.']/cognome');
+		my $nome="".get('/database/tabUtente/utente[@idU='.$id.']/nome');
+		my $cognome="".get('/database/tabUtente/utente[@idU='.$id.']/cognome');
 		if($psw eq $password){
 			@out=(1,$nome,$cognome, $id, $admin);
 			return \@out;
@@ -450,9 +453,9 @@ sub getVoli{
 			$posti_disponibili=int(get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']/numeroPosti'));
 		}
 		my $id_volo=int($volo->getAttribute("idV"));
-		#print '//prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]';
+		#print '/database/tabPrenotazione/prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]';
 		#ora sottraggo i posti disponibili in base alle prenotazioni
-		my $prenotazioni=get('//prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]');
+		my $prenotazioni=get('/database/tabPrenotazione/prenotazione[@idV='.$id_volo.' and dataPartenza="'.$anno.'-'.$mese.'-'.$giorno.'"]');
 		#print $prenotazioni;
 		foreach my $prenotazione ($prenotazioni->get_nodelist){
 			#ora mi ricavo il numero di passeggeri + il prenotante.
@@ -580,7 +583,7 @@ sub addStato{
 	if(int($id)==0){
 		#aggiungo da zero
 		my $id_stato=int(get('/database/tabNazione/nazione/@idN[ not (.</database/tabNazione/nazione/@idN)]'))+1;
-		my $presente=int(get('//nazione[nome="'.$stato.'"]/@idN'));
+		my $presente=int(get('/database/tabNazione/nazione[nome="'.$stato.'"]/@idN'));
 		if($presente>0){
 			return -1;
 		}
@@ -605,12 +608,12 @@ sub addStato{
 			
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;
-			my $nazione=$db->findnodes('//nazione[@idN='.$id.']/nome/text()')->[0];
+			my $nazione=$db->findnodes('/database/tabNazione/nazione[@idN='.$id.']/nome/text()')->[0];
 			if ($nazione eq ""){
 				return -1;
 				#utente non trovato
 			}
-			$nazione=$db->findnodes('//nazione[@idN='.$id.']')->[0];
+			$nazione=$db->findnodes('/database/tabNazione/nazione[@idN='.$id.']')->[0];
 			my $nome_nazione=$nazione->findnodes('nome/text()')->[0];
 			$nome_nazione->setData($stato);
 	
@@ -621,7 +624,7 @@ sub addStato{
 }
 sub listStati{
 	my @list_stati;
-	my $db_stati=get('//nazione');
+	my $db_stati=get('/database/tabNazione/nazione');
 	foreach my $stato ($db_stati->get_nodelist){
 		my @tmp=($stato->getAttribute("idN"), $stato->find("nome"));
 		push @list_stati, \@tmp;
@@ -634,11 +637,11 @@ sub addCitta
 	if(int($id)==0){
 		#aggiungo da zero
 		my $id_citta=int(get('/database/tabCitta/citta/@idC[ not (.</database/tabCitta/citta/@idC)]'))+1;
-		my $presente=int(get('//citta[nome="'.$nome_citta.'"]/@idN'));
+		my $presente=int(get('/database/tabCitta/citta[nome="'.$nome_citta.'"]/@idN'));
 		if($presente>0){
 			return -1;
 		}
-		my $id_stato=int(get('//nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
+		my $id_stato=int(get('/database/tabNazione/nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
 		if($id_stato==0){
 			return -1;
 		}
@@ -662,16 +665,16 @@ sub addCitta
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;
 			
-			my $citta=$db->findnodes('//citta[@idC='.$id.']/nome/text()')->[0];
+			my $citta=$db->findnodes('/database/tabCitta/citta[@idC='.$id.']/nome/text()')->[0];
 			if ($citta eq ""){
 				return -1;
 				#città non trovata
 			}
-			my $id_stato=int(get('//nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
+			my $id_stato=int(get('/database/tabNazione/nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
 			if($id_stato==0){
 				return -1;
 			}
-			$citta=$db->findnodes('//citta[@idC='.$id.']')->[0];
+			$citta=$db->findnodes('/database/tabCitta/citta[@idC='.$id.']')->[0];
 			$citta->setAttribute("idN", $id_stato);
 			my $nodo_nome_citta=$citta->findnodes('nome/text()')->[0];
 			$nodo_nome_citta->setData($nome_citta);
@@ -681,16 +684,16 @@ sub addCitta
 sub listCitta{
 	my ($stato)=@_;
 	my @list_citta;
-	my $id_stato=int(get('//nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
+	my $id_stato=int(get('/database/tabNazione/nazione[nome="'.$stato.'"]/@idN')); #mi ricavo l'id dello stato
 	if($id_stato==0){
-		my $db_citta=get('//citta');
+		my $db_citta=get('/database/tabCitta/citta');
 		foreach my $citta ($db_citta->get_nodelist){
 		my @tmp=($citta->getAttribute("idC"), $citta->find("nome"));
 		push @list_citta, \@tmp;
 		}
 		return \@list_citta;
 	}
-	my $db_citta=get('//citta[@idN='.$id_stato.']');
+	my $db_citta=get('/database/tabCitta/citta[@idN='.$id_stato.']');
 	foreach my $citta ($db_citta->get_nodelist){
 		my @tmp=($citta->getAttribute("idC"), $citta->find("nome"));
 		push @list_citta, \@tmp;
@@ -705,11 +708,11 @@ sub addAereoporto
 		#aggiungo da zero
 		my $id_aereoporto=int(get('/database/tabAereoporto/aereoporto/@idAp[ not (.</database/tabAereoporto/aereoporto/@idAp)]'))+1;
 		
-		my $presente=int(get('//aereoporto[nome="'.$aereoporto.'"]/@idAp'));
+		my $presente=int(get('/database/tabAereoporto/aereoporto[nome="'.$aereoporto.'"]/@idAp'));
 		if($presente>0){
 			return -1;
 		}
-		my $id_citta=int(get('//citta[nome="'.$nome_citta.'"]/@idC'));
+		my $id_citta=int(get('/database/tabCitta/citta[nome="'.$nome_citta.'"]/@idC'));
 		if($id_citta==0){
 			return -1;
 		}
@@ -740,16 +743,16 @@ sub addAereoporto
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;
 			
-			my $id_citta=int(get('//citta[nome="'.$nome_citta.'"]/@idC'));
+			my $id_citta=int(get('/database/tabCitta/citta[nome="'.$nome_citta.'"]/@idC'));
 			if($id_citta==0){
 				return -1;
 			}
 			#print $id_citta;
-			if(int(get('//aereoporto[@idAp='.$id.']/@idAp'))==0)
+			if(int(get('/database/tabAereoporto/aereoporto[@idAp='.$id.']/@idAp'))==0)
 			{
 				return -1;#l'aereoporto con questo id non esiste
 			}
-			my $nodo_aereoporto=$db->findnodes('//aereoporto[@idAp='.$id.']')->[0];
+			my $nodo_aereoporto=$db->findnodes('/database/tabAereoporto/aereoporto[@idAp='.$id.']')->[0];
 			$nodo_aereoporto->setAttribute("idC", $id_citta);
 			my $nodo_nome_aereoporto=$nodo_aereoporto->findnodes('nome/text()')->[0];
 			$nodo_nome_aereoporto->setData($aereoporto);
@@ -759,16 +762,16 @@ sub addAereoporto
 sub listAereoporti{
 	my ($citta)=@_;
 	my @list_aereoporti;
-	my $id_citta=int(get('//citta[nome="'.$citta.'"]/@idC')); #mi ricavo l'id dello stato
+	my $id_citta=int(get('/database/tabCitta/citta[nome="'.$citta.'"]/@idC')); #mi ricavo l'id dello stato
 	if($id_citta==0){
-		my $db_aereoporti=get('//aereoporto');
+		my $db_aereoporti=get('/database/tabAereoporto/aereoporto');
 		foreach my $aereoporto ($db_aereoporti->get_nodelist){
 			my @tmp=($aereoporto->getAttribute("idAp"), $aereoporto->find("nome"));
 			push @list_aereoporti, \@tmp;
 		}
 		return \@list_aereoporti;
 	}
-	my $db_aereoporti=get('//aereoporto[@idC='.$id_citta.']');
+	my $db_aereoporti=get('/database/tabAereoporto/aereoporto[@idC='.$id_citta.']');
 	foreach my $aereoporto ($db_aereoporti->get_nodelist){
 		my @tmp=($aereoporto->getAttribute("idAp"), $aereoporto->find("nome"));
 		push @list_aereoporti, \@tmp;
@@ -782,11 +785,11 @@ sub addTratta{
 			if(int($durata)<1){
 				return -10;
 			}
-			my $id_aereoporto_partenza=int(get('//aereoporto[nome="'.$partenza.'"]/@idAp'));
+			my $id_aereoporto_partenza=int(get('/database/tabAereoporto/aereoporto[nome="'.$partenza.'"]/@idAp'));
 			if($id_aereoporto_partenza==0){
 				return -8; #l'aereoporto non esiste
 			}
-			my $id_aereoporto_arrivo=int(get('//aereoporto[nome="'.$arrivo.'"]/@idAp'));
+			my $id_aereoporto_arrivo=int(get('/database/tabAereoporto/aereoporto[nome="'.$arrivo.'"]/@idAp'));
 			if($id_aereoporto_arrivo==0){
 				return -7; #l'aereoporto non esiste
 			}
@@ -794,7 +797,7 @@ sub addTratta{
 				return -5; #non posso decollare ed atterrare nello stesso aereoporto!
 			}
 			my $id_tratta=int(get('/database/tabTratta/tratta/@idT[ not (.</database/tabTratta/tratta/@idT)]'))+1;
-			my $presente=int(get('//tratta[@idApP='.$id_aereoporto_partenza.' and @idApA='.$id_aereoporto_arrivo.']/@idT'));
+			my $presente=int(get('/database/tabTratta/tratta[@idApP='.$id_aereoporto_partenza.' and @idApA='.$id_aereoporto_arrivo.']/@idT'));
 			if($presente>0){
 				return -1;
 			}
@@ -824,18 +827,18 @@ sub addTratta{
 				return -10;
 			}
 			
-			my $id_aereoporto_partenza=int(get('//aereoporto[nome="'.$partenza.'"]/@idAp'));
+			my $id_aereoporto_partenza=int(get('/database/tabAereoporto/aereoporto[nome="'.$partenza.'"]/@idAp'));
 			if($id_aereoporto_partenza==0){
 				return -8; #l'aereoporto non esiste
 			}
-			my $id_aereoporto_arrivo=int(get('//aereoporto[nome="'.$arrivo.'"]/@idAp'));
+			my $id_aereoporto_arrivo=int(get('/database/tabAereoporto/aereoporto[nome="'.$arrivo.'"]/@idAp'));
 			if($id_aereoporto_arrivo==0){
 				return -7; #l'aereoporto non esiste
 			}
 			if($id_aereoporto_partenza==$id_aereoporto_arrivo){
 				return -5; #non posso decollare ed atterrare nello stesso aereoporto!
 			}
-			my $id_tratta=int(get('//tratta[@idT='.$id.']/@idT'));
+			my $id_tratta=int(get('/database/tabTratta/tratta[@idT='.$id.']/@idT'));
 			if($id_tratta==0){
 				return -1; #la tratta non esiste
 			}
@@ -843,7 +846,7 @@ sub addTratta{
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;
 			
-			my $nodo_tratta=$db->findnodes('//tratta[@idT='.$id.']')->[0];
+			my $nodo_tratta=$db->findnodes('/database/tabTratta/tratta[@idT='.$id.']')->[0];
 			$nodo_tratta->setAttribute("idApP",$id_aereoporto_partenza);
 			$nodo_tratta->setAttribute("idApA",$id_aereoporto_arrivo);
 			my $nodo_tratta_durata=$nodo_tratta->findnodes('durata/text()')->[0];
@@ -855,15 +858,15 @@ sub addTratta{
 sub getTratta{
 			my ($partenza, $arrivo)=@_;
 			if(($partenza eq "") and ($arrivo eq "")){
-				my $tratte=get('//tratta');
+				my $tratte=get('/database/tabTratta/tratta');
 				my @list_tratte;
 				foreach my $tratta ($tratte->get_nodelist){
 					my $id_partenza=$tratta->getAttribute("idApP");
 					my $id_arrivo=$tratta->getAttribute("idApA");
-					my $cittaP=get('//aereoporto[@idAp='.$id_partenza.']/nome');
+					my $cittaP=get('/database/tabAereoporto/aereoporto[@idAp='.$id_partenza.']/nome');
 					
-					my $cittaA=get('//aereoporto[@idAp='.$id_arrivo.']/nome');
-					my $durata=get('//tratta[@idT='.$tratta->getAttribute("idT").']/durata');
+					my $cittaA=get('/database/tabAereoporto/aereoporto[@idAp='.$id_arrivo.']/nome');
+					my $durata=get('/database/tabTratta/tratta[@idT='.$tratta->getAttribute("idT").']/durata');
 					#print "$id_partenza";
 					my @temp=(
 						$tratta->getAttribute("idT"),
@@ -875,18 +878,18 @@ sub getTratta{
 				}
 				return \@list_tratte;
 			}
-			my $id_aereoporto_partenza=int(get('//aereoporto[nome="'.$partenza.'"]/@idAp'));
+			my $id_aereoporto_partenza=int(get('/database/tabAereoporto/aereoporto[nome="'.$partenza.'"]/@idAp'));
 			if($id_aereoporto_partenza==0){
 				return -8; #l'aereoporto non esiste
 			}
-			my $id_aereoporto_arrivo=int(get('//aereoporto[nome="'.$arrivo.'"]/@idAp'));
+			my $id_aereoporto_arrivo=int(get('/database/tabAereoporto/aereoporto[nome="'.$arrivo.'"]/@idAp'));
 			if($id_aereoporto_arrivo==0){
 				return -7; #l'aereoporto non esiste
 			}
 			if($id_aereoporto_partenza==$id_aereoporto_arrivo){
 				return -5; #non posso decollare ed atterrare nello stesso aereoporto!
 			}
-			return get('//tratta[@idApP='.$id_aereoporto_partenza.' and @idApA='.$id_aereoporto_arrivo.']/@idT');
+			return get('/database/tabTratta/tratta[@idApP='.$id_aereoporto_partenza.' and @idApA='.$id_aereoporto_arrivo.']/@idT');
 			
 }
 sub addVolo{
@@ -896,7 +899,7 @@ sub addVolo{
 			if(int($prezzo)<1){
 				return -10;
 			}
-			my $id_tratta=int(get('//tratta[@idT='.$tratta.']/@idT'));
+			my $id_tratta=int(get('/database/tabTratta/tratta[@idT='.$tratta.']/@idT'));
 			if($id_tratta==0){
 				return -1; #la tratta non esiste
 			}
@@ -958,11 +961,11 @@ sub addVolo{
 			if(int($prezzo)<1){
 				return -10;
 			}
-			my $id_tratta=int(get('//tratta[@idT='.$tratta.']/@idT'));
+			my $id_tratta=int(get('/database/tabTratta/tratta[@idT='.$tratta.']/@idT'));
 			if($id_tratta==0){
 				return -1; #la tratta non esiste
 			}
-			my $id_volo=int(get('//volo[@idV='.$id.']/@idV'));
+			my $id_volo=int(get('/database/tabVolo/volo[@idV='.$id.']/@idV'));
 			if($id_volo==0){
 				return -1; #il volo non esiste
 			}
@@ -972,7 +975,7 @@ sub addVolo{
 			my $parser = XML::LibXML->new();
 			my $db = $parser->parse_file($filename) or die;
 			
-			my $nodo_volo=$db->findnodes('//volo[@idV='.$id_volo.']')->[0];
+			my $nodo_volo=$db->findnodes('/database/tabVolo/volo[@idV='.$id_volo.']')->[0];
 			$nodo_volo->setAttribute("idT",$id_tratta);
 			my $nodo_volo_attivo=$nodo_volo->findnodes('flagAttivo/text()')->[0];
 			if($attivo==1){
@@ -995,13 +998,18 @@ sub addVolo{
 
 sub getVoli_totali{
 	my @voli;
-	my $tab_voli=get('//volo');
+	my $tab_voli=get('/database/tabVolo/volo');
 	foreach my $volo ($tab_voli->get_nodelist){
 		my $id_volo=$volo->getAttribute("idV");
 		my $id_tratta=$volo->getAttribute("idT");
 		my $orario=$volo->find("oraPartenza");
-		my $aereoporto_partenza=get('//aereoporto[@idAp=(//tratta[@idT='.$id_tratta.']/@idApP)]/nome');
-		my $aereoporto_arrivo=get('//aereoporto[@idAp=(//tratta[@idT='.$id_tratta.']/@idApA)]/nome');
+		my $tratte=get('/database/tabTratta/tratta[@idT='.$id_tratta.']');
+		my $tratta;
+		foreach my $tmp ($tratte->get_nodelist){
+			$tratta=$tmp;
+		}
+		my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApP').']/nome/text()');
+		my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApA').']/nome/text()');
 		my $prezzo=$volo->find('prezzo');
 		my @v_t=(
 			$id_volo,
@@ -1053,7 +1061,7 @@ sub addServizio{
 		
 	}else{
 		#modifico
-		my $id_servizio=int(get('//servizio[@idS='.$id.']/@idS'));
+		my $id_servizio=int(get('/database/tabServizio/servizio[@idS='.$id.']/@idS'));
 		if($id_servizio==0){
 			return -1;
 			#servizio non trovato
@@ -1083,13 +1091,13 @@ sub removeServizio {
 	my ($id)=@_;
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
-	my $test=get('//servizio[@idS='.$id.']/@idS');
+	my $test=get('/database/tabServizio/servizio[@idS='.$id.']/@idS');
 	if("".$test eq ""){
 		return -1;
 		#l'id non è stato trovato
 	}
-	my $servizio=$db->findnodes('//servizio[@idS='.$id.']')->[0];#rimuovo la prenotazione
-	my $tab_p=$db->findnodes('//tabServizio')->[0];
+	my $servizio=$db->findnodes('/database/tabServizio/servizio[@idS='.$id.']')->[0];#rimuovo la prenotazione
+	my $tab_p=$db->findnodes('/database/tabServizio')->[0];
 	$tab_p->removeChild($servizio);
 		
 	#print $db->toString(1);
