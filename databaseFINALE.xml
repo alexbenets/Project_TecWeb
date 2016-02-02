@@ -4,15 +4,27 @@
 		
 		<tabUtente>
 			<utente idU="1"> 
-				<nome>pinco</nome>
-				<cognome>pallino</cognome>
+				<nome>Andrea</nome>
+				<cognome>Rossi</cognome>
 				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
 				<dataNascita>12/02/1990</dataNascita>
 			</utente>
 			<utente idU="2"> 
-				<nome>pinco</nome>
-				<cognome>pallino</cognome>
-				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
+				<nome>Pina</nome>
+				<cognome>Rossi</cognome>
+				<codiceFiscale>MSFSFV00S19L702V</codiceFiscale>
+				<dataNascita>01/05/2010</dataNascita>
+			</utente>
+			<utente idU="3"> 
+				<nome>Alberto</nome>
+				<cognome>Lupo</cognome>
+				<codiceFiscale>ALBRTO00S19L702V</codiceFiscale>
+				<dataNascita>01/05/2010</dataNascita>
+			</utente>
+			<utente idU="4"> 
+				<nome>Beatrice</nome>
+				<cognome>Rosa</cognome>
+				<codiceFiscale>MSFSFV00S19L702V</codiceFiscale>
 				<dataNascita>01/05/2010</dataNascita>
 			</utente>
 		</tabUtente> 
@@ -21,17 +33,24 @@
 		<tabUtenteRegistrato>
 			<utenteRegistrato idUR="1">
 				<flagBann>false</flagBann>
-				<mail>112</mail>
-				<password>12321234</password>
-				<domandaSegreta>fdvioa</domandaSegreta>
-				<rispostaSegreta>asdyfi</rispostaSegreta>
+				<mail>pinco.pallino@mail.com</mail>
+				<password>12345678</password>
+				<domandaSegreta>come si chiama tua madre?</domandaSegreta>
+				<rispostaSegreta>Anna</rispostaSegreta>
 			</utenteRegistrato>
 			<utenteRegistrato idUR="2">
 				<flagBann>false</flagBann>
-				<mail>112</mail>
-				<password>12321234</password>
-				<domandaSegreta>fdvioa</domandaSegreta>
-				<rispostaSegreta>asdyfi</rispostaSegreta>
+				<mail>pnca.pallino@hotmail.com</mail>
+				<password>87654321</password>
+				<domandaSegreta>come si chiama tuo fratello?</domandaSegreta>
+				<rispostaSegreta>Aldo</rispostaSegreta>
+			</utenteRegistrato>
+			<utenteRegistrato idUR="3">
+				<flagBann>false</flagBann>
+				<mail>berto.lupo@hotmail.com</mail>
+				<password>87654321</password>
+				<domandaSegreta>come si chiama tuo fratello?</domandaSegreta>
+				<rispostaSegreta>Aldo</rispostaSegreta>
 			</utenteRegistrato>
 		</tabUtenteRegistrato>
 		
@@ -40,7 +59,7 @@
 			<amministratore idA="1"> 
 				<superAdmin>false</superAdmin>
 			</amministratore>
-			<amministratore idA="2"> 
+			<amministratore idA="3"> 
 				<superAdmin>false</superAdmin>
 			</amministratore>
 		</tabAmministratore> 
@@ -49,41 +68,104 @@
 		<tabAereoporto>
 			<aereoporto idAp="1" idC="1">
 				<flagAttivo>true</flagAttivo> 
-				<nome>qqq</nome>		
+				<nome>Marco Polo</nome>		
 			</aereoporto>
 			<aereoporto idAp="2" idC="2">
-				<flagAttivo>true</flagAttivo>
-				<nome>aaa</nome>		
+				<flagAttivo>true</flagAttivo> 
+				<nome>Cristoforo Colombo</nome>		
+			</aereoporto>
+			<aereoporto idAp="3" idC="3">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Ciampino/nome>		
+			</aereoporto>
+			<aereoporto idAp="4" idC="3">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Fiumicino/nome>		
+			</aereoporto>
+			<aereoporto idAp="5" idC="4">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Fiorello La Guardia</nome>		
+			</aereoporto>
+			<aereoporto idAp="5" idC="4">
+				<flagAttivo>true</flagAttivo> 
+				<nome>JFK</nome>		
+			</aereoporto>
+			<aereoporto idAp="6" idC="5">
+				<flagAttivo>true</flagAttivo> 
+				<nome>London Heathrow</nome>		
 			</aereoporto>
 		</tabAereoporto>
 
 
 		<tabCitta>
 			<citta idC="1" idN="1">
-				<nome>lll</nome>
+				<nome>Venezia</nome>
 			</citta>
 			<citta idC="2" idN="1">
-				<nome>lal</nome>
+				<nome>Genova</nome>
 			</citta>
+			<citta idC="3" idN="1">
+				<nome>Roma</nome>
+			</citta>
+			<citta idC="4" idN="2">
+				<nome>NewYork</nome>
+			</citta>
+			<citta idC="5" idN="3">
+				<nome>Londra</nome>
+			</citta>
+			
 		</tabCitta>
 
 
 
 		<tabNazione>
 			<nazione idN="1">
-				<nome>fdso</nome>
+				<nome>Italia</nome>
+			</nazione>
+			<nazione idN="2">
+				<nome>Stati Uniti d'America</nome>
+			</nazione>
+			<nazione idN="3">
+				<nome>Inghilterra</nome>
 			</nazione>
 		</tabNazione>
 	
 		
 		<tabTratta>
-			<tratta idT="1" idApP="1" idApA="2">
-				<durata>12</durata>
+			<tratta idT="1" idApP="1" idApA="3">
+				<durata>90</durata>
+			</tratta>
+			<tratta idT="2" idApP="3" idApA="1">
+				<durata>90</durata>
+			</tratta>
+			<tratta idT="3" idApP="1" idApA="4">
+				<durata>600</durata>
+			</tratta>
+			<tratta idT="4" idApP="4" idApA="1">
+				<durata>600</durata>
+			</tratta>
+			<tratta idT="5" idApP="5" idApA="3">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="6" idApP="3" idApA="5">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="7" idApP="5" idApA="4">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="8" idApP="4" idApA="5">
+				<durata>630</durata>
 			</tratta>
 		</tabTratta>	
 
 
 		<tabVolo>
+			<volo idV="1" idT="1" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
 			<volo idV="1" idT="1" idAe="1">
 				<flagAttivo>true</flagAttivo>
 				<oraPartenza>00:00</oraPartenza>
