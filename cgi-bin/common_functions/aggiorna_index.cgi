@@ -10,6 +10,7 @@ require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
+
 my @ISA       = qw(Exporter);
 my $VERSION   = 1.00;         # Version number
 
@@ -45,7 +46,7 @@ $ritorno ="
 # esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
-print_header::setMenu(menu::get());
+print_header::setMenu(menu::get(1));
 
 my %tratte=database::listTratte();
 print_search::set_tratte(%tratte);
@@ -75,21 +76,14 @@ return $ritorno;
 
 #funzioni base
 sub aggiorna{
-	gestione_sessione::createSession();
-	my $loggato=gestione_sessione::getParam("logged");
-	gestione_sessione::setParam("logged",0);
-	my $admin=gestione_sessione::getParam("admin");
-	gestione_sessione::setParam("admin",0);
 	my $index;
 	my $testo= get();
 	$testo =~ s/([a-zA-Z_.]+.cgi)/cgi-bin\/$1/g;
+	$testo =~ s/"..\//"/g;
 	my $filename="../public_html/index.html";
 	open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
 	print $fh $testo;
 	close $fh;
-	
-	gestione_sessione::setParam("logged",$loggato);
-	gestione_sessione::setParam("admin",$admin);
     #my $ricerca=$p->getElementById("prenota");
     #print $ricerca;
    # my $ricerca=$p->get_tag('<div id="prenota">');

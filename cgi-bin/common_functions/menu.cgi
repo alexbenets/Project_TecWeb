@@ -30,11 +30,12 @@ sub add{
 }
 
 sub get{
+	my ($ignora)=@_;
 	my $create=gestione_sessione::createSession();
 	
 	my @menu_temp;
 	push @menu_temp, add("Home", "index.cgi"); 
-	if($trovato==0){
+	if(($trovato==0) and (int($ignora)==0)){
 		my $pagina_sessione=gestione_sessione::getParam("location");
 		$pagina_sessione=~/([a-zA-Z0-9_]+).cgi/;
 		my $titolo=$1;
@@ -58,7 +59,7 @@ sub get{
 		push @menu_temp, add("Amministrazione", "admin.cgi");
 	}
 	
-	if($logged==1){
+	if(($logged==1) and (int($ignora)==0)){
 		push @menu_temp, add("Logout", "login.cgi?logout=1");
 	}else{
 		push @menu_temp, add("Login", "login.cgi");
