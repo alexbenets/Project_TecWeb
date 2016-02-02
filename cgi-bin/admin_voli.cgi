@@ -119,8 +119,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 							<fieldset>
 								<h3>Modifica un volo</h3>'.$errore.'
 								<div>
-									<label for="volo">Volo:</label>
-									<select id="volo" name="volo">
+									<label for="volo1">Volo:</label>
+									<select id="volo1" name="volo">
 										<option>-</option>';
 										my @voli=@{database::getVoli_totali()};
 										foreach my $volo (@voli){
@@ -131,8 +131,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="tratta">Tratta:</label>
-									<select id="tratta" name="tratta">
+									<label for="tratta1">Tratta:</label>
+									<select id="tratta1" name="tratta">
 										<option>-</option>';
 										my @tratte=@{database::getTratta()};
 								foreach my $tratta (@tratte){
@@ -144,23 +144,23 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div class="clearer"></div>	
 								<div>
-									<label for="partenza">Partenza:</label>
-									<input type="text" id="partenza" name="partenza" value="08:00"></input>
+									<label for="partenza1">Partenza:</label>
+									<input type="text" id="partenza1" name="partenza" value="08:00"></input>
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="prezzo">Prezzo &euro;:</label>
-									<input type="text" id="prezzo" name="prezzo" value="12"></input>
+									<label for="prezzo1">Prezzo &euro;:</label>
+									<input type="text" id="prezzo1" name="prezzo" value="12"></input>
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="attivo">Attivo </label>
-									<input type="checkbox" id="attivo" name="attivo" value="1"></input>
+									<label for="attivo1">Attivo </label>
+									<input type="checkbox" id="attivo1" name="attivo" value="1"></input>
 								</div>
 								<div class="clearer"></div>
 								
 								<div>
-									<button type="submit" id="salva" name="salva" value="salva">
+									<button type="submit" id="salva1" name="salva" value="salva">
 										<span>modifica</span>
 									</button>
 								</div>

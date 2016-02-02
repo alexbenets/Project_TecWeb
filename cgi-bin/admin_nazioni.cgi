@@ -100,7 +100,7 @@ print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print '<div id="secondo_menu">
 					<ul>
-						<li><span">Gestione Nazioni</span></li>
+						<li><span>Gestione Nazioni</span></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
@@ -144,11 +144,11 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 							<fieldset>
 								<h3>Aggiungi una nazione</h3>
 								<div>
-									<label for="nuovo_nome">Nuovo nome:</label>
-									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Italia"></input>
+									<label for="nuovo_nome1">Nuovo nome:</label>
+									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Italia"></input>
 								</div>
 								<div>
-									<button type="submit" id="salva" name="salva" value="salva">
+									<button type="submit" id="salva1" name="salva" value="salva">
 										<span>Aggiungi</span>
 									</button>
 								</div>

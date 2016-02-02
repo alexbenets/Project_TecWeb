@@ -98,7 +98,7 @@ sub getPrenotazioni{
 	if($id_P eq ''){
 		$prenotazioni=get('//prenotazione[@idUR='.$id.']');
 	}else{
-		$prenotazioni=get('//prenotazione[@idUR='.$id.' and @idP='.$id_P.']');
+		$prenotazioni=get('//prenotazione[@idUR='.$id.' and @idP='.int($id_P).']');
 	}
 	my @prenotazioni;
 	foreach my $prenotazione ($prenotazioni->get_nodelist){
@@ -189,22 +189,13 @@ sub salva_utente{
 
 sub salvaServizio{
 	my ($id_prenotazione, $id_servizio)=@_;
-	my $id=int(get('/database/tabServizioPrenotato/servizioPrenotato[@idP="'.$id_prenotazione.'" and @idS="'.$id_servizio.'"]/@idSP'));
-	if($id>0){
-		#il servizio è già presente nella prenotazione.
-		#caso molto degenere, ma può capitare in caso di bug nel codice di prenotazione
-		#soprattutto, capita durante la fase di test delle funzionalità,
-		#così mantengo il database pulito da doppioni di idS.
-		return $id;
-	}
-	#idee: controllo se idS esiste o mi fido?
 	
-	$id=int(get('/database/tabServizioPrenotato/servizioPrenotato/@idSP[ not (.</database/tabServizioPrenotato/servizioPrenotato/@idSP)]'))+1;
+	my $id=int(get('/database/tabServizioPrenotato/servizioPrenotato/@idSP[ not (.</database/tabServizioPrenotato/servizioPrenotato/@idSP)]'))+1;
 	#ottengo un nuovo id di servizio prenotato
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
 	
-	my $tab_servizi=$db->findnodes('/database/tabServizioPrenotato')->[0];
+	my $tab_servizi=$db->findnodes('//tabServizioPrenotato')->[0];
 	my $nodo=XML::LibXML::Element->new("servizioPrenotato");
 	#idP="1" idS="1"
 	$nodo->setAttribute("idSP",$id);
@@ -222,6 +213,12 @@ sub salvaServizio{
 sub prenota{
 	my ($id_utente,$data, $id_volo, $passeggeri, $servizi, $bagagli)=@_;
 	my $id_prenotazione=int(get('/database/tabPrenotazione/prenotazione/@idP[ not (.</database/tabPrenotazione/prenotazione/@idP)]'))+1;
+	my @ser=@{$servizi};
+	for (my $i=0; $i<scalar(@ser); $i++){
+		print "<p>$id_prenotazione, @ser[$i]->[0]</p>";
+		print salvaServizio($id_prenotazione,@ser[$i]->[0]);
+	}
+	#devo prima aggiungere i servizi altrimenti, avendo già letto il file, mi annullerà tutte le altre modifiche!
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
 	
@@ -271,10 +268,7 @@ sub prenota{
 	}
 	
 	$nodo->setAttribute("idU",$string_passeggeri);
-	my @ser=@{$servizi};
-	for (my $i=0; $i<scalar(@ser); $i++){
-		salvaServizio($id_prenotazione,@ser[$i]);
-	}
+	
 	$tab_prenotazioni->addChild($nodo);
 	
 	set($db->toString(1));

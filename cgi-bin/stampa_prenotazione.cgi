@@ -72,7 +72,7 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 							my @prenotazione=@{$tmp};
 							$testo.='
 								<dl>
-									<dt>Prenotazione N&deg; '.@prenotazione[0].'</dt>
+									<dt>Prenotazione N&deg; '.gestione_sessione::getParam("id").'#'.@prenotazione[0].'</dt>
 									<dt>Volo: '.@prenotazione[2].'</dt>
 									<dt>Data di prenotazione: '.@prenotazione[5].'</dt>
 									<dt>Data di partenza: '.@prenotazione[6].'</dt>
@@ -82,23 +82,41 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 								</dl>
 							</div><!-- chiudo prenotazione -->
 							<div class="clearer"></div>';
-							$testo.="<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
+							$testo.="<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->
+							<dl>";
 							
-							$testo.='<h3>Passeggeri</h3>';
+							$testo.='<dt>Passeggeri</dt>';
 							my @passeggeri=@{@prenotazione[11]};
 							foreach my $pt (@passeggeri){
 								my @passeggero=@{$pt};
 								$testo.="
-								<p>Nome: @passeggero[0]</p>
-								<p>Cognome: @passeggero[1]</p>
-								<p>Codice Fiscale: @passeggero[2]</p>
-								<p>Data di nascita: @passeggero[3]</p>
+								<dt>Nome: @passeggero[0]</dt>
+								<dt>Cognome: @passeggero[1]</dt>
+								<dt>Codice Fiscale: @passeggero[2]</dt>
+								<dt>Data di nascita: @passeggero[3]</dt>
 								";
 							}
-							$testo.='
+							$testo.='</dl>
 							</div><!-- chiudo prenotazione -->
 							<div class="clearer"></div>';
-							$testo.='<a href="index.cgi">Torna alla pagina principale</a>
+							
+							$testo.="<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->
+							<dl>";
+							
+							$testo.='<dt>Servizi aggiuntivi</dt>';
+							my @servizi=@{@prenotazione[10]};
+							foreach my $pt (@servizi){
+								my @servizio=@{$pt};
+								$testo.="
+								<dt>Nome: @servizio[0]</dt>
+								<dt>Prezzo: @servizio[1]&euro;</dt>
+								
+								";
+							}
+							$testo.='</dl>
+							</div><!-- chiudo prenotazione -->
+							<div class="clearer"></div>';
+							$testo.='<a href="utente.cgi?prenotazioni=1">Torna alla pagina delle prenotazioni</a>
 					';
 		#$id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati,\@utenti
 		

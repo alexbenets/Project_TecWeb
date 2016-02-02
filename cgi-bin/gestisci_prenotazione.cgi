@@ -27,9 +27,9 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
+
 my $id_prenotazione=int($form{"id"});
-
-
+my $elimina=int($form{"elimina"});
 
 
 my $titolo="Area utente";
@@ -101,15 +101,16 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 		<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 		my @prenotazione=@{$tmp};
 			$testo.='
+			<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">
 			<object>
-						<fieldset>
+				<fieldset>
 							<p>Data: '.@prenotazione[6].'</p>
 							<p>Partenza: '.@prenotazione[3].'</p>
 							<p>Arrivo: '.@prenotazione[4].'</p>
 							<p>Orario partenza: '.@prenotazione[7].'</p>
-							<p><a href="gestisci_prenotazione.cgi?id=1&amp;elimina=1">Elimina</a></p>
-						</fieldset>
-					</object>';
+				</fieldset>			
+					</object></a>
+					<p><a href="gestisci_prenotazione.cgi?id=1&amp;elimina=1">Elimina</a></p>';
 		#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
 		$testo.="</div><!-- chiudo prenotazione -->
 		<div class=\"clearer\"></div>";

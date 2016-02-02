@@ -171,8 +171,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								<h3>Aggiungi una tratta</h3>
 								<div class="clearer"></div>
 								<div>
-									<label for="aereoporto1">Aereoporto partenza:</label>
-									<select id="aereoporto1" name="aereoportoP">
+									<label for="aereoporto1_1">Aereoporto partenza:</label>
+									<select id="aereoporto1_1" name="aereoportoP">
 										<option>-</option>';
 										my @aereoporti=@{database::listAereoporti()};
 										foreach my $aereoporto (@aereoporti){
@@ -184,8 +184,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="aereoporto2">Aereoporto arrivo:</label>
-									<select id="aereoporto2" name="aereoportoA">
+									<label for="aereoporto2_2">Aereoporto arrivo:</label>
+									<select id="aereoporto2_2" name="aereoportoA">
 										<option>-</option>';
 										my @aereoporti=@{database::listAereoporti()};
 										foreach my $aereoporto (@aereoporti){
@@ -197,12 +197,12 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="durata1">durata (minuti):</label>
-									<input type="text" id="durata1" name="durata" value="12"></input>
+									<label for="durata1_2">durata (minuti):</label>
+									<input type="text" id="durata1_2" name="durata" value="12"></input>
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<button type="submit" id="salva" name="salva" value="salva">
+									<button type="submit" id="salva1" name="salva" value="salva">
 										<span>aggiungi</span>
 									</button>
 								</div>
