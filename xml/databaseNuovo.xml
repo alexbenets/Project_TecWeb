@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<database>
+		<tabUtente>
+			<utente idU="1"> 
+				<nome>Andrea</nome>
+				<cognome>Rossi</cognome>
+				<codiceFiscale>MSFSFV00S19L702N</codiceFiscale>
+				<dataNascita>12/02/1990</dataNascita>
+			</utente>
+			<utente idU="2"> 
+				<nome>Pina</nome>
+				<cognome>Rossi</cognome>
+				<codiceFiscale>MSFSFV00S19L702V</codiceFiscale>
+				<dataNascita>01/05/1953</dataNascita>
+			</utente>
+			<utente idU="3"> 
+				<nome>Alberto</nome>
+				<cognome>Lupo</cognome>
+				<codiceFiscale>ALBRTO00S19L702V</codiceFiscale>
+				<dataNascita>01/05/1990</dataNascita>
+			</utente>
+			<utente idU="4"> 
+				<nome>Beatrice</nome>
+				<cognome>Rosa</cognome>
+				<codiceFiscale>MSFSFV00S19L702V</codiceFiscale>
+				<dataNascita>01/05/2010</dataNascita>
+			</utente>
+		</tabUtente> 
+		
+		
+		<tabUtenteRegistrato>
+			<utenteRegistrato idUR="1">
+				<flagBann>false</flagBann>
+				<mail>pinco.pallino@mail.com</mail>
+				<password>12345678</password>
+				<domandaSegreta>come si chiama tua madre?</domandaSegreta>
+				<rispostaSegreta>Anna</rispostaSegreta>
+			</utenteRegistrato>
+			<utenteRegistrato idUR="2">
+				<flagBann>false</flagBann>
+				<mail>pnca.pallino@hotmail.com</mail>
+				<password>87654321</password>
+				<domandaSegreta>come si chiama tuo fratello?</domandaSegreta>
+				<rispostaSegreta>Aldo</rispostaSegreta>
+			</utenteRegistrato>
+			<utenteRegistrato idUR="3">
+				<flagBann>false</flagBann>
+				<mail>berto.lupo@hotmail.com</mail>
+				<password>87654321</password>
+				<domandaSegreta>come si chiama tuo fratello?</domandaSegreta>
+				<rispostaSegreta>Aldo</rispostaSegreta>
+			</utenteRegistrato>
+		</tabUtenteRegistrato>
+		
+
+                <tabAmministratore>
+			<amministratore idA="1"> 
+				<superAdmin>false</superAdmin>
+			</amministratore>
+			<amministratore idA="3"> 
+				<superAdmin>false</superAdmin>
+			</amministratore>
+		</tabAmministratore> 
+
+
+		<tabAereoporto>
+			<aereoporto idAp="1" idC="1">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Marco Polo</nome>		
+			</aereoporto>
+			<aereoporto idAp="2" idC="2">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Cristoforo Colombo</nome>		
+			</aereoporto>
+			<aereoporto idAp="3" idC="3">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Ciampino</nome>		
+			</aereoporto>
+			<aereoporto idAp="4" idC="3">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Fiumicino</nome>		
+			</aereoporto>
+			<aereoporto idAp="5" idC="4">
+				<flagAttivo>true</flagAttivo> 
+				<nome>Fiorello La Guardia</nome>		
+			</aereoporto>
+			<aereoporto idAp="6" idC="4">
+				<flagAttivo>true</flagAttivo> 
+				<nome>JFK</nome>		
+			</aereoporto>
+			<aereoporto idAp="7" idC="5">
+				<flagAttivo>true</flagAttivo> 
+				<nome>London Heathrow</nome>		
+			</aereoporto>
+		</tabAereoporto>
+
+
+		<tabCitta>
+			<citta idC="1" idN="1">
+				<nome>Venezia</nome>
+			</citta>
+			<citta idC="2" idN="1">
+				<nome>Genova</nome>
+			</citta>
+			<citta idC="3" idN="1">
+				<nome>Roma</nome>
+			</citta>
+			<citta idC="4" idN="2">
+				<nome>NewYork</nome>
+			</citta>
+			<citta idC="5" idN="3">
+				<nome>Londra</nome>
+			</citta>
+			
+		</tabCitta>
+
+
+
+		<tabNazione>
+			<nazione idN="1">
+				<nome>Italia</nome>
+			</nazione>
+			<nazione idN="2">
+				<nome>Stati Uniti d'America</nome>
+			</nazione>
+			<nazione idN="3">
+				<nome>Inghilterra</nome>
+			</nazione>
+		</tabNazione>
+	
+		
+		<tabTratta>
+			<tratta idT="1" idApP="1" idApA="3">
+				<durata>90</durata>
+			</tratta>
+			<tratta idT="2" idApP="3" idApA="1">
+				<durata>90</durata>
+			</tratta>
+			<tratta idT="3" idApP="1" idApA="4">
+				<durata>600</durata>
+			</tratta>
+			<tratta idT="4" idApP="4" idApA="1">
+				<durata>600</durata>
+			</tratta>
+			<tratta idT="5" idApP="5" idApA="3">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="6" idApP="3" idApA="5">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="7" idApP="5" idApA="4">
+				<durata>315</durata>
+			</tratta>
+			<tratta idT="8" idApP="4" idApA="5">
+				<durata>630</durata>
+			</tratta>
+		</tabTratta>	
+
+
+		<tabVolo>
+			<volo idV="1" idT="1" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>08:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="2" idT="1" idAe="2">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>10:30</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="3" idT="1" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>16:00</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>5</giorno>			
+			</volo>
+			<volo idV="4" idT="2" idAe="3">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>07:00</oraPartenza>
+				<prezzo>20</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="5" idT="2" idAe="2">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>21:00</oraPartenza>
+				<prezzo>20</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="6" idT="2" idAe="4">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>18:15</oraPartenza>
+				<prezzo>12</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="7" idT="4" idAe="3">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>17:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="8" idT="4" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>17:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>7</giorno>			
+			</volo>
+			<volo idV="9" idT="4" idAe="3">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>19:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>6</giorno>			
+			</volo>
+			<volo idV="10" idT="4" idAe="4">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>17:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>3</giorno>			
+			</volo>
+			<volo idV="11" idT="4" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>06:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="12" idT="4" idAe="2">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>12:10</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="13" idT="4" idAe="3">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>11:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>5</giorno>			
+			</volo>
+			<volo idV="14" idT="5" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>00:00</oraPartenza>
+				<prezzo>30</prezzo>
+				<giorno>6</giorno>			
+			</volo>
+			<volo idV="15" idT="5" idAe="2">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>09:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="16" idT="6" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>06:00</oraPartenza>
+				<prezzo>43</prezzo>
+				<giorno>7</giorno>			
+			</volo>
+			<volo idV="17" idT="6" idAe="4">
+				<flagAttivo>false</flagAttivo>
+				<oraPartenza>03:00</oraPartenza>
+				<prezzo>21</prezzo>
+				<giorno>2</giorno>			
+			</volo>
+			<volo idV="18" idT="6" idAe="2">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>10:20</oraPartenza>
+				<prezzo>54</prezzo>
+				<giorno>3</giorno>			
+			</volo>
+			<volo idV="19" idT="7" idAe="4">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>20:00</oraPartenza>
+				<prezzo>60</prezzo>
+				<giorno>1</giorno>			
+			</volo>
+			<volo idV="20" idT="7" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>22:40</oraPartenza>
+				<prezzo>33</prezzo>
+				<giorno>5</giorno>			
+			</volo>
+			<volo idV="21" idT="7" idAe="1">
+				<flagAttivo>false</flagAttivo>
+				<oraPartenza>23:40</oraPartenza>
+				<prezzo>45</prezzo>
+				<giorno>3</giorno>			
+			</volo>
+			<volo idV="22" idT="8" idAe="1">
+				<flagAttivo>true</flagAttivo>
+				<oraPartenza>19:40</oraPartenza>
+				<prezzo>70</prezzo>
+				<giorno>5</giorno>			
+			</volo>
+		</tabVolo>
+		
+
+		<tabPrenotazione>
+			<prenotazione idP="1" idUR="2" idV="1">
+				<data>16/11/2013</data>
+				<dataPartenza>07/12/2013</dataPartenza>
+				<numeroBagagli>2</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="2" idUR="2" idV="4">
+				<data>06/04/2015</data>
+				<dataPartenza>20/04/2015</dataPartenza>
+				<numeroBagagli>2</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="3" idUR="1" idV="7">
+				<data>01/01/2016</data>
+				<dataPartenza>05/06/2016</dataPartenza>
+				<numeroBagagli>1</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="4" idUR="1" idV="8">
+				<data>16/01/2016</data>
+				<dataPartenza>07/02/2016</dataPartenza>
+				<numeroBagagli>2</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="5" idUR="3" idV="1">
+				<data>16/11/2014</data>
+				<dataPartenza>07/12/2014</dataPartenza>
+				<numeroBagagli>5</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="6" idUR="2" idV="1">
+				<data>22/01/2016</data>
+				<dataPartenza>10/05/2016</dataPartenza>
+				<numeroBagagli>2</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="7" idUR="1" idV="1">
+				<data>16/11/2014</data>
+				<dataPartenza>07/12/2014</dataPartenza>
+				<numeroBagagli>0</numeroBagagli>
+			</prenotazione>
+			<prenotazione idP="8" idUR="3" idV="1">
+				<data>08/01/2016</data>
+				<dataPartenza>20/01/2016</dataPartenza>
+				<numeroBagagli>3</numeroBagagli>
+			</prenotazione>
+		</tabPrenotazione>
+		
+		<tabPasseggeriPrenotazione>
+			<passeggeriPrenotazione idPP="1" idU="2" idP="1"/>
+			<passeggeriPrenotazione idPP="2" idU="4" idP="1"/>
+			<passeggeriPrenotazione idPP="3" idU="2" idP="2"/>
+			<passeggeriPrenotazione idPP="4" idU="1" idP="3"/>
+			<passeggeriPrenotazione idPP="5" idU="1" idP="4"/> 
+			<passeggeriPrenotazione idPP="6" idU="3" idP="5"/>
+			<passeggeriPrenotazione idPP="7" idU="2" idP="5"/>
+			<passeggeriPrenotazione idPP="8" idU="1" idP="6"/>
+			<passeggeriPrenotazione idPP="9" idU="3" idP="7"/>
+			<passeggeriPrenotazione idPP="10" idU="3" idP="8"/>
+		</tabPasseggeriPrenotazione>
+
+		<tabAereo>
+			<aereo idAe="1" idTA="1">
+				<stato>true</stato> 
+				<noteVarie>nessuna nota</noteVarie>
+			</aereo>
+			<aereo idAe="2" idTA="1">
+				<stato>true</stato> 
+				<noteVarie>revisione da effettuare</noteVarie>
+			</aereo>
+			<aereo idAe="3" idTA="1">
+				<stato>true</stato> 
+				<noteVarie>un anno di servizio, comprato usato (3 anni di eta')</noteVarie>
+			</aereo>
+			<aereo idAe="4" idTA="1">
+				<stato>true</stato> 
+				<noteVarie>5 anni di servizio, ultima revisione eseguita 1 anno fa il 13/11/2015</noteVarie>
+			</aereo>
+				<aereo idAe="5" idTA="1">
+				<stato>false</stato> 
+				<noteVarie>aereo impiegato per l'addestramento dei piloti, 10 anni di servizio</noteVarie>
+			</aereo>
+		</tabAereo>
+		
+
+		<tabTipoAereo>
+			<tipoAereo idTA="1" idPA="1">
+				<nome>747-300</nome>
+				<numeroPosti>452</numeroPosti>
+				<lunghezza>70.6</lunghezza>
+				<aperturaAlare>59.6</aperturaAlare>
+				<diametroFusoliera>4</diametroFusoliera>
+				<altezza>19.3</altezza>
+				<superficieAlare>23</superficieAlare>
+				<pesoVuoto>178100</pesoVuoto>
+				<pesoMaxDecollo>377842</pesoMaxDecollo>
+				<CapacitaCombustibile>183380</CapacitaCombustibile>
+				<numeroMotori>4</numeroMotori>
+				<tipoMotori></tipoMotori>
+				<spintaMotori>4</spintaMotori>
+				<velocitaMax>945</velocitaMax>
+				<velocitaCrociera>895</velocitaCrociera> 
+				<autonomia>2000</autonomia>
+				<infoSediliFile></infoSediliFile>	
+				</tipoAereo>
+		</tabTipoAereo>
+
+
+		<tabProduttoreAereo>
+			<produttoreAereo idPA="1">
+				<nome>Boeing</nome>
+			</produttoreAereo>
+		</tabProduttoreAereo>
+		
+		
+		<tabCommento>
+			<commento idCo="1" idUR="2" idA="1" idV="1">
+				<abilitato>1</abilitato>
+				<voto>5</voto> 
+				<testo>
+					<data>28/12/2013</data>
+					<titolo>wes</titolo>
+					<contenuto>asjb</contenuto>
+				</testo>
+			</commento>
+		</tabCommento>
+
+		
+		<tabServizio>
+			
+			<servizio idS="1">
+				<nome>noleggio auto</nome>
+				<descrizione>
+				noleggia un auto: 
+				prenota la possibilita' di richiedere un'auto a prezzi vantaggiosi una volta arrivato a destinazione!
+				con un piccolo acconto da pagare all'aereoporto di partenza un risparmio del 30% su qualsiasi veicolo!
+				</descrizione>
+				<prezzo>15</prezzo>  
+			</servizio>
+			<servizio idS="2">
+				<nome>prenota camera</nome>
+				<descrizione>
+				prenota una camera in modo conveniente: 
+				20% di sconto su qualsiasi camera, su qualsiasi hotel, se prenoti tramite questo link!
+				</descrizione>
+				<prezzo>10</prezzo>  
+			</servizio>
+			<servizio idS="3">
+				<nome>assistenza speciale</nome>
+				<descrizione>
+				
+				</descrizione>
+				<prezzo>10</prezzo>  
+			</servizio>
+		</tabServizio>
+				
+
+		<tabServizioPrenotato>
+			<servizioPrenotato idSP="1" idP="1" idS="1"/>
+		</tabServizioPrenotato>
+
+				
+		<tabNews>
+			<news idNe="1" idA="3">
+				<testo>
+					<data>12/01/2010</data>
+					<titolo>13</titolo>
+					<contenuto>3w</contenuto>
+				</testo>
+			</news>
+		</tabNews>
+		
+
+		<tabFaq>
+			<faq idF="1" idA="3">
+				<argomento>allk</argomento>
+				<testo>
+					<data>03/08/2015</data>
+					<titolo>1eqsfa</titolo>
+					<contenuto>1ewaef</contenuto>
+				</testo>
+			</faq>
+		</tabFaq>
+
+	
+	</database>
