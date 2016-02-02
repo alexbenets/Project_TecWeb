@@ -433,19 +433,19 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="nome" type="xsd:string"/>
 		<xsd:element name="numeroPosti" type="xsd:integer"/>
-		<xsd:element name="lunghezza" type="xsd:integer"/>
-		<xsd:element name="aperturaAlare" type="xsd:integer"/>
-		<xsd:element name="diametroFusoliera" type="xsd:integer"/>
-		<xsd:element name="altezza" type="xsd:integer"/>
-		<xsd:element name="superficieAlare" type="xsd:integer"/>
-		<xsd:element name="pesoVuoto" type="xsd:integer"/>
-		<xsd:element name="pesoMaxDecollo" type="xsd:integer"/>
-		<xsd:element name="CapacitaCombustibile" type="xsd:integer"/>
+		<xsd:element name="lunghezza" type="xsd:float"/>
+		<xsd:element name="aperturaAlare" type="xsd:float"/>
+		<xsd:element name="diametroFusoliera" type="xsd:float"/>
+		<xsd:element name="altezza" type="xsd:float"/>
+		<xsd:element name="superficieAlare" type="xsd:float"/>
+		<xsd:element name="pesoVuoto" type="xsd:float"/>
+		<xsd:element name="pesoMaxDecollo" type="xsd:float"/>
+		<xsd:element name="CapacitaCombustibile" type="xsd:float"/>
 		<xsd:element name="numeroMotori" type="xsd:integer"/>
 		<xsd:element name="tipoMotori" type="xsd:string"/>
-		<xsd:element name="spintaMotori" type="xsd:integer"/>
-		<xsd:element name="velocitaMax" type="xsd:integer"/>
-		<xsd:element name="velocitaCrociera" type="xsd:integer"/> 
+		<xsd:element name="spintaMotori" type="xsd:float"/>
+		<xsd:element name="velocitaMax" type="xsd:float"/>
+		<xsd:element name="velocitaCrociera" type="xsd:float"/> 
 		<xsd:element name="autonomia" type="xsd:integer"/>
 		<xsd:element name="infoSediliFile" type="xsd:string"/>
 	</xsd:sequence>
