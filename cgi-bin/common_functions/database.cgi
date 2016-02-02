@@ -93,8 +93,13 @@ sub aggiornaUtente{
 ### INIZIO FUNZIONI RELATIVE ALLA PRENOTAZIONE
 
 sub getPrenotazioni{
-	my ($id)=@_;
-	my $prenotazioni=get('//prenotazione[@idUR='.$id.']');
+	my ($id, $id_P)=@_;
+	my $prenotazioni;
+	if($id_P eq ''){
+		$prenotazioni=get('//prenotazione[@idUR='.$id.']');
+	}else{
+		$prenotazioni=get('//prenotazione[@idUR='.$id.' and @idP='.$id_P.']');
+	}
 	my @prenotazioni;
 	foreach my $prenotazione ($prenotazioni->get_nodelist){
 		#<prenotazione idP="1" idUR="1" idU="1,2" idV="3">
@@ -106,6 +111,11 @@ sub getPrenotazioni{
 		
 		my @id_utenti=split /,/ , $idU;
 		#ora ottengo un array contenente tutti gli utenti di quella prenotazione
+		my @utenti;
+		foreach my $ut (@id_utenti){
+			my $tmp=getUtente($ut);
+			push @utenti, $tmp;
+		}
 		my $posti_occupati = (scalar(@id_utenti)+1);
 		
 		my $id_volo=$prenotazione->getAttribute("idV");
@@ -127,7 +137,7 @@ sub getPrenotazioni{
 			push @servizi_prenotati, \@s_temp;
 		}
 		#print "<p>$id, $posti_occupati, $tratta $id_volo, $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati</p>";
-		my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
+		my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati,\@utenti); 
 		push @prenotazioni, \@temp;
 		
 	}
@@ -297,6 +307,7 @@ sub modificaPrenotazione{
 	#print $db->toString(1);
 	return set( $db->toString(1));
 }
+
 
 ## INIZIO FUNZIONI INERENTI AL LOGIN ED ALLA REGISTRAZIONE DELL'UTENTE
 ##

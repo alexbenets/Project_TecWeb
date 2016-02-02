@@ -108,7 +108,7 @@
 			<dataPartenza>2016-2-01</dataPartenza>
 			<numeroBagagli>1</numeroBagagli>
 		</prenotazione>
-	<prenotazione idP="4" idUR="3" idV="1" idU="3,3,3"><data>2016-1-30</data><dataPartenza>2016-1-31</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="5" idUR="1" idV="1" idU="4,5"><data>2016-1-31</data><dataPartenza>2016-02-02</dataPartenza><numeroBagagli>4</numeroBagagli></prenotazione></tabPrenotazione>
+	<prenotazione idP="4" idUR="3" idV="1" idU="3,3,3"><data>2016-1-30</data><dataPartenza>2016-1-31</dataPartenza><numeroBagagli>5</numeroBagagli></prenotazione><prenotazione idP="5" idUR="1" idV="1" idU="1,2"><data>2016-1-31</data><dataPartenza>2016-02-02</dataPartenza><numeroBagagli>4</numeroBagagli></prenotazione></tabPrenotazione>
 
 
 		<tabAereo>
