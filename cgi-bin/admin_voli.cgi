@@ -128,7 +128,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
 						<h3>Benvenuto!</h3>
-						<p>In questa pagina modificare i vari parametri inerenti agli aereoporti, citt&agrave; ecc...</p>
+						<p>In questa pagina puoi modificare i voli presenti nel database. (ricordati di selezionare &quot;Attivo&quot; affinch&eacute; il volo risulti disponibile!)</p>
 					</div><!-- chiudo sezione -->
 					<div class="sezione">
 						<form action="admin_voli.cgi" method="post">
@@ -146,7 +146,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div class="clearer"></div>
 								<div>
-									<label for="tratta1">Tratta:</label>
+									<label for="tratta1">nuova Tratta:</label>
 									<select id="tratta1" name="tratta">
 										<option>-</option>';
 								foreach my $tratta (@tratte){

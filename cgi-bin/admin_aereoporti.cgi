@@ -116,14 +116,14 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
 						<h3>Benvenuto!</h3>
-						<p>In questa pagina modificare i vari parametri inerenti agli aereoporti, citt&agrave; ecc...</p>
+						<p>In questa pagina puoi modificare gli aereoporti presenti nel database.</p>
 					</div><!-- chiudo sezione -->
 					<div class="sezione">
 						<form action="admin_aereoporti.cgi" method="post">
 							<fieldset>
 								<h3>Modifica un aereoporto</h3>'.$errore.'
 								<div>
-									<label for="citta">citt&agrave;:</label>
+									<label for="citta">nuova citt&agrave;:</label>
 									<select id="citta" name="citta">
 										<option>-</option>';
 								my @citta=@{database::listCitta()};

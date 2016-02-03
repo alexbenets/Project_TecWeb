@@ -92,9 +92,22 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
 						<h3>Benvenuto!</h3>
-						<p>In questa pagina modificare i vari parametri inerenti agli aereoporti, citt&agrave; ecc...</p>
+						<p>In questa pagina puoi modificare i vari parametri inerenti agli aereoporti, citt&agrave; ecc...</p>
+						<p>Da grandi poteri derivano grandi responsabilit&agrave;, attento a non spostare Roma in Indonesia!</p>
 					</div><!-- chiudo sezione -->
-					
+					<div class="sezione" id="S2"><!-- apro "mini manuale" -->
+						<h3>Mini manuale</h3>
+						<p>Cosa puoi fare:</p>
+						<ul>
+							<li>Aggiungere o modificare una nazione</li>
+							<li>Aggiungere o modificare una citt&agrave; (attenzione a posizionarla nella nazione esatta, rischi di trovarti Mosca negli U.S.A.).</li>
+							<li>Aggiungere o modificare un aereoporto (stessa situazione: attento alla citt&agrave; di appartenenza.</li>
+							<li>Aggiungere o modificare una tratta (devi solamente selezionare l\'aereoporto di partenza e di arrivo, NON FUNZIONA ALL\'INVERSO!).</li>
+							<li>Aggiungere o modificare un volo (devi selezionare la tratta, impostare l\'orario e definire se &egrave; prenotabole).</li>
+							<li>Aggiungere o modificare un servizio.</li>
+							
+						</ul>
+					</div><!-- chiudo div sezione "mini manuale" -->
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

@@ -116,7 +116,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
 						<h3>Benvenuto!</h3>
-						<p>In questa pagina modificare i vari parametri inerenti agli aereoporti, citt&agrave; ecc...</p>
+						<p>In questa pagina puoi modificare le tratte presenti nel database.</p>
 					</div><!-- chiudo sezione -->
 					<div class="sezione">
 						<form action="admin_tratte.cgi" method="post">

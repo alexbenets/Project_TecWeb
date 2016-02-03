@@ -70,12 +70,34 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 	{
 							$testo.="<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 							my @prenotazione=@{$tmp};
+							@prenotazione[5]=~/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/;
+							my $giorno=int($3);
+							if($giorno<10){
+								$giorno="0".$giorno;
+							}
+							my $mese=int($2);
+							if($mese<10){
+								$mese="0".$mese;
+							}
+							my $anno=int($1);
+							my $d_prenotazione="$giorno/$mese/$anno";
+							@prenotazione[6]=~/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/;
+							$giorno=int($3);
+							if($giorno<10){
+								$giorno="0".$giorno;
+							}
+							$mese=int($2);
+							if($mese<10){
+								$mese="0".$mese;
+							}
+							$anno=int($1);
+							my $d_partenza="$giorno/$mese/$anno";
 							$testo.='
 								<dl>
-									<dt>Prenotazione N&deg; '.gestione_sessione::getParam("id").'#'.@prenotazione[0].'</dt>
+									<dt>Prenotazione N&deg; I'.gestione_sessione::getParam("id").'P'.@prenotazione[0].'</dt>
 									<dt>Volo: '.@prenotazione[2].'</dt>
-									<dt>Data di prenotazione: '.@prenotazione[5].'</dt>
-									<dt>Data di partenza: '.@prenotazione[6].'</dt>
+									<dt>Data di prenotazione: '.$d_prenotazione.'</dt>
+									<dt>Data di partenza: '.$d_partenza.'</dt>
 									<dt>Partenza: '.@prenotazione[3].'</dt>
 									<dt>Arrivo: '.@prenotazione[4].'</dt>
 									<dt>Orario partenza: '.@prenotazione[7].'</dt>

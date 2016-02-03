@@ -279,16 +279,27 @@ if($modifica_prenotazioni==1){
 	print "prenotazioni";	
 	$testo='<div id="contenitore_sezioni">';
 	my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"))};
-	foreach my $tmp (@prenotazioni)
+	for (my $i=(scalar(@prenotazioni)-1); $i>=0; $i--)
 	{
 		$testo.="
 		<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
-		my @prenotazione=@{$tmp};
+		my @prenotazione=@{@prenotazioni[$i]};
+		@prenotazione[6]=~/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/;
+		my $giorno=int($3);
+		if($giorno<10){
+			$giorno="0".$giorno;
+		}
+		my $mese=int($2);
+		if($mese<10){
+			$mese="0".$mese;
+		}
+		my $anno=int($1);
+		my $d_partenza="$giorno/$mese/$anno";
 			$testo.='
 			<a href="gestisci_prenotazione.cgi?id='.@prenotazione[0].'">
 					<object>
 						<fieldset>
-							<p>Data: '.@prenotazione[6].'</p>
+							<p>Data: '.$d_partenza.'</p>
 							<p>Partenza: '.@prenotazione[3].'</p>
 							<p>Arrivo: '.@prenotazione[4].'</p>
 							<p>Orario partenza: '.@prenotazione[7].'</p>

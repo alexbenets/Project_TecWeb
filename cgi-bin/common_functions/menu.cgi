@@ -62,7 +62,7 @@ sub get{
 	push @menu_temp, add("Compagnia", "../compagnia.html");
 	push @menu_temp, add("Servizi", "../servizi.html");
 	
-	if((gestione_sessione::getParam("admin")==1)and ($ignora==0)){
+	if((gestione_sessione::getParam("admin")==1)and ($ignora==0) and !(gestione_sessione::getParam("location") eq "admin.cgi")){
 		push @menu_temp, add("Amministrazione", "admin.cgi");
 	}
 	

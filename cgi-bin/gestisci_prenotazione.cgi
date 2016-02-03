@@ -78,7 +78,10 @@ my @path=("Home", "index.cgi");
 push @path_temp, \@path;
 my @path=("Area utente", "utente.cgi");
 push @path_temp, \@path;
-my @path=("Gestione prenotazioni", "gestisci_prenotazione.cgi");
+my @path=("Gestione prenotazioni", "utente.cgi?prenotazioni=1");
+push @path_temp, \@path;
+print_header::setPath(\@path_temp);
+my @path=("Modifica la prenotazione", "gestisci_prenotazione.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
@@ -93,45 +96,67 @@ if($elimina==1 and $result<0){
 }
 my $testo;
 $testo='<div id="contenitore_sezioni">';
-		
+my $count=0;		
 my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), $id_prenotazione)};
 	foreach my $tmp (@prenotazioni)
 	{
+		$count++;
 		$testo.="
 		<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 		my @prenotazione=@{$tmp};
-			@prenotazione[6]=~/([0-9]{4})-([0-9]{2})-([0-9]{2})/;
-			my $giorno=$3;
-			my $mese=$2;
-			my $anno=$1;
+			@prenotazione[6]=~/([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})/;
+			my $giorno=int($3);
+			if($giorno<10){
+				$giorno="0".$giorno;
+			}
+			my $mese=int($2);
+			if($mese<10){
+				$mese="0".$mese;
+			}
+			my $anno=int($1);
 			my $today = Time::Piece->new();
 			my $oggi=$today->year."/".$today->mon."/".$today->mday;
 			my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
 			my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
 			my $d = int(($dt2 - $dt1)->days);
-			print $d;
-			if($d>1){
-				$testo.='<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">';
-			}
+			$testo.='<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">';
+			
 			$testo.='<object>
 				<fieldset>';
 			if($d<=1){
 				$testo.='<p>(Non puoi cancellare la prenotazione, in quanto la data di partenza &egrave; passata o &egrave; troppo vicina)';
-			}	
+			}
 			$testo.='				<p>Data: '."$giorno/$mese/$anno".'</p>
 							<p>Partenza: '.@prenotazione[3].'</p>
 							<p>Arrivo: '.@prenotazione[4].'</p>
 							<p>Orario partenza: '.@prenotazione[7].'</p>
+							<p>STAMPA</p>
 				</fieldset>			
-					</object>';
+				</object>
+				</a>';
 			if($d>1){
-				$testo.='</a>';
+				$testo.='		<p><a href="gestisci_prenotazione.cgi?id='.@prenotazione[0].'&amp;elimina=1">Elimina</a></p>';
 			}
-			$testo.='		<p><a href="gestisci_prenotazione.cgi?id=1&amp;elimina=1">Elimina</a></p>';
+			
 		#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
 		$testo.="</div><!-- chiudo prenotazione -->
 		<div class=\"clearer\"></div>";
 	}
+if($count==0 ){
+	if($elimina==1){
+	$testo.='
+		<div class="sezione">
+			<p>La prenotazione &egrave; stata cancellata</p>
+			<a href="utente.cgi?prenotazioni=1">Torna alla sezione prenotazioni</a>
+	';
+	}else{
+		$testo.='
+		<div class="sezione">
+			<p class="errore">La prenotazione non &egrave; stata trovata!</p>
+			<a href="utente.cgi?prenotazioni=1">Torna alla sezione prenotazioni</a>
+	';
+	}
+}
 $testo.= '</div><!-- chiudo contenitore sezioni -->';
 print print_content::print($testo);
 print "		</div>
