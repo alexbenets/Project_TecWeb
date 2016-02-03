@@ -221,6 +221,18 @@ sub prenota{
 		#print "<p>$id_prenotazione, @ser[$i]->[0]</p>";
 		salvaServizio($id_prenotazione,@ser[$i]->[0]);
 	}
+	my @passeggeri_id;
+	if(defined($passeggeri)){
+		my @pass=@{$passeggeri};
+		foreach my $tmp (@pass){
+			my $nome=@{$tmp}[0];
+			my $cognome=@{$tmp}[1];
+			my $cf=@{$tmp}[2];
+			my $nascita=@{$tmp}[3];
+			my $id=salva_utente($nome,$cognome,$cf,$nascita);
+			push @passeggeri_id, $id;
+		}
+	}
 	#devo prima aggiungere i servizi altrimenti, avendo già letto il file, mi annullerà tutte le altre modifiche!
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;
@@ -249,18 +261,7 @@ sub prenota{
 	$nodo->setAttribute("idP",$id_prenotazione);
 	$nodo->setAttribute("idUR",$id_utente);
 	$nodo->setAttribute("idV",$id_volo);
-	my @passeggeri_id;
-	if(defined($passeggeri)){
-		my @pass=@{$passeggeri};
-		foreach my $tmp (@pass){
-			my $nome=@{$tmp}[0];
-			my $cognome=@{$tmp}[1];
-			my $cf=@{$tmp}[2];
-			my $nascita=@{$tmp}[3];
-			my $id=salva_utente($nome,$cognome,$cf,$nascita);
-			push @passeggeri_id, $id;
-		}
-	}
+	
 	my $string_passeggeri;
 	#mi genero la stringa contenuta in nel parametro idU di prenotazione: contiene i vari id utente inerenti alla prenotazione.
 	for (my $i=0; $i<scalar(@passeggeri_id); $i++){
