@@ -42,11 +42,15 @@ sub print {
 	if($vuoto==1){
 		$errori=0;
 	}
+my $path="";
+if($errori==128){#valore che mi indica l'aggiornamento dell'index.
+	$path="cgi-bin/"
+}
 my $testo= "
 		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
-				<form action=\"../cgi-bin/search.cgi\" method=\"post\">
+				<form action=\"".$path."search.cgi\" method=\"post\">
 					<fieldset>
-					<legend>Dati del volo:</legend>
+					<!--<legend>Dati del volo:</legend>-->
 						";
 						if(($errori & 3)>0){
 							$testo.="<div>

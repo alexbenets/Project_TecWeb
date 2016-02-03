@@ -87,15 +87,15 @@
 				<flagAttivo>true</flagAttivo> 
 				<nome>Fiorello La Guardia</nome>		
 			</aereoporto>
-			<aereoporto idAp="5" idC="4">
+			<aereoporto idAp="6" idC="4">
 				<flagAttivo>true</flagAttivo> 
 				<nome>JFK</nome>		
 			</aereoporto>
-			<aereoporto idAp="6" idC="5">
+			<aereoporto idAp="7" idC="5">
 				<flagAttivo>true</flagAttivo> 
 				<nome>London Heathrow</nome>		
 			</aereoporto>
-		<aereoporto idAp="7" idC="6"><flagAttivo>true</flagAttivo><nome>Catullo</nome></aereoporto></tabAereoporto>
+		<aereoporto idAp="8" idC="6"><flagAttivo>true</flagAttivo><nome>Catullo</nome></aereoporto></tabAereoporto>
 
 
 		<tabCitta>
@@ -109,7 +109,7 @@
 				<nome>Roma</nome>
 			</citta>
 			<citta idC="4" idN="2">
-				<nome>NewYork</nome>
+				<nome>New York</nome>
 			</citta>
 			<citta idC="5" idN="3">
 				<nome>Londra</nome>
@@ -157,7 +157,7 @@
 			<tratta idT="8" idApP="4" idApA="5">
 				<durata>630</durata>
 			</tratta>
-		<tratta idT="9" idApP="5" idApA="2"><durata>1250</durata></tratta><tratta idT="10" idApP="7" idApA="1"><durata>120</durata></tratta></tabTratta>	
+		<tratta idT="9" idApP="5" idApA="2"><durata>1250</durata></tratta><tratta idT="10" idApP="7" idApA="1"><durata>120</durata></tratta><tratta idT="11" idApP="1" idApA="2"><durata>120</durata></tratta><tratta idT="12" idApP="5" idApA="6"><durata>120</durata></tratta><tratta idT="13" idApP="7" idApA="6"><durata>1255</durata></tratta><tratta idT="14" idApP="6" idApA="7"><durata>1255</durata></tratta></tabTratta>	
 
 
 		<tabVolo>
@@ -293,7 +293,7 @@
 				<prezzo>70</prezzo>
 				<giorno>5</giorno>			
 			</volo>
-		</tabVolo>
+		<volo idV="23" idT="11" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>08:00</oraPartenza><prezzo>1255</prezzo><giorno>2</giorno></volo><volo idV="24" idT="10" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>18:00</oraPartenza><prezzo>125</prezzo><giorno>2</giorno></volo><volo idV="25" idT="12" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>16:00</oraPartenza><prezzo>126</prezzo><giorno>2</giorno></volo><volo idV="26" idT="14" idAe="1"><flagAttivo>true</flagAttivo><oraPartenza>08:00</oraPartenza><prezzo>1260</prezzo><giorno>2</giorno></volo></tabVolo>
 		
 
 		<tabPrenotazione>

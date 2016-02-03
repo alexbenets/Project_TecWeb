@@ -32,7 +32,11 @@ sub add{
 sub get{
 	my ($ignora)=@_;
 	my $create=gestione_sessione::createSession();
-	
+	if($ignora eq ''){
+		$ignora=0;
+	}else{
+		$ignora=1;
+	}
 	my @menu_temp;
 	push @menu_temp, add("Home", "index.cgi"); 
 	if(($trovato==0) and (int($ignora)==0)){
@@ -49,17 +53,17 @@ sub get{
 		}
 	}
 	my $logged=gestione_sessione::getParam("logged");
-	if($logged==1){
+	if(($logged==1) and ($ignora==0)){
 		push @menu_temp, add("Area utente", "utente.cgi");
 	}
 	push @menu_temp, add("Compagnia", "../compagnia.html");
 	push @menu_temp, add("Servizi", "../servizi.html");
 	
-	if(gestione_sessione::getParam("admin")==1){
+	if((gestione_sessione::getParam("admin")==1)and ($ignora==0)){
 		push @menu_temp, add("Amministrazione", "admin.cgi");
 	}
 	
-	if(($logged==1) and (int($ignora)==0)){
+	if(($logged==1) and ($ignora==0)){
 		push @menu_temp, add("Logout", "login.cgi?logout=1");
 	}else{
 		push @menu_temp, add("Login", "login.cgi");

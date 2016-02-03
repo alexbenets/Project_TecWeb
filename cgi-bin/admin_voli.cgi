@@ -17,6 +17,7 @@ require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
+require "common_functions/aggiorna_index.cgi";
 
 
 my %form;
@@ -61,6 +62,12 @@ if (!($form{"salva"} eq "")){
 	}else{
 		#$errore="$id_tratta $orario_partenza $prezzo $attivo";
 		$errore=database::addVolo($id_tratta, $orario_partenza, $prezzo, $attivo); 
+	}
+	if($errore!=1){
+	$errore='<p class="errore">Attenzione: non ho potuto modificare il volo!</p>';
+	}else{
+		$errore="";
+		aggiorna_index::aggiorna();
 	}
 }
 gestione_sessione::setParam("location","admin_voli.cgi");

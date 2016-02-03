@@ -320,10 +320,10 @@ sub registrati{
 	if(int($utenti)==1){
 		return -1;
 	}
-	$utenti=get('/database/tabUtente/utente/codiceFiscale="'.$cf.'"');
-	if(int($utenti)==1){
-		return -2;
-	}
+	#$utenti=get('/database/tabUtente/utente/codiceFiscale="'.$cf.'"');
+	#if(int($utenti)==1){
+	#	return -2;
+	#}
 	my $max_id=salva_utente($nome, $cognome, $cf, $nascita);
 				
 	my $parser = XML::LibXML->new();

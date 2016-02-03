@@ -54,9 +54,15 @@ if (!($form{"salva"} eq "")){
 	}else{
 		$errore=database::addTratta($aereoporto_partenza, $aereoporto_arrivo, $durata);
 	}
-	aggiorna_index::aggiorna();
+	if($errore!=1){
+		$errore='<p class="errore">Attenzione: non ho potuto modificare la tratta!</p>';
+	}else{
+		$errore="";
+		aggiorna_index::aggiorna();
+	}
 }
 gestione_sessione::setParam("location","admin_tratte.cgi");
+
 
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);

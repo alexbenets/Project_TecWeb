@@ -17,7 +17,7 @@ require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
-
+require "common_functions/aggiorna_index.cgi";
 
 my %form;
 
@@ -53,6 +53,12 @@ if (!($form{"salva"} eq "")){
 		$errore=database::addServizio($nuovo_nome, $descrizione, $costo, $id_servizio);
 	}else{
 		$errore=database::addServizio($nuovo_nome, $descrizione, $costo);
+	}
+	if($errore!=1){
+		$errore='<p class="errore">Attenzione: non ho potuto modificare il servizio!</p>';
+	}else{
+		$errore="";
+		aggiorna_index::aggiorna();
 	}
 }
 gestione_sessione::setParam("location","admin_servizi.cgi");

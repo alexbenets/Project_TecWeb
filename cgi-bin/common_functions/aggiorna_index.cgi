@@ -33,7 +33,7 @@ $ritorno ="
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
-		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
+		<link rel=\"stylesheet\" href=\"style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>$titolo</title>
 	</head>
 	
@@ -52,13 +52,13 @@ my %tratte=database::listTratte();
 print_search::set_tratte(%tratte);
 
 my @path_temp;
-my @path=("Home", "index.cgi");
+my @path=("Home", "index.html");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
 $ritorno .= print_header::print();
 $ritorno .= "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-$ritorno .= print_search::print();
+$ritorno .= print_search::print(128);
 my $testo='
 				<div id="presentazione">
 					
@@ -76,14 +76,17 @@ return $ritorno;
 
 #funzioni base
 sub aggiorna{
+
 	my $index;
 	my $testo= get();
-	$testo =~ s/([a-zA-Z_.]+.cgi)/cgi-bin\/$1/g;
-	$testo =~ s/"..\//"/g;
+	#$testo =~ s/([a-zA-Z_.]+.cgi)/cgi-bin\/$1/g;
+	#$testo =~ s/"..\//"/g;
 	my $filename="../public_html/index.html";
-	open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
-	print $fh $testo;
-	close $fh;
+	eval {
+		open(my $fh, '>', $filename) or die "Could not open file '$filename' $!";
+		print $fh $testo;
+		close $fh;
+	};	
     #my $ricerca=$p->getElementById("prenota");
     #print $ricerca;
    # my $ricerca=$p->get_tag('<div id="prenota">');

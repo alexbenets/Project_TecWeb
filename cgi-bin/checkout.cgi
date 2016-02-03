@@ -40,6 +40,13 @@ my $titolo="Seleziona il tuo volo";
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
+if(int(gestione_sessione::getCookie('prenotato'))==1){
+	print "location: index.cgi\n\n";
+}
+
+my $prenotato_cookie = CGI::Cookie->new(-name=>'prenotato',-value=>"1",-expires =>  '+20s',);
+#controllo per evitare il ricaricamento della pagina, che comporterebbe a prenotare un secondo volo.
+
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">

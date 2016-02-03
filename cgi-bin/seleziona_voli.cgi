@@ -126,7 +126,7 @@ sub get_aereoporto
 {
 	#Parigi - Charles De Gaulle
 	my ($nome_completo)=@_;
-	$nome_completo =~/([a-zA-Z.]+)([ \- ]+)([a-zA-Z. ]+)/;
+	$nome_completo =~/([a-zA-Z. ]+)([ \- ]+)([a-zA-Z. ]+)/;
 	return $3;
 }
 
@@ -287,11 +287,14 @@ for(my $dd=-3; $dd<=3; $dd++){
       				);
 	$dt2=$dt2->add(days =>$dd);
 	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
-	my $temp=\@{getVoli($data, $select_partenza, $select_arrivo, int($select_passeggeri)+1, $dd+4)};
-	push @voli_settimana, $temp;
+	my $res=getVoli($data, $select_partenza, $select_arrivo, int($select_passeggeri)+1, $dd+4);
+	if(defined($res)){
+		my $temp=\@{$res};
+		push @voli_settimana, $temp;
 	
-	if(scalar(@{$temp})>$max_altezza){
-		$max_altezza=scalar(@{$temp});
+		if(scalar(@{$temp})>$max_altezza){
+			$max_altezza=scalar(@{$temp});
+		}
 	}
 }
 #poi scorro i vari elementi
@@ -326,7 +329,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
-												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
+												<p>Prezzo: '.@elemento[$altezza]->[3].'&euro;</p>
 												<p>Posti disponibili: '.@elemento[$altezza]->[6].'</p>
 											</div>
 										</object>';
@@ -407,11 +410,12 @@ for(my $dd=-3; $dd<=3; $dd++){
       				);
 	$dt2=$dt2->add(days =>$dd);
 	my $data=$dt2->day."/".$dt2->month.'/'.$dt2->year;
-	my $temp=\@{getVoli($data, $select_arrivo, $select_partenza, $select_passeggeri, 3)};
+	my $temp=getVoli($data, $select_arrivo, $select_partenza, $select_passeggeri);
 	push @voli_settimana, $temp;
-	
-	if(scalar(@{$temp})>$max_altezza){
-		$max_altezza=scalar(@{$temp});
+	if($temp!=0){
+		if(scalar(@{$temp})>$max_altezza){
+			$max_altezza=scalar(@{$temp});
+		}
 	}
 }
 
@@ -447,7 +451,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 												<p>Volo n:'.@elemento[$altezza]->[0].'</p>
 												<p>Partenza ore: '.@elemento[$altezza]->[1].'</p>
 												<p>Arrivo ore: '.@elemento[$altezza]->[2].'</p> 
-												<p>Prezzo: '.@elemento[$altezza]->[3].'</p>
+												<p>Prezzo: '.@elemento[$altezza]->[3].'&euro;</p>
 												<p>Posti disponibili: '.@elemento[$altezza]->[6].'</p>
 											</div>
 										</object>';

@@ -36,7 +36,17 @@ sub getSessionCookie{
     }
    return undef;#non c'è nulla da eliminare, visto che non esiste nemmeno il cookie di sessione.
 }
-
+sub getCookie{
+	my ($nome)=@_;
+	if($nome eq ''){
+		return undef;
+	}
+	my %cookies = CGI::Cookie->fetch;
+    if($cookies{$nome}){
+     	return $cookies{$nome}->value; #ritorno l'id sessione.
+    	
+    }
+}
 
 
 sub destroySession{
