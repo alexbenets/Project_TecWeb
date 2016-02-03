@@ -59,7 +59,7 @@ sub aggiornaUtente{
 		return -1;
 		#utente non trovato
 	}
-	my $utente_registrato=$db->findnodes('/database/tabUtente/utenteRegistrato[@idUR='.$id.']')->[0];
+	my $utente_registrato=$db->findnodes('/database/tabUtenteRegistrato/utenteRegistrato[@idUR='.$id.']')->[0];
 	my $psw_database=$utente_registrato->findnodes('password/text()')->[0];
 	if(!($psw_database eq $password)){
 		return 0;

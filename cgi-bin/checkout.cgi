@@ -201,6 +201,7 @@ $testo.='
 					<p>
 						<span>Numero di bagagli: </span>
 						<span>'.$bagagli.'</span>
+					</p>
 				</div>
 				<div><!-- div servizi -->
 					<h2>Servizi aggiuntivi:</h2>
@@ -227,8 +228,6 @@ $testo.='
 						<a href="index.cgi">Torna alla homepage</a>
 					</span>
 				</div>
-			</fieldset>
-		</form>
 	</div><!-- chiudo sezione -->
 ';
 

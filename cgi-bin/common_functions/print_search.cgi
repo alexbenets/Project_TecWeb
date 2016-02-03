@@ -128,7 +128,7 @@ my $testo= "
 									my @dati_aereoporto=@{$tmp}[0];
 									my @aer=@dati_aereoporto;
 									$testo.="<option";
-									if("$nome_citta - @aer[0]" eq $partenza){
+									if("$nome_citta - @aer[0]" eq $arrivo){
 										$testo.=" selected=\"selected\" ";
 									}
 									$testo.=">$nome_citta - @aer[0]</option>";

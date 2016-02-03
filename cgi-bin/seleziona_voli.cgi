@@ -96,7 +96,11 @@ if($volo_andata eq ""){#forse sono tornato indietro o sono appena arrivato?
 	gestione_sessione::setParam("volo_andata",$volo_andata);
 }
 if($giorno_partenza eq ""){#forse sono tornato indietro o sono appena arrivato?
-	$giorno_partenza=gestione_sessione::getParam("data_partenza");
+	if(gestione_sessione::getParam("Andata_data") eq ""){
+		$giorno_partenza=gestione_sessione::getParam("data_partenza");
+	}else{
+		$giorno_partenza=gestione_sessione::getParam("Andata_data");
+	}
 }else{
 	gestione_sessione::setParam("giorno_partenza",$giorno_partenza);
 }
@@ -108,7 +112,11 @@ if($volo_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
 }
 
 if($giorno_ritorno eq ""){#forse sono tornato indietro o sono appena arrivato?
-	$giorno_ritorno=gestione_sessione::getParam("data_ritorno");
+	if(gestione_sessione::getParam("Ritorno_data") eq ""){
+		$giorno_ritorno=gestione_sessione::getParam("data_partenza");
+	}else{
+		$giorno_ritorno=gestione_sessione::getParam("Ritorno_data");
+	}
 }else{
 	gestione_sessione::setParam("giorno_ritorno",$giorno_ritorno);
 }
@@ -136,18 +144,19 @@ if(!($volo_andata eq "")){
 	$selezione=1;
 }
 if(!($giorno_partenza eq "")){
-	$selezione+=2;
+	$selezione|=2;
 }
 if(!($volo_ritorno eq "")){
-	$selezione+=4;
+	$selezione|=4;
 }
 if(!($giorno_ritorno eq "")){
-	$selezione+=8;
+	$selezione|=8;
 }
+my $click=gestione_sessione::getParam("numero_selezioni_voli");
 if(!($form{"visitato"} eq "1")){
 	$selezione=0;
 }else{
-	my $click=gestione_sessione::getParam("numero_selezioni_voli");
+	
 	if($form{"andata"}){
 		$click|=1;
 	}
@@ -244,23 +253,41 @@ for(my $dd=-3; $dd<=3; $dd++){
       				day        => $giorno
       				);
 	$dt2=$dt2->add(days =>$dd);
-	$date_tabella.="		<th class=\"data\">Data: ".$dt2->strftime('%d/%m/%y')."</th>\n";
+	$date_tabella.="		<th id=\"andata_".($dd+3)."\" class=\"data\">Data: ".$dt2->strftime('%d/%m/%y')."</th>\n";
 }
 
 # print "$giorno_partenza, $giorno_ritorno"; #per il debug
 
 my $testo='<div id="cerca_voli"><!-- sezione cerca voli -->
 				<h1 id="voli_trovati">Ecco i voli per te!</h1>
-				
+				<p>Legenda:</p>
+				<ul class="legenda">
+					<li class="volo_selected">Volo selezionato</li>
+					<li class="volo_prev_selected">Volo da confermare</li>
+				</ul>
 				<h2 id="titolo_tabellaAndata">Andata &quot;'.$select_partenza.' &gt; '.$select_arrivo.'&quot;</h2>
 
 					<table id="tabella_voliAndata" summary="In questa tabella vengono riportati i voli per il viaggio di ritorno">
 						<caption class="intestazione_tabella">I voli in dettaglio per l\'andata del '.$data_partenza.'</caption>
 							<thead>
 								<tr>'.$date_tabella.'</tr>
-							</thead>
-
-							<tfoot>
+							</thead>';
+my $date_tabella='';
+for(my $dd=-3; $dd<=3; $dd++){
+	#da -6 giorni a + 6 giorni
+	my $gma=check_form::regexp_data($data_partenza);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];
+	my $dt2 = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+	$dt2=$dt2->add(days =>$dd);
+	$date_tabella.="		<th id=\"andata_f_".($dd+3)."\" class=\"data\">Data: ".$dt2->strftime('%d/%m/%y')."</th>\n";
+}
+$testo.='							<tfoot>
 									<tr>'.$date_tabella.'</tr>
 							</tfoot>
 
@@ -310,13 +337,16 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			my $selected;
 			if(((@elemento[$altezza]->[0]) eq $volo_andata) and ((@elemento[$altezza]->[5]) eq $giorno_partenza)){
 				$selected="volo_selected";
+				if(($click&1)==0){
+					$selected="volo_prev_selected";
+				}
 				gestione_sessione::setParam("Andata_data",$giorno_partenza);
 				gestione_sessione::setParam("Andata_id",@elemento[$altezza]->[0]);
 				gestione_sessione::setParam("Andata_partenza",@elemento[$altezza]->[1]);
 				gestione_sessione::setParam("Andata_arrivo",@elemento[$altezza]->[2]);
 				gestione_sessione::setParam("Andata_prezzo",@elemento[$altezza]->[3]);
 			}
-			$testo.='<td class="'.$classe.' '.$selected.'">';
+			$testo.='<td headers="andata_'.$giorno.'" class="'.$classe.' '.$selected.'">';
 			my $data_ok=1;
 			if($andata==0){
 				$data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
@@ -370,7 +400,7 @@ for(my $dd=-3; $dd<=3; $dd++){
       				day        => $giorno
       				);
 	$dt2=$dt2->add(days =>$dd);
-	$date_tabella.='<th class="data">Data: '.$dt2->strftime('%d/%m/%y').'</th>';
+	$date_tabella.='<th id="ritorno_'.($dd+3).'" class="data">Data: '.$dt2->strftime('%d/%m/%y').'</th>';
 }
 
 		
@@ -380,9 +410,23 @@ $testo.='					<h2 id="titolo_tabellaRitorno">Ritorno: &quot;'.$select_arrivo.' &
 						<caption class="intestazione_tabella">I voli in dettaglio per il ritorno del '.$data_ritorno.'</caption>
 							<thead>
 								<tr>'.$date_tabella.'</tr>
-							</thead>
-
-							<tfoot>
+							</thead>';
+$date_tabella='';
+for(my $dd=-3; $dd<=3; $dd++){
+	#da -3 giorni a + 3 giorni
+	my $gma=check_form::regexp_data($data_ritorno);
+	my $giorno=$gma->[0];
+	my $mese=$gma->[1];
+	my $anno=$gma->[2];
+	my $dt2 = DateTime->new( 
+					year       => $anno,
+      				month      => $mese,
+      				day        => $giorno
+      				);
+	$dt2=$dt2->add(days =>$dd);
+	$date_tabella.='<th id="ritorno_f'.$dd.'" class="data">Data: '.$dt2->strftime('%d/%m/%y').'</th>';
+}
+$testo.='							<tfoot>
 								<tr>'.$date_tabella.'</tr>
 							</tfoot>
 
@@ -432,6 +476,9 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			my $selected;
 			if(((@elemento[$altezza]->[0]) eq $volo_ritorno) and ((@elemento[$altezza]->[5]) eq $giorno_ritorno)){
 				$selected="volo_selected";
+				if(($click&2)==0){
+					$selected="volo_prev_selected";
+				}
 				gestione_sessione::setParam("Ritorno_id",@elemento[$altezza]->[0]);
 				gestione_sessione::setParam("Ritorno_data",$giorno_ritorno);
 				gestione_sessione::setParam("Ritorno_partenza",@elemento[$altezza]->[1]);
@@ -440,7 +487,7 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 				
 			}
 			if(!(@elemento[$altezza]->[1] eq '')){
-				$testo.='<td class="'.$classe.' '.$selected.'">';
+				$testo.='<td headers="ritorno_'.$giorno.'" class="'.$classe.' '.$selected.'">';
 				my $data_ok=compareDate($giorno_partenza,@elemento[$altezza]->[5]);	
 				my $classe_cella="seleziona_cella";
 				my $classe_cella="seleziona_cella";

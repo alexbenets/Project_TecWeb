@@ -124,7 +124,7 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 			$testo.='<object>
 				<fieldset>';
 			if($d<=1){
-				$testo.='<p>(Non puoi cancellare la prenotazione, in quanto la data di partenza &egrave; passata o &egrave; troppo vicina)';
+				$testo.='<p>(Non puoi cancellare la prenotazione, in quanto la data di partenza &egrave; passata o &egrave; troppo vicina)</p>';
 			}
 			$testo.='				<p>Data: '."$giorno/$mese/$anno".'</p>
 							<p>Partenza: '.@prenotazione[3].'</p>

@@ -32,7 +32,7 @@ foreach my $p (param()) {
 
 
 my $create=gestione_sessione::createSession();
-gestione_sessione::setParam("location","/cgi-bin/servizi_aggiuntivi.cgi");
+gestione_sessione::setParam("location","servizi_aggiuntivi.cgi");
 
 
 

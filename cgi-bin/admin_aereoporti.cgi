@@ -110,7 +110,6 @@ print '<div id="secondo_menu">
 						<li><a href="admin_voli.cgi">Gestione Voli</a></li>
 						<li><a href="admin_servizi.cgi">Gestione Servizi</a></li>
 					</ul>
-					</ul>
 				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					

@@ -153,7 +153,7 @@ if($modifica_dati_utente==1){
 		$errore|=32;
 	}
 	my $messaggio;
-	if($errore==0){
+	if($errore==0 and (int($form {"avanti"})==1)){
 		#$id, $nome, $cognome, $cf, $nascita, $password, $nuova_password
 		my $result=database::aggiornaUtente($id, $nome, $cognome, $codice_fiscale, $nascita, $password_form, $nuova_password);
 		if($result==0){#se la password è errata
