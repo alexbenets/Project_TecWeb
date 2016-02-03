@@ -44,10 +44,10 @@ if(int(gestione_sessione::getCookie('prenotato'))==1){
 	print "location: index.cgi\n\n";
 }
 
-my $prenotato_cookie = CGI::Cookie->new(-name=>'prenotato',-value=>"1",-expires =>  '+20s',);
+my $prenotato_cookie = CGI::Cookie->new(-name=>'prenotato',-value=>'1',-expires =>  '+20s',);
 #controllo per evitare il ricaricamento della pagina, che comporterebbe a prenotare un secondo volo.
 
-print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
+print CGI::header(-cookie=>$session_cookie, -cookie=>$prenotato_cookie);#imposto il cookie di sessione
 
 print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
@@ -140,10 +140,7 @@ my $prezzo_biglietti=int($andata_prezzo)+int($ritorno_prezzo);
 my $prezzo_servizi=0;
 print print_header::print();
 
-
-
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-
 my $testo='
 	<div class="sezione">
 				<div><!-- div h2 -->

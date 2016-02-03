@@ -217,10 +217,10 @@ sub prenota{
 	my ($id_utente,$data, $id_volo, $passeggeri, $servizi, $bagagli)=@_;
 	my $id_prenotazione=int(get('/database/tabPrenotazione/prenotazione/@idP[ not (.</database/tabPrenotazione/prenotazione/@idP)]'))+1;
 	my @ser=@{$servizi};
-	for (my $i=0; $i<scalar(@ser); $i++){
-		print "<p>$id_prenotazione, @ser[$i]->[0]</p>";
-		print salvaServizio($id_prenotazione,@ser[$i]->[0]);
-	}
+	#for (my $i=0; $i<scalar(@ser); $i++){
+		#print "<p>$id_prenotazione, @ser[$i]->[0]</p>";
+		#print salvaServizio($id_prenotazione,@ser[$i]->[0]);
+	#}
 	#devo prima aggiungere i servizi altrimenti, avendo già letto il file, mi annullerà tutte le altre modifiche!
 	my $parser = XML::LibXML->new();
 	my $db = $parser->parse_file($filename) or die;

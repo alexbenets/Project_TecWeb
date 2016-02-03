@@ -100,17 +100,34 @@ my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), 
 		$testo.="
 		<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 		my @prenotazione=@{$tmp};
-			$testo.='
-			<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">
-			<object>
-				<fieldset>
-							<p>Data: '.@prenotazione[6].'</p>
+			@prenotazione[6]=~/([0-9]{4})-([0-9]{2})-([0-9]{2})/;
+			my $giorno=$3;
+			my $mese=$2;
+			my $anno=$1;
+			my $today = Time::Piece->new();
+			my $oggi=$today->year."/".$today->mon."/".$today->mday;
+			my $dt1 =  Time::Piece->strptime($oggi, "%Y/%m/%d");
+			my $dt2 =  Time::Piece->strptime("$anno/$mese/$giorno", "%Y/%m/%d");
+			my $d = int(($dt2 - $dt1)->days);
+			print $d;
+			if($d>1){
+				$testo.='<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">';
+			}
+			$testo.='<object>
+				<fieldset>';
+			if($d<=1){
+				$testo.='<p>(Non puoi cancellare la prenotazione, in quanto la data di partenza &egrave; passata o &egrave; troppo vicina)';
+			}	
+			$testo.='				<p>Data: '."$giorno/$mese/$anno".'</p>
 							<p>Partenza: '.@prenotazione[3].'</p>
 							<p>Arrivo: '.@prenotazione[4].'</p>
 							<p>Orario partenza: '.@prenotazione[7].'</p>
 				</fieldset>			
-					</object></a>
-					<p><a href="gestisci_prenotazione.cgi?id=1&amp;elimina=1">Elimina</a></p>';
+					</object>';
+			if($d>1){
+				$testo.='</a>';
+			}
+			$testo.='		<p><a href="gestisci_prenotazione.cgi?id=1&amp;elimina=1">Elimina</a></p>';
 		#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
 		$testo.="</div><!-- chiudo prenotazione -->
 		<div class=\"clearer\"></div>";
