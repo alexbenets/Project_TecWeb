@@ -19,6 +19,7 @@ sub set_tratte {
 	my (%temp)=@_;
 	%tratte=%temp;
 	
+	
 }
 
 sub print { 
@@ -85,11 +86,13 @@ my $testo= "
 						$testo.="<div class=\"casella_partenza\">
 							<label for=\"partenza\">Partenza:</label>
 							<select id=\"partenza\" name=\"partenza\" class=\"partenza\">";
-						while ((my $paese, my $citta) = each(%tratte))
-						{
+							
+    	
+						foreach my $paese (sort {lc $a cmp lc $b} keys %tratte) {
+							my %citta=%{$tratte{$paese}};
 							$testo.= "<optgroup label=\"$paese\">\n";
-							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
-							{
+							foreach my $nome_citta (sort {lc $a cmp lc $b} keys %citta) {
+								my $aereoporto=$citta{$nome_citta};
 								my @aer_T=@{$aereoporto};
 								my $tmp;
 								foreach $tmp (@aer_T)
@@ -112,11 +115,11 @@ my $testo= "
 						<div class=\"casella_arrivo\">					
 							<label for=\"arrivo\">Arrivo:</label>
 							<select id=\"arrivo\" name=\"arrivo\" class=\"arrivo\">";
-						while ((my $paese, my $citta) = each(%tratte))
-						{
+						foreach my $paese (sort {lc $a cmp lc $b} keys %tratte) {
+							my %citta=%{$tratte{$paese}};
 							$testo.= "<optgroup label=\"$paese\">\n";
-							while ((my $nome_citta, my $aereoporto) = each(%{$citta}))
-							{
+							foreach my $nome_citta (sort {lc $a cmp lc $b} keys %citta) {
+								my $aereoporto=$citta{$nome_citta};
 								my @aer_T=@{$aereoporto};
 								my $tmp;
 								foreach $tmp (@aer_T)
@@ -125,7 +128,7 @@ my $testo= "
 									my @dati_aereoporto=@{$tmp}[0];
 									my @aer=@dati_aereoporto;
 									$testo.="<option";
-									if("$nome_citta - @aer[0]" eq $arrivo){
+									if("$nome_citta - @aer[0]" eq $partenza){
 										$testo.=" selected=\"selected\" ";
 									}
 									$testo.=">$nome_citta - @aer[0]</option>";

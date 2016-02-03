@@ -31,14 +31,17 @@ sub add{
 
 sub get{
 	my ($ignora)=@_;
+	
+	my @menu_temp;
 	my $create=gestione_sessione::createSession();
 	if($ignora eq ''){
 		$ignora=0;
+		push @menu_temp, add("Home", "index.cgi"); 
 	}else{
 		$ignora=1;
+		
+		push @menu_temp, add("Home", "index.html"); 
 	}
-	my @menu_temp;
-	push @menu_temp, add("Home", "index.cgi"); 
 	if(($trovato==0) and (int($ignora)==0)){
 		my $pagina_sessione=gestione_sessione::getParam("location");
 		$pagina_sessione=~/([a-zA-Z0-9_]+).cgi/;
@@ -66,7 +69,11 @@ sub get{
 	if(($logged==1) and ($ignora==0)){
 		push @menu_temp, add("Logout", "login.cgi?logout=1");
 	}else{
-		push @menu_temp, add("Login", "login.cgi");
+		if($ignora==0){
+			push @menu_temp, add("Login", "login.cgi");
+		}else{
+			push @menu_temp, add("Login", "cgi-bin/login.cgi");#per la parte statica
+		}
 	}
 	return \@menu_temp;
 }
