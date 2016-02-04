@@ -29,11 +29,12 @@ foreach my $p (param()) {
     $form{$p} = param($p);
     #print "$p = $form{$p}<br>\n";
 }
-
+my %cf_passeggeri;
 my $errori=0;
 my $passeggeri=gestione_sessione::getParam("passeggeri");
 my @dati;
 for(my $i=1; $i<=$passeggeri; $i++){
+	$cf_passeggeri{$form{"CF$i"}}++;
 	my $errore=0;
 	my $nome="Nome";
 	if (defined ($form{"Nome$i"})){
@@ -104,7 +105,11 @@ for(my $i=1; $i<=$passeggeri; $i++){
 					$errore);
 	push  @dati,\@dati_temp; 
 }
-
+foreach my $passeggero (%cf_passeggeri){
+	if($passeggero>1){
+		$errori|=128;
+	}
+}
 
 if((($errori==0)&defined($form{"avanti"})| $passeggeri==0)){
  #passo successivo	
@@ -152,9 +157,13 @@ print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o d
 my $messaggio="";
 if($errori>0){
 	$messaggio="<div>
-					<h3 class=\"errore\">Attenzione: alcuni dati non sono corretti!</h3>
-				</div>";
+					<h3 class=\"errore\">Attenzione: alcuni dati non sono corretti!</h3>";
+	if(($errori&128)>0){
+		$messaggio.="<p class=\"errore\">Hai ripetuto pi&ugrave; lo stesso codice fiscale per pi&ugrave; utenti!</p>";
+	}
+	$messaggio.='</div>';
 }
+
 my $testo="
 		<div class=\"sezione\">
 			<form action=\"dati_passeggeri.cgi\" method=\"post\">
