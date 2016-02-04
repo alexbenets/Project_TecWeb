@@ -78,7 +78,8 @@ my $gma=check_form::regexp_data($data_partenza);
 my $giorno=$gma->[0];
 my $mese=$gma->[1];
 my $anno=$gma->[2];
-if(($giorno==0)|($mese==0)|($anno=0)){
+
+if(($giorno==0)|($mese==0)|($anno==0)){
 	$giorno="31";
 	$mese="12";
 	$anno="1950";
@@ -89,15 +90,16 @@ my $partenza = DateTime->new(
       				month      => $mese,
       				day        => $giorno
       				);
-my $gma=check_form::regexp_data($data_ritorno);
+      				
+$gma=check_form::regexp_data($data_ritorno);
 my $ritorno=DateTime->new(
 					year       => "1900",
       				month      => "01",
       				day        => "01"
       				);
-my $giorno=$gma->[0];
-my $mese=$gma->[1];
-my $anno=$gma->[2];
+$giorno=$gma->[0];
+$mese=$gma->[1];
+$anno=$gma->[2];
 if(defined($giorno) & defined($mese)){
 	$ritorno = DateTime->new( 
 					year       => $anno,

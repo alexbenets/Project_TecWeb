@@ -289,9 +289,7 @@ for(my $dd=-3; $dd<=3; $dd++){
 }
 $testo.='							<tfoot>
 									<tr>'.$date_tabella.'</tr>
-							</tfoot>
-
-							<tbody>';
+							</tfoot>';
 
 #sub: inserisco i vari voli andata, iterativo.
 #problema: ho una tabella, quindi il numero di elementi dev'essere costante!
@@ -323,6 +321,15 @@ for(my $dd=-3; $dd<=3; $dd++){
 			$max_altezza=scalar(@{$temp});
 		}
 	}
+}
+$testo.='
+							<tbody>';
+if($max_altezza==0){
+	$testo.='<tr>';
+	for (my $dd=-3; $dd<=3; $dd++){
+		$testo.='<td headers="andata_'.($dd+3).'"></td>';
+	}
+	$testo.='</tr>';
 }
 #poi scorro i vari elementi
 for(my $altezza=0; $altezza<$max_altezza; $altezza++){
@@ -384,8 +391,15 @@ $testo.='									</td>';
 }
 
 
-$testo.='					</tbody>
-					</table>';
+$testo.='
+							</tbody>';
+
+$testo.='					</table>';
+if($max_altezza==0){
+	$testo.='<p>Non ci sono voli disponibili per questa tratta
+			<a href="index.cgi">torna alla home page</a>
+			</p>';
+}
 if($andata==0){
 $date_tabella='';
 for(my $dd=-3; $dd<=3; $dd++){
@@ -430,7 +444,6 @@ $testo.='							<tfoot>
 								<tr>'.$date_tabella.'</tr>
 							</tfoot>
 
-							<tbody>
 					';
 #sub: inserisco i vari voli andata, iterativo.
 #problema: ho una tabella, quindi il numero di elementi dev'essere costante!
@@ -439,7 +452,6 @@ $testo.='							<tfoot>
 my @voli_settimana;
 
 my $max_altezza=0;# contiene il numero massimo di elementi presenti "in colonna"
-
 
 for(my $dd=-3; $dd<=3; $dd++){
 	#da -3 giorni a + 3 giorni
@@ -464,6 +476,16 @@ for(my $dd=-3; $dd<=3; $dd++){
 }
 
 #poi scorro i vari elementi
+
+	$testo.='
+							<tbody>';
+if($max_altezza==0){
+	$testo.='<tr>';
+	for (my $dd=-3; $dd<=3; $dd++){
+		$testo.='<td headers="ritorno_'.($dd+3).'"></td>';
+	}
+	$testo.='</tr>';
+}
 for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 	$testo.='<tr>';
 	for(my $giorno=0; $giorno<scalar(@voli_settimana); $giorno++){
@@ -524,8 +546,14 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 	$testo.='</tr>';
 }
 $testo.='
-							</tbody>
-					</table>';
+							</tbody>';
+
+$testo.='					</table>';
+if($max_altezza==0){
+	$testo.='<p>Non ci sono voli disponibili per questa tratta
+			<a href="index.cgi">torna alla home page</a>
+			</p>';
+}
 }		
 $testo.='			</div><!-- chiudo sezione visualizzazione voli -->';
 
