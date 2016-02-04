@@ -136,7 +136,7 @@ if($andata==0){
 
 #variabili generali
 
-my $prezzo_biglietti=int($andata_prezzo)+int($ritorno_prezzo);
+my $prezzo_biglietti=int($andata_prezzo)+int($ritorno_prezzo) * (int($num_passeggeri)+1);
 my $prezzo_servizi=0;
 print print_header::print();
 
@@ -217,10 +217,10 @@ $testo.='
 				</div><!-- fine div servizi -->
 				<div><!-- div costi -->
 					<h2>COSTO TOTALE:</h2>
-					<p>Biglietti: '.$prezzo_biglietti.'&euro; </p>
+					<p>Biglietti: '.($prezzo_biglietti * (int($num_passeggeri)+1)).'&euro; </p>
 					<p>Servizi aggiuntivi: '.$prezzo_servizi.'&euro; </p>
 					<p></p>
-					<h2>Totale: '.($prezzo_biglietti+$prezzo_servizi).'&euro; </h2>
+					<h2>Totale: '.(($prezzo_biglietti+$prezzo_servizi) * (int($num_passeggeri)+1)).'&euro; </h2>
 				</div><!-- fine div costi -->
 				
 				<div>
