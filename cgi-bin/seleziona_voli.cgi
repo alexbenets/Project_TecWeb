@@ -358,6 +358,12 @@ for(my $altezza=0; $altezza<$max_altezza; $altezza++){
 			if($andata==0){
 				$data_ok=compareDate(@elemento[$altezza]->[5],$giorno_ritorno);	
 			}
+			
+			#evito di prenotare dei voli in partenza fino ad oggi.
+			my $oggi=DateTime->now(time_zone=>'local');
+			if(compareDate($oggi->day."/".$oggi->month.'/'.$oggi->year,@elemento[$altezza]->[5])<1){
+				$data_ok=0;
+			}
 			my $classe_cella="seleziona_cella";
 			if($data_ok>0 and !(@elemento[$altezza]->[0] eq "")){
 				$testo.='		<a href="seleziona_voli.cgi?volo_andata='.@elemento[$altezza]->[0].'&amp;giorno_partenza='.@elemento[$altezza]->[5].'&amp;visitato=1&amp;andata=1">';
