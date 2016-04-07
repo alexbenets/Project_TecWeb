@@ -130,6 +130,12 @@ my $id_prenotazione_ritorno=0;
 if($andata==0){
 	$id_volo_ritorno=~/T([\d]+)V([\d]+)/;
 	@gma=@{check_form::regexp_data($giorno_ritorno)};
+	if(int(@gma[1])<10){
+		@gma[1]="0".@gma[1];
+	}
+	if(int(@gma[0])<10){
+		@gma[0]="0".@gma[0];
+	}
 	$id_prenotazione_ritorno=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
 
 }

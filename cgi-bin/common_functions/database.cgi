@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 package database;
 use XML::LibXML;
-use XML::XPath;
-use XML::XPath::XMLParser;
+#use XML::XPath;
+#use XML::XPath::XMLParser;
 require      Exporter;
 require 'common_functions/check_form.cgi';
 my @ISA       = qw(Exporter);
@@ -15,14 +15,15 @@ use strict;
 my $filename="database.xml";
 
 #funzioni base
-my $xp=0;
+my $xp=undef;
 sub get{
 	#ritorna il nodo in base alla stringa xpath
 	my ($xpath)=@_;
-	if($xp==0){
-		$xp = XML::XPath->new(filename => $filename);
+	if($xp==undef){
+		#$xp = XML::XPath->new(filename => $filename);
+		$xp=XML::LibXML->load_xml(location => $filename);
 	}
-	return $xp->find($xpath); # find 
+	return $xp->findnodes($xpath); # find 
 }
 
 sub set{
@@ -241,12 +242,22 @@ sub prenota{
 	my $nodo=XML::LibXML::Element->new("prenotazione");
 	
 	my $today = Time::Piece->new();
-	my $oggi=(($today->year))."-".$today->mon."-".$today->mday;
 	
+	my $oggi=(($today->year))."-";
+	if(int($today->mon)<10){
+		$oggi.="0";
+	}
+	$oggi.=$today->mon."-";
+	if(int($today->mday)<10){
+		$oggi.="0";
+	}
+	$oggi.=$today->mday;
 	my $nodo_data=XML::LibXML::Element->new("data");
 	my $n_n=XML::LibXML::Text->new($oggi);
 	$nodo_data->appendChild($n_n);
 	$nodo->appendChild($nodo_data);
+	
+	
 	
 	my $nodo_data_partenza=XML::LibXML::Element->new("dataPartenza");
 	my $n_n=XML::LibXML::Text->new($data);
