@@ -28,7 +28,7 @@ sub get{
 
 sub set{
 	#SOVRASCRIVE IL DATABASE in base a quanto inserito nella stringa
-	$xp=0;
+	$xp=undef;
 	my ($valore)=@_;
 	open (my $fh,'>',$filename);
 	print $fh $valore;
@@ -104,7 +104,16 @@ sub getPrenotazioni{
 	}else{
 		$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.' and @idP='.int($id_P).']');
 	}
-	my @prenotazioni;
+	my @out_prenotazioni;
+	
+	#variabili per cache
+	my $id_volo=-1;
+	my $tratta;
+	my $ora_partenza;
+	my $prezzo;
+	my $aereoporto_partenza;
+	my $aereoporto_arrivo;
+	
 	foreach my $prenotazione ($prenotazioni->get_nodelist){
 		#<prenotazione idP="1" idUR="1" idU="1,2" idV="3">
 		#<data>2016-02-12</data>
@@ -122,19 +131,33 @@ sub getPrenotazioni{
 		}
 		my $posti_occupati = (scalar(@id_utenti)+1);
 		
-		my $id_volo=$prenotazione->getAttribute("idV");
+		my $miss=0;
+		
+		my $id_volo_temp=int($prenotazione->getAttribute("idV"));
+		if($id_volo_temp!=$id_volo){
+			$id_volo=$id_volo_temp;
+			$miss=1;
+		}
 		my $data_prenotazione=$prenotazione->find("data");
 		my $data_partenza=$prenotazione->find("dataPartenza");
 		my $bagagli=$prenotazione->find("numeroBagagli");
 		
-		my $tratta=get('/database/tabVolo/volo[@idV='.$id_volo.']/@idT');
-		my $ora_partenza=get('/database/tabVolo/volo[@idV='.$id_volo.']/oraPartenza');
-		my $prezzo=get('/database/tabVolo/volo[@idV='.$id_volo.']/prezzo');
-		
-		my $aereoporto_partenza=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApP)]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApP)]/nome');
-		my $aereoporto_arrivo=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApA)]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=(/database/tabTratta/tratta[@idT='.$tratta.']/@idApA)]/nome');
-		
-		my $servizi=get('/database/tabServizio/servizioPrenotato[@idP='.$id.']');
+		if($miss==1){ #se l'ID del volo è cambiato, allora rigenero tutto
+			$tratta=get('/database/tabVolo/volo[@idV='.$id_volo.']/@idT');
+			$ora_partenza=get('/database/tabVolo/volo[@idV='.$id_volo.']/oraPartenza');
+			$prezzo=get('/database/tabVolo/volo[@idV='.$id_volo.']/prezzo');
+			my $idAaP;
+			my $idAaA;
+			my $tratta=get('/database/tabTratta/tratta[@idT='.$tratta.']');
+			foreach my $t ($tratta->get_nodelist){
+				$idAaP=int($t->getAttribute('idApP'));
+				$idAaA=int($t->getAttribute('idApA'));
+				
+			}
+			$aereoporto_partenza=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=('.$idAaP.')]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=('.$idAaP.')]/nome');
+			$aereoporto_arrivo=get('(/database/tabCitta/citta[@idC=(/database/tabAereoporto/aereoporto[@idAp=('.$idAaA.')]/@idC)])/nome')." ".get('/database/tabAereoporto/aereoporto[@idAp=('.$idAaA.')]/nome');
+		}
+		my $servizi=get('/database/tabServizioPrenotato/servizioPrenotato[@idP='.int($id_P).']');
 		my @servizi_prenotati;
 		foreach my $temp ($servizi->get_nodelist){
 			my @s_temp=(get('/database/tabServizio/servizio[@idS='.$temp->getAttribute("idS").']/nome'),get('/database/tabServizio/servizio[@idS='.$temp->getAttribute("idS").']/prezzo'));
@@ -142,10 +165,10 @@ sub getPrenotazioni{
 		}
 		#print "<p>$id, $posti_occupati, $tratta $id_volo, $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati</p>";
 		my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati,\@utenti); 
-		push @prenotazioni, \@temp;
+		push @out_prenotazioni, \@temp;
 		
 	}
-	return \@prenotazioni;
+	return \@out_prenotazioni;
 }
 
 sub salva_utente{
@@ -242,22 +265,12 @@ sub prenota{
 	my $nodo=XML::LibXML::Element->new("prenotazione");
 	
 	my $today = Time::Piece->new();
+	my $oggi=(($today->year))."-".$today->mon."-".$today->mday;
 	
-	my $oggi=(($today->year))."-";
-	if(int($today->mon)<10){
-		$oggi.="0";
-	}
-	$oggi.=$today->mon."-";
-	if(int($today->mday)<10){
-		$oggi.="0";
-	}
-	$oggi.=$today->mday;
 	my $nodo_data=XML::LibXML::Element->new("data");
 	my $n_n=XML::LibXML::Text->new($oggi);
 	$nodo_data->appendChild($n_n);
 	$nodo->appendChild($nodo_data);
-	
-	
 	
 	my $nodo_data_partenza=XML::LibXML::Element->new("dataPartenza");
 	my $n_n=XML::LibXML::Text->new($data);
