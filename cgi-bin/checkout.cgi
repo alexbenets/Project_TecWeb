@@ -42,6 +42,8 @@ my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires 
 
 if(int(gestione_sessione::getCookie('prenotato'))==1){
 	print "location: index.cgi\n\n";
+	return 0;
+	#non devo ripetere la prenotazione!
 }
 
 my $prenotato_cookie = CGI::Cookie->new(-name=>'prenotato',-value=>'1',-expires =>  '+20s',);
@@ -116,7 +118,16 @@ for(my $i=1; $i<=$num_passeggeri; $i++){
 my $bagagli=int(gestione_sessione::getParam("bagagli"));
 
 #sezione variabili inerenti ai servizi
-my @servizi=@{getServizi()};
+my @servizi_temp=@{getServizi()};
+my @servizi;
+
+for(my $i=0; $i<scalar(@servizi_temp); $i++){
+	
+	my @temp=@{@servizi_temp[$i]};
+	if(gestione_sessione::getParam("servizio".@temp[0])==1){
+		push @servizi, \@temp;
+	}
+}
 $id_volo_partenza=~/T([\d]+)V([\d]+)/;
 my @gma=@{check_form::regexp_data($giorno_partenza)};
 if(int(@gma[1])<10){
@@ -214,10 +225,10 @@ $testo.='
 					';
 for(my $i=0; $i<scalar(@servizi); $i++){
 	my @temp=@{@servizi[$i]};
-	if(gestione_sessione::getParam("servizio".@temp[0])==1){
+	#if(gestione_sessione::getParam("servizio".@temp[0])==1){
 		$testo.='	<p>'.@temp[1].', prezzo: '.@temp[2].'&euro; </p>';
 		$prezzo_servizi+=int(@temp[2]);
-	}
+	#}
 }
 $testo.='			
 				</div><!-- fine div servizi -->

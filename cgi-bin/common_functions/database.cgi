@@ -95,14 +95,24 @@ sub aggiornaUtente{
 	return 1;
 }
 ### INIZIO FUNZIONI RELATIVE ALLA PRENOTAZIONE
-
+my $prenotazioni;
+my $id_ur_prenotazione;
+my @nodi_prenotazione;
 sub getPrenotazioni{
 	my ($id, $id_P)=@_;
-	my $prenotazioni;
+	my $miss_id=0;
+	if ($id_ur_prenotazione!=$id){
+		$id_ur_prenotazione=$id;
+		$miss_id=1;
+	}
 	if($id_P eq ''){
-		$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.']');
+		if($miss_id==1){
+			$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.']');
+			@nodi_prenotazione=$prenotazioni->get_nodelist;
+		}
 	}else{
 		$prenotazioni=get('/database/tabPrenotazione/prenotazione[@idUR='.$id.' and @idP='.int($id_P).']');
+		@nodi_prenotazione=$prenotazioni->get_nodelist;
 	}
 	my @out_prenotazioni;
 	
@@ -114,7 +124,7 @@ sub getPrenotazioni{
 	my $aereoporto_partenza;
 	my $aereoporto_arrivo;
 	
-	foreach my $prenotazione ($prenotazioni->get_nodelist){
+	foreach my $prenotazione (@nodi_prenotazione){
 		#<prenotazione idP="1" idUR="1" idU="1,2" idV="3">
 		#<data>2016-02-12</data>
 		#		<dataPartenza>2016-03-12</dataPartenza>
@@ -245,6 +255,7 @@ sub prenota{
 		#print "<p>$id_prenotazione, @ser[$i]->[0]</p>";
 		salvaServizio($id_prenotazione,@ser[$i]->[0]);
 	}
+	#return 0;
 	my @passeggeri_id;
 	if(defined($passeggeri)){
 		my @pass=@{$passeggeri};
@@ -408,27 +419,31 @@ sub login{
 ### INIZIO FUNZIONI INERENTI AI VOLI
 #variabili di cache: nel caso cui alcuni valori siano identici, allora non effettuo chiamate XPath
 #migliora l'efficienza nell'esecuzione del codice. (nel caso cui sia richiamato nella funzione di "scacchiera" per la selezione dei voli).
+#visto che questa funzione viene ripetuta 7 volte durante la generazione della scacchiera, alcuni valori rimangono costanti.
+#Avendo una visualizzazione per tratta, i dati inerenti alla tratta rimarranno costanti, quindi è inutile ripetere la loro interrogazione.
+#la libreria Exporter introduce i namespace, quindi le variabili "globali" all'interno di questa libreria rimangono interne alla libreria
+#consentendo il riciclo dei nomi nelle altre librerie.
 
 
 #sezione inerente agli aereoporti
-my $id_partenza=0;
-my $volo_aereoporto_andata; #nome dell'aereoporto d'andata
+my $id_partenza_getVoli=0;
+my $volo_aereoporto_andata_getVoli; #nome dell'aereoporto d'andata
 
-my $id_arrivo=0;
-my $volo_aereoporto_ritorno; #nome dell'aereoporto di ritorno
+my $id_arrivo_getVoli=0;
+my $volo_aereoporto_ritorno_getVoli; #nome dell'aereoporto di ritorno
 
 #sezione inerente alla tratta
-my $tratta=0;
-my $durata=0;
-my $id_tratta=0;
+my $tratta_getVoli=0;
+my $durata_getVoli=0;
+my $id_tratta_getVoli=0;
 
 #sezione inerente ai voli
-my $voli_db;
-my @nodo_voli;
+my $voli_db_getVoli;
+my @nodo_voli_getVoli;
 
 #sezione inerente agli aerei
-my $id_aereo;
-my $posti_disponibili;
+my $id_aereo_getVoli;
+my $posti_disponibili_getVoli;
 sub getVoli{
 
 	#funzionamento:
@@ -439,35 +454,35 @@ sub getVoli{
 	#ora mi recupero l'ID tratta
 	my $miss=0; #se i valori non sono identici alle variabili in cache
 	
-	if($nome_andata ne $volo_aereoporto_andata){
+	if($nome_andata ne $volo_aereoporto_andata_getVoli){
 		$miss=1; #la cache dev'essere rigenerata
-		$volo_aereoporto_andata=$nome_andata;
+		$volo_aereoporto_andata_getVoli=$nome_andata;
 		my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[nome="'.$nome_andata.'" and flagAttivo="true"]');
 		foreach my $aereoporto ($aereoporto_partenza->get_nodelist){
-			$id_partenza=$aereoporto->getAttribute("idAp");
+			$id_partenza_getVoli=$aereoporto->getAttribute("idAp");
 		}
-		if($id_partenza==0){
+		if($id_partenza_getVoli==0){
 			return undef;
 		}
 	}
-	if($nome_ritorno ne $volo_aereoporto_ritorno){
+	if($nome_ritorno ne $volo_aereoporto_ritorno_getVoli){
 		$miss=1; #la cache dev'essere rigenerata
-		$volo_aereoporto_ritorno=$nome_ritorno;
+		$volo_aereoporto_ritorno_getVoli=$nome_ritorno;
 		my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[nome="'.$nome_ritorno.'" and flagAttivo="true"]');
 		foreach my $aereoporto ($aereoporto_arrivo->get_nodelist){
-			$id_arrivo=$aereoporto->getAttribute("idAp");
+			$id_arrivo_getVoli=$aereoporto->getAttribute("idAp");
 		}
-		if($id_arrivo==0){
+		if($id_arrivo_getVoli==0){
 			return undef;
 		}
 	}
 	if($miss==1){
 		#rigenero la cache della tratta
-		$tratta=get('/database/tabTratta/tratta[@idApP='.$id_partenza.' and @idApA='.$id_arrivo.']');
+		$tratta_getVoli=get('/database/tabTratta/tratta[@idApP='.$id_partenza_getVoli.' and @idApA='.$id_arrivo_getVoli.']');
 	
-		foreach my $tratta_temp ($tratta->get_nodelist){
-			$durata=int($tratta_temp->find("durata"));
-			$id_tratta=$tratta_temp->getAttribute("idT");
+		foreach my $tratta_temp ($tratta_getVoli->get_nodelist){
+			$durata_getVoli=int($tratta_temp->find("durata"));
+			$id_tratta_getVoli=$tratta_temp->getAttribute("idT");
 		}
 	}
 	#if($durata==0){ #se, per esempio, è il ritorno
@@ -491,8 +506,8 @@ sub getVoli{
 	my $anno=@gma[2];
 	
 	if($miss==1){
-		$voli_db=get('/database/tabVolo/volo[@idT='.$id_tratta.' and flagAttivo="true"]');
-		@nodo_voli=$voli_db->get_nodelist;
+		$voli_db_getVoli=get('/database/tabVolo/volo[@idT='.$id_tratta_getVoli.' and flagAttivo="true"]');
+		@nodo_voli_getVoli=$voli_db_getVoli->get_nodelist;
 	}
 	my @voli;
 	#<oraPartenza>00:00:00</oraPartenza>
@@ -503,15 +518,15 @@ sub getVoli{
 	#	my @volo=('AZ000'.$i, '8:00', '10:00', '160', '4.75', $giorno);
 	#	push @voli, \@volo; 
 	#}
-	foreach my $volo (@nodo_voli){
+	foreach my $volo (@nodo_voli_getVoli){
 		my $id_aereo_temp=int($volo->getAttribute("idAe"));
-		if($id_aereo_temp!=$id_aereo){
-			$id_aereo=$id_aereo_temp;
-			my $aerei=get('/database/tabAereo/aereo[@idAe='.$id_aereo.']');
+		if($id_aereo_temp!=$id_aereo_getVoli){
+			$id_aereo_getVoli=$id_aereo_temp;
+			my $aerei=get('/database/tabAereo/aereo[@idAe='.$id_aereo_getVoli.']');
 			#mi ricavo i posti totali in base all'aereo che effettua il volo
 			foreach my $aereo ($aerei->get_nodelist){
 				my $id_tipo=int($aereo->getAttribute("idTA"));
-				$posti_disponibili=int(get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']/numeroPosti'));
+				$posti_disponibili_getVoli=int(get('/database/tabTipoAereo/tipoAereo[@idTA='.$id_tipo.']/numeroPosti'));
 			}
 		}
 		my $id_volo=int($volo->getAttribute("idV"));
@@ -525,7 +540,7 @@ sub getVoli{
 		# variabile che assume il valore dei posti disponibili per quel volo.
 		#non modifico posti_disponibili, in quanto è una variabile che è paragonabile ad una costante
 		#per il tipo di aereo.
-		my $posti_disponibili_volo=$posti_disponibili;
+		my $posti_disponibili_volo=$posti_disponibili_getVoli;
 		
 		foreach my $prenotazione ($prenotazioni->get_nodelist){
 			#ora mi ricavo il numero di passeggeri + il prenotante.
@@ -544,7 +559,7 @@ sub getVoli{
 		#conoscendo l'orario di partenza e la durata (in minuti), conosco l'orario di arrivo.
 		my $t_andata =Time::Piece->strptime($orario, '%H:%M');
 		#my $t_durata =Time::Piece->strptime((int(int($durata)/60)).":".int(int($durata)%60), '%H:%M');
-		my $orario_arrivo=($t_andata+int($durata)*60)->strftime('%H:%M');
+		my $orario_arrivo=($t_andata+int($durata_getVoli)*60)->strftime('%H:%M');
 		#my $t_andata = Time::Piece->strptime('%T', $orario);
 		#my $t_arrivo=$t_andata;
 		#<commento idCo="1" idUR="1" idA="2" idV="1">
@@ -561,7 +576,7 @@ sub getVoli{
 		#if($valutazione==0){
 		#	$valutazione="";
 		#}
-		my @v_temp=("T".$id_tratta."V".$id_volo,$orario, $orario_arrivo,$prezzo,$valutazione, $data, $posti_disponibili_volo);
+		my @v_temp=("T".$id_tratta_getVoli."V".$id_volo,$orario, $orario_arrivo,$prezzo,$valutazione, $data, $posti_disponibili_volo);
 		if($posti_disponibili_volo>=($passeggeri)){
 			push @voli, \@v_temp;
 		}
@@ -586,28 +601,10 @@ sub listServizi{
 
 sub listTratte{
 
-
 #funzionamento: 
 #creo array associativo {ID, valore} di Nazione
 #per ogni ID Nazione, mi creo l'array associativo di città
 #per ogni città, mi creo l'array associativo degli aereoporti
-
-
-
-	#my @aereoporti_temp=("Linate", "Malpensa");
-	#my %temp;
-	
-	#$temp{"Milano"}=\@aereoporti_temp;
-	
-	#my @aereoporti_temp=("Fiumicino");
-	#$temp{"Roma"}=\@aereoporti_temp;
-	#$partenze {"Italia"}=\%temp;
-	
-	#my @aereoporti_temp=( "Charles de gaulle");
-	#	my %temp;
-	#	$temp{"Parigi"}=\@aereoporti_temp;
-	#	$partenze {"Francia"}=\%temp;
-	
 
 #mi genero l'array delle tratte
 my %partenze;

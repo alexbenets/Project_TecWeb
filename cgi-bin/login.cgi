@@ -44,9 +44,9 @@ if(!defined($location)){#se la variabile di sessione non è definita
 	$location="index.cgi";
 }
 if (gestione_sessione::getParam("logged") == 1){
-		if($location eq "login.cgi"){
-			$location="index.cgi";
-		}
+		#if($location eq "login.cgi"){
+		#	$location="index.cgi";
+		#}
 		print "Location: $location\n\n";
 		exit;
 }
@@ -62,7 +62,7 @@ if(defined($email) and defined($password)){
 		exit;
 	}
 }
-gestione_sessione::setParam("location", "login.cgi");
+#gestione_sessione::setParam("location", "login.cgi");
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
