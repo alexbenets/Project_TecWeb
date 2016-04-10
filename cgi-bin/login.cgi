@@ -11,7 +11,7 @@ use CGI;
 
 
 require "common_functions/print_header.cgi";
-require "common_functions/print_search.cgi";
+#require "common_functions/print_search.cgi"; #inutile: non viene sfruttato in questa pagina.
 require "common_functions/print_content.cgi";
 require "common_functions/print_footer.cgi";
 require "common_functions/Session.cgi";
