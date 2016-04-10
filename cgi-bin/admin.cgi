@@ -66,8 +66,6 @@ print "
 #
 print_header::setMenu(menu::get());
 
-my %tratte=database::listTratte();
-print_search::set_tratte(%tratte);
 
 my @path_temp;
 my @path=("Home", "index.cgi");

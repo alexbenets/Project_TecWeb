@@ -146,7 +146,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div>
 									<label for="nuovo_nome">Nuovo nome:</label>
-									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Italia"></input>
+									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Milano"></input>
 								</div>
 								<div>
 									<button type="submit" id="salva" name="salva" value="salva">
@@ -176,7 +176,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div>
 									<label for="nuovo_nome1">Nuovo nome:</label>
-									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Italia"></input>
+									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Milano"></input>
 								</div>
 								<div>
 									<button type="submit" id="salva2" name="salva" value="salva">
