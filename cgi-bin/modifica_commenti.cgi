@@ -86,7 +86,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 			<div class="clearer"></div>
 				';
 #fine di parte copiata che dovrebbe formare la parte comune a tutte le pagine del sito
-my $form_comm='<form action="http://www.miosito.it/cgi-bin/script.cgi" method="post"> 
+#i dati di questa dovrebbero essere presi dal database
+my $form_comm='<form action="script_commenti.cgi" method="post">  
 	<fieldset>
 		<legend>commento</legend>
 		<input type=”hidden” name=”idC” value=”$idC”>
@@ -94,6 +95,7 @@ my $form_comm='<form action="http://www.miosito.it/cgi-bin/script.cgi" method="p
 		<input type=”hidden” name=”idUR” value=”$idUR”>
 		Valutazione:
 		<select name="valutazione">
+			<option value="0"></option>
 			<option value="1">1</option>
 			<option value="2">2</option>
 			<option value="3">3</option>
@@ -111,7 +113,7 @@ my $form_comm='<form action="http://www.miosito.it/cgi-bin/script.cgi" method="p
 </form>';
 
 my $form_vuota='<form>
-	<fieldset action="http://www.miosito.it/cgi-bin/script.cgi" method="post">
+	<fieldset action="script_commenti.cgi" method="post">
 		<legend>nuovo commento</legend>
 		<input type=”hidden” name=”idC” value=”0”>
 		<input type=”hidden” name=”idV” value=”$idV”>
@@ -164,4 +166,5 @@ print "		</div>"; #chiudo il div main
 print print_footer::print();
 print "	</body>
 </html>";
+
 
