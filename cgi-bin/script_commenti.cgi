@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 package commenti;
 use strict;
 use DateTime;  #utilizzato per validare la data inserita
