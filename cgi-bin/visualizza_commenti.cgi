@@ -1,5 +1,8 @@
 #!/usr/bin/perl
-
+http://www.tutorialspoint.com/perl/perl_cgi.htm
+#pagina dalla quale sceglire la prenotazione (dunque il volo) sulla quale esprimere un commento;  
+#richiama la pagina modifica commento contenente la form per scrivere un nuovo commento
+#se esiste gia un commento fatto dall'utente registrato su quel volo allora viene invece richiamata una form per modificare o eliminare il commnto
 package commenti;
 use strict;
 use DateTime;  #utilizzato per validare la data inserita
@@ -25,7 +28,7 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
-my $idPrenotazione=int($form{"idP"}); # se 0=> voglio vis tutte le prenot else modifica commento/crea NB un SOLO commento
+my $id_prenotazione=int($form{"idP"}); # se 0=> do we need it?
 my $titolo="Area utente";
 
 
@@ -78,23 +81,19 @@ print '<div id="secondo_menu">
 					<ul>
 						<li><a href="utente.cgi?dati=1">Dati personali</a></li>
 						<li><a href="utente.cgi?prenotazioni=1">Prenotazioni</a></li>
-						<li><a href="utente.cgi?commenti=1">Commenti</a></li>
+						<li><a href="utente.cgi">Commenti</a></li> <!--ho eliminato il "?commenti=1" credo che sia inutile visto che non mi pare utile in nessun luogo !!! controlla pagina Utente-->
 					</ul>
 				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
 						<h3>Benvenuto!</h3>
-						<p>In questa pagina potrai modificare i tuoi dati e le tue prenotazioni (fino a 2 giorni prima della partenza), nonch&egrave 
-						esprimere il tuo parere sull\'esperienza di volo avuta con noi.</p>
+						<p>In questa pagina potrai modificare selezionare una prenotazione sulla quale esprimere un commento, o modificare un commento gi\&agrave espresso un parere</p>			esprimere il tuo parere sull\'esperienza di volo avuta con noi.</p>
 					</div><!-- chiudo sezione -->
 					
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
-					</div>
-			</div><!-- chiudo contenitore_sezioni -->	
-			<div class="clearer"></div>
-				';
+					</div>';
 
 #qui comincia davvero la mia parte !!! in mezzo stavano i casi trattati da marco nella pagina utente.cgi
 #questo script deve visualizzare i voli effettuati dall'utente (sono voli x i quali l'utente ha fatto una prenotazione, con data di partenza passata rispetto al giorno in cui si scrive)
@@ -118,16 +117,18 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 
 
 #per visualizzare prenotazioni utente
-my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"), $id_prenotazione)};
+my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"))}; #secondo parametro di dubbia importanza: ", $id_prenotazione"
 my $today = Time::Piece->new();
 	foreach my $tmp (@prenotazioni)
-	{
+	{#!!!
+	 #immagino che qui servirebbe un modo per rendere cliccabile l'intera sezione della prenotazione, che dovrebbe chiamare lo script per mostrare la form corrispondante
+	 #questa chiamata dovrebbe passare l'idUR e l'idV => se esiste commento form visualizzata piena, con pulsante salva e elimina; altrimenti vuota con solo pulasante salva
 		if(@prenotazione[6]<$today){# se dataPartenza @prenotazione[3] e < della data di oggi (print search la contiene cerca) => aggiungi a $testo, altrimenti ignora
 			$testo.="
 			<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
 			my @prenotazione=@{$tmp};
-				$testo.='
-				<a href="stampa_prenotazione.cgi?id='.@prenotazione[0].'">
+				$testo.="
+				<a href=\"modifica_commenti.cgi?idP='.@prenotazione[0].'\"> <!--noto adesso che questo portava ancora a stampa_prenotazione-->
 				<object>
 					<fieldset>
 								<p>Data: '.@prenotazione[6].'</p> 
@@ -137,13 +138,15 @@ my $today = Time::Piece->new();
 					</fieldset>				
 				</object>
 				</a>
-						<p><a href="modifica_commenti.cgi?idP='.@prenotazione[0].'">modifica commenti</a></p>';
+				<!--<p><a href=\"modifica_commenti.cgi?idP='.@prenotazione[0].'\">modifica commenti</a></p> non più necessario credo-->
+				";
 			#my @temp=($id, $posti_occupati, "T$tratta"."V$id_volo", $aereoporto_partenza,$aereoporto_arrivo,$data_prenotazione, $data_partenza, $ora_partenza, $prezzo, $bagagli, \@servizi_prenotati); 
 			$testo.="</div><!-- chiudo prenotazione -->
 			<div class=\"clearer\"></div>";
 		}
 	}
-$testo.= '</div><!-- chiudo contenitore sezioni -->';
+$testo.= "</div><!-- chiudo contenitore_sezioni -->	
+		<div class=\"clearer\"></div>";
 
 print print_content::print($testo);
 print "		</div>"; #chiudo il div main
