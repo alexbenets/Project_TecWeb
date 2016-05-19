@@ -1,0 +1,36 @@
+commento:
+idC=1&
+idUR=1&
+idV=1&
+cittaP=Roma&
+cittaA=New York&
+valutazione=4&
+titolo=viaggio tranquillo&
+testo=siamo partiti in pergetto orario e siamo arrivati senza incontrare turbolenze sul percorso, ottimo atterraggio;
+commento:
+idC=2&
+idUR=1&
+idV=2&
+cittaP=New York&
+cittaA=Como&
+valutazione=1&
+titolo=arrestate il pilota&
+testo=siamo sopravvissuti per miracolo togliete la patente a quel pilota;
+commento:
+idC=3&
+idUR=2&
+idV=1&
+cittaP=Ancara&
+cittaA=Col Gatto&
+valutazione=3&
+titolo=&
+testo=;
+commento:
+idC=4&
+idUR=3&
+idV=5&
+cittaP=Abissinia&
+cittaA=Otranto&
+valutazione=5&
+titolo=&
+testo=ho apprezzato molto il servizio offerto dalla vostra compagnia spero di poter viaggiapre presto con voi;
