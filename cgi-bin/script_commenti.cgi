@@ -6,7 +6,7 @@ use Time::Piece;
 use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
-
+#NB sistema c1 NON é VALIDO o CORRETTO; bisogna finire la funzione save_comm ma non alle 12.30 di notte 
 my $q = new CGI; #parte mia
 
 
@@ -19,6 +19,46 @@ require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
 
+#INIZIO SUBROUTINE, NB QUESTO HA ANCHE BISOGNO DI BUILD_ E FIND_ COMMENT DA MODIFICA_COMMENTI.CGI
+save_comm($presente, $c_rif){#deve salvare il commento sul file; due casi: A)il commento è nuovo => lo appendo alla fine del file
+					 #B)il commento è vecchio=>devo sostiruire quel pezzo di testo con una nuova stringa, da creare con quel che ho
+	($presente, $c_rif)=_@;
+	open (comm, "+<file_commenti.txt") or die "could not open file";#leggi e appendi al posto giusto
+	if($prensente){#presente contiene null se commento non esiste, 1 altrimenti, c_rif è rif. al commento su cui operare 
+		
+	}
+	else{
+		
+		print comm 
+	}									
+}
+
+del_comm($idC){#subroutine che si prende carico di eliminare il commento SUL FILE contenente idC passato; deve sostituire con stringa vuota tutto quel che è contenito tra Commento X e ; con $idC=parametro passato
+	$idC=_@;
+	open (comm, "+<file_commenti.txt") or die "could not open file";
+	my $del=0;
+	while(<comm>){
+		my $line=$_;
+		if($line=~m/idC=\$idC/){#cerco match -> cancello NB COSI NON MI DA PROBLEMI X TROVARE LA STRINGA? NON dovrebbe cerace letteralmente "$idC"...
+			$del=1;
+			print comm "";#prima riga da cancellare
+		}
+		if(del=1){
+			while($line!=~m/idC/){#finchè non arrivo al nuovo commento cancella, visto che nn posso cancella re la linea "commento :" del precedente cancello la corrente
+				print comm "";
+			} 
+		}
+	}
+	close comm;
+}
+
+sub yesorno($action, $idC){
+	($action, $idC)=_@;
+	if($action=="yes"){
+		&del_comm;
+		}
+}
+#FINE SUBROUTINE
 #parte iniziale per la corretta visualizzazione della pagina
 
 # NB !!! %form dovrebbe essere inutile xke non viene passato niente mediante il link
@@ -28,7 +68,7 @@ require "common_functions/menu.cgi";
 #foreach my $p (param()) {
 #    $form{$p} = param($p);
     #print "$p = $form{$p}<br>\n";
-#} 
+# 
 
 #my $id_prenotazione=int($form{"idP"}); 
 my $idUR=gestione_sessione::getParam("id");
@@ -48,15 +88,6 @@ gestione_sessione::setParam("location","utente.cgi");
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
 print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
-sub yesorno($action){
-	$action=_@;
-	if($action=="yes"){
-		return true;
-		}
-	else{
-		return false;
-	}
-}
 
 print "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
@@ -118,9 +149,9 @@ my $testo= $q->param('testo');
 my $form_control="<form action=\"script_commenti.cgi\" method=\"post\"> 
 						<fieldset>
 							<legend>commento</legend>
-							<input type=\”hidden\” name=\”idC\” value=\”$idC\”>
-							<input type=\”hidden\” name=\”idV\” value=\”$idV\”>
-							<input type=\”hidden\” name=\”idUR\” value=\”$idUR\”>
+							<input type=\"hidden\" name=\"idC\" value=\"$idC\">
+							<input type=\"hidden\" name=\"idV\" value=\"$idV\">
+							<input type=\"hidden\" name=\"idUR\" value=\"$idUR\">
 							Valutazione:
 							<select name=\"valutazione\">
 								<option value=\"0\" checked=\"checked\">non valutato</option>
@@ -140,8 +171,8 @@ my $form_control="<form action=\"script_commenti.cgi\" method=\"post\">
 					</form>";
 
 if(($c1{idC}==0 and $c1{submit}==true and $q->param()) || ($c1{idC}!=0 and $c1{submit}==true)){  
-
 	#il commento non esiste e devo salvarlo => creo un nuovo hash e lo stampo
+	
 	# O SE il commento esiste e devo salvarlo => cerco l'hash con i giusti id e lo modifico
 		
 		if(testo==""){
@@ -170,18 +201,14 @@ else{
 	$testo.="vuoi eliminare il commento sul volo $V?"# dal database troveremo poi altri dati da scrivere x identificare il commento: data ecc
 	$form_control="<form method=\"get\" action=\"&yesorno\">
 		<fieldset>
-			<input type=\"radio\" name=\"yesorno\" value=\"1\"> Si</input><br>
-			<input type=\"radio\" name=\"yesorno\" value=\"0\" checked=\"cheched\"> No</input> 
+			<input type=\"radio\" name=\"action\" value=\"1\"> Si</input><br>
+			<input type=\"radio\" name=\"action\" value=\"0\" checked=\"cheched\"> No</input> 
 			</br>
 			<input type=\"submit\" value=\"Salva\">
 		</fieldset>
 	</form>";
 	$testo.=$form_control;
-	if(&yesorno){
-		for (keys %c1){
-       		delete $c1{$_}; #ok?
-    	}
-    }
+	&yesorno($action,$idC);#come si fa????
     $testo.="il commento effettuato dall'utente $idUR sul volo $idV è stato eliminato"
 }
 $testo.= '</div><!-- chiudo contenitore_sezioni -->	
