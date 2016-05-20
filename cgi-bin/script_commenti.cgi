@@ -6,7 +6,7 @@ use Time::Piece;
 use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
-#NB sistema c1 NON é VALIDO o CORRETTO; bisogna finire la funzione save_comm ma non alle 12.30 di notte 
+#ancora un paio di considerazioni su come far funzionare le form e ok credo 
 my $q = new CGI; #parte mia
 
 
@@ -19,25 +19,40 @@ require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
 
-#INIZIO SUBROUTINE, NB QUESTO HA ANCHE BISOGNO DI BUILD_ E FIND_ COMMENT DA MODIFICA_COMMENTI.CGI
+#INIZIO SUBROUTINEs
 save_comm($presente, $c_rif){#deve salvare il commento sul file; due casi: A)il commento è nuovo => lo appendo alla fine del file
 					 #B)il commento è vecchio=>devo sostiruire quel pezzo di testo con una nuova stringa, da creare con quel che ho
 	($presente, $c_rif)=_@;
 	open (comm, "+<file_commenti.txt") or die "could not open file";#leggi e appendi al posto giusto
-	if($prensente){#presente contiene null se commento non esiste, 1 altrimenti, c_rif è rif. al commento su cui operare 
-		
-	}
+	if($prensente!=NULL){#presente contiene null se commento non esiste, 1 altrimenti, c_rif è rif. al commento su cui operare 
+		while(<comm>){
+			my $line=_$;
+			if($line=~m/$c_rif->{idC}/){ #dovrebbe iniziare a stampare al punto giusto
+				foreach $key (keys %$c_rif){#stampa ogni campo dell'array
+				my $value = $c_rif{$key};
+				print comm "\n$key => $value\&";
+				}			
+			print ";";
+			}
+		}
+	} 
 	else{
-		
-		print comm 
-	}									
+		seek comm,0,2;#vai alla fine del file
+		print"commento:";
+		foreach $key (keys %$c_rif){#stampa ogni campo dell'array
+			my $value = $c_rif{$key};
+			print comm "\n$key => $value\&";
+		}
+		print ";"; 
+	}		
+	close comm;							
 }
 
 del_comm($idC){#subroutine che si prende carico di eliminare il commento SUL FILE contenente idC passato; deve sostituire con stringa vuota tutto quel che è contenito tra Commento X e ; con $idC=parametro passato
 	$idC=_@;
-	open (comm, "+<file_commenti.txt") or die "could not open file";
+	open (comm, "+<file_commenti.txt") or die "could not open file";#apri x lettura e scrittura senza blank del file
 	my $del=0;
-	while(<comm>){
+	while(<comm>){#dovrebbe cancellare, spero che non si limiti ad aprire un buco nel file
 		my $line=$_;
 		if($line=~m/idC=\$idC/){#cerco match -> cancello NB COSI NON MI DA PROBLEMI X TROVARE LA STRINGA? NON dovrebbe cerace letteralmente "$idC"...
 			$del=1;
@@ -145,7 +160,8 @@ my $idC = $q->param('idC');
 my $idV = $q->param('idV');
 my $valutazione = $q->param('valutazzione');
 my $titolo = $q->param('titolo');
-my $testo= $q->param('testo');
+my $testoC= $q->param('testo');
+my $action=$q->param('action');
 my $form_control="<form action=\"script_commenti.cgi\" method=\"post\"> 
 						<fieldset>
 							<legend>commento</legend>
@@ -169,46 +185,49 @@ my $form_control="<form action=\"script_commenti.cgi\" method=\"post\">
 							<input type=\"submit\" value=\"Salva\">
 						</fieldset>
 					</form>";
+  
 
-if(($c1{idC}==0 and $c1{submit}==true and $q->param()) || ($c1{idC}!=0 and $c1{submit}==true)){  
+if($action=="salva"){
 	#il commento non esiste e devo salvarlo => creo un nuovo hash e lo stampo
-	
-	# O SE il commento esiste e devo salvarlo => cerco l'hash con i giusti id e lo modifico
-		
-		if(testo==""){
+	#O il commento esiste e devo salvarlo => cerco l'hash con i giusti id e lo modifico	
+	if($testoC==""){
         	$error_count=$error_count+1;
-        		$testo.="il tuo commento non &grave valido in quanto non fornisce sufficente informazione sul volo che hai effettuato";
+       		$testo.="<p>il tuo commento non &grave valido in quanto non fornisce sufficente informazione sul volo che hai effettuato</p>";
         }
         if ($error_count!=0){
         	$testo.= '$form_control';
         }
-		$testo.= $q->("utente $idUR");
+	my %to_save{
+		idC=>$idC,
+		idUR=>$idUR,
+		idV=>$idV,
+		cittaP=>NULL,
+		cittaA=>NULL,
+		valutazione=>$valutazione,
+		titolo=>$titolo,
+		testo=>$testoC
+	};
+	my $presente=NULL;
+	if($to_save{idC}!=0){
+		$presente=1;
+	}
+	my $ref_to_save=\%to_save;
+	&save_comm($presente, $ref_to_save);
+	$testo.= $q->("utente $idUR");
         $testo.= $q->p("volo $idV, valutazione $valutazione, titolo $titolo, testo $testo");
-
-     	%c1= {
-			idC => $idC
-			idV => $idV #usando local posso creare variabili del pachage x passare?
-			idUR => $idUR
-			valutazione =>$valutazione
-			titolo =>$titolo
-			testo =>$testo
-			submit =>true #usiamo un valore booleano? T<=> ho analizzato la form e devo salvare; F altrimenti
-			cancella =>  false#usiamo un valore booleano? T<=> ho analizzato la form, è un commento scritto da cancellare; F altrimenti
-		};
 }
 else{		
 	#il commento esiste e devo eliminarlo, questo va fatto direttamente sul database ma prima controllo che l'autore voglia davvero eliminarlo
-	$testo.="vuoi eliminare il commento sul volo $V?"# dal database troveremo poi altri dati da scrivere x identificare il commento: data ecc
-	$form_control="<form method=\"get\" action=\"&yesorno\">
+	$testo.="<p>vuoi eliminare il commento sul volo $idV?</p>"# dal database troveremo poi altri dati da scrivere x identificare il commento: data ecc
+	$form_control="<form method=\"get\" action=\"&yesorno($idC)\">
 		<fieldset>
 			<input type=\"radio\" name=\"action\" value=\"1\"> Si</input><br>
 			<input type=\"radio\" name=\"action\" value=\"0\" checked=\"cheched\"> No</input> 
 			</br>
-			<input type=\"submit\" value=\"Salva\">
+			<input type=\"submit\" value=\"submit\">
 		</fieldset>
 	</form>";
 	$testo.=$form_control;
-	&yesorno($action,$idC);#come si fa????
     $testo.="il commento effettuato dall'utente $idUR sul volo $idV è stato eliminato"
 }
 $testo.= '</div><!-- chiudo contenitore_sezioni -->	
