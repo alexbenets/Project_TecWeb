@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-http://www.tutorialspoint.com/perl/perl_cgi.htm
+#http://www.tutorialspoint.com/perl/perl_cgi.htm
 #pagina dalla quale sceglire la prenotazione (dunque il volo) sulla quale esprimere un commento;  
 #richiama la pagina modifica commento contenente la form per scrivere un nuovo commento
 #se esiste gia un commento fatto dall'utente registrato su quel volo allora viene invece richiamata una form per modificare o eliminare il commnto
@@ -11,10 +11,10 @@ use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
 
-require "common_functions/print_header.cgi";
-#require "common_functions/print_search.cgi"; #inutile: non viene sfruttato in questa pagina.
-require "common_functions/print_content.cgi";
-require "common_functions/print_footer.cgi";
+require "common_functions/\"_header.cgi";
+#require "common_functions/\"_search.cgi"; #inutile: non viene sfruttato in questa pagina.
+require "common_functions/\"_content.cgi";
+require "common_functions/\"_footer.cgi";
 require "common_functions/Session.cgi";
 require "common_functions/check_form.cgi";
 require "common_functions/database.cgi";
@@ -25,17 +25,17 @@ my %form;
 
 foreach my $p (param()) {
     $form{$p} = param($p);
-    #print "$p = $form{$p}<br>\n";
+    #\" "$p = $form{$p}<br>\n";
 }
 
-my $id_prenotazione=int($form{"idP"}); # se 0=> do we need it?
+my $id_prenotazione=int($form{"idP"}); #do we need it? a cosa serve qui?
 my $titolo="Area utente";
 
 
 my $create=gestione_sessione::createSession();
 
 if(gestione_sessione::getParam("logged")!=1){
-	print "location: index.cgi\n\n";
+	\" "location: index.cgi\n\n";
 	exit;
 }
 
@@ -44,9 +44,9 @@ gestione_sessione::setParam("location","utente.cgi");
 
 my $session_cookie = CGI::Cookie->new(-name=>'SESSION',-value=>$create,-expires =>  '+2h',);
 
-print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
+\" CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 
-print "
+\" "
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">
 <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"it\" xml:lang=\"it\">
 	<head>
@@ -63,21 +63,21 @@ print "
 # esempio: RIF_MENU_1=array("Home", "pagina.html", "1"); //Il pulsante avrà il nome "Home", il riferimento a "pagina.html" e sarà selezionato sul CSS.
 #          RIF_MENU_1=array("404", "404.html", "0"); //Il pulsante avrà il nome "404", il riferimento a "404.html" e NON sarà selezionato sul CSS.
 #
-print_header::setMenu(menu::get());
+\"_header::setMenu(menu::get());
 
 #my %tratte=database::listTratte();
-#print_search::set_tratte(%tratte);
+#\"_search::set_tratte(%tratte);
 
 my @path_temp;
 my @path=("Home", "index.cgi");
 push @path_temp, \@path;
 my @path=("Area utente", "utente.cgi");
 push @path_temp, \@path;
-print_header::setPath(\@path_temp);
+\"_header::setPath(\@path_temp);
 
-print print_header::print();
-print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print '<div id="secondo_menu">
+\" \"_header::\"();
+\" "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+\" '<div id="secondo_menu">
 					<ul>
 						<li><a href="utente.cgi?dati=1">Dati personali</a></li>
 						<li><a href="utente.cgi?prenotazioni=1">Prenotazioni</a></li>
@@ -123,12 +123,14 @@ my $today = Time::Piece->new();
 	{#!!!
 	 #immagino che qui servirebbe un modo per rendere cliccabile l'intera sezione della prenotazione, che dovrebbe chiamare lo script per mostrare la form corrispondante
 	 #questa chiamata dovrebbe passare l'idUR e l'idV => se esiste commento form visualizzata piena, con pulsante salva e elimina; altrimenti vuota con solo pulasante salva
-		if(@prenotazione[6]<$today){# se dataPartenza @prenotazione[3] e < della data di oggi (print search la contiene cerca) => aggiungi a $testo, altrimenti ignora
+		my @prenotazione=@{$tmp};
+		if(@prenotazione[6]<$today){# se dataPartenza @prenotazione[3] e < della data di oggi (\" search la contiene cerca) => aggiungi a $testo, altrimenti ignora
 			$testo.="
 			<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
-			my @prenotazione=@{$tmp};
+			#my @prenotazione=@{$tmp}; QUESTA ERA LA POSIZIONE DOVE VIENE DICHIARATO PER LA PRIMA VOLTA MA VIENE USATO SUBITO SOPRA, NON PUO ESSERE CORRETTO
+			#OR @PRENOTAZIONe[6] DOVEVA ESSERE @PRENOTAZIONi[6], MA NON SEMBRA VISTO CHE VIENE RIUSATA LA STESSA NOTAZIONE IN OBJECT 
 				$testo.="
-				<a href=\"modifica_commenti.cgi?idP='.@prenotazione[0].'\"> <!--noto adesso che questo portava ancora a stampa_prenotazione-->
+				<a href=\"modifica_commenti.cgi?id=\".@prenotazione[0].\"\"> <!--noto adesso che questo portava ancora a stampa_prenotazione; .@ ECC era framed con ' MA questo potrebbe implicare che non venga visualizzato corretto -->
 				<object>
 					<fieldset>
 								<p>Data: '.@prenotazione[6].'</p> 
@@ -148,8 +150,8 @@ my $today = Time::Piece->new();
 $testo.= "</div><!-- chiudo contenitore_sezioni -->	
 		<div class=\"clearer\"></div>";
 
-print print_content::print($testo);
-print "		</div>"; #chiudo il div main
-print print_footer::print();
-print "	</body>
+\" \"_content::\"($testo);
+\" "		</div>"; #chiudo il div main
+\" \"_footer::\"();
+\" "	</body>
 </html>";
