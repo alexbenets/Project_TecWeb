@@ -15,19 +15,10 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
-my $idPrenotazione=int($form{"id"}); 
+my $idPrenotazione=int($form{"idP"}); 
 my $titolo="Area utente";
 my $idUR=gestione_sessione::getParam("id");  
-my %c1= {
-	idC => 1
-	idV => 1
-	idUR => $idUR
-	};
-my $idV=$c1{idV}; #ricavato direttamente dal database, presente nella prenotazione
 my $idC=0; #se esiste un commento eseguito da idUR si idV=> prendo dal database il valore, altrimenti il valore iniziale è zero e dovroò calcolare il primo valore libero x salvare
-if($c1{idC}){#chiamata al database, per ora vuota
-	$idC=$c1{idC};
-}
 my $create=gestione_sessione::createSession();
 
 if(gestione_sessione::getParam("logged")!=1){
@@ -92,6 +83,39 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					</div>';
 #fine di parte copiata che dovrebbe formare la parte comune a tutte le pagine del sito
 #i dati di questa dovrebbero essere presi dal database
+
+#INIZIO SUBROUTINES
+sub build_comment(commenti_ref){#divide il testo del file in singoli blocchi ciascuno contenete un solo commento
+	open(my $comm; 'filecommenti.txt') or die "could not open file";
+	\@commenti_ref=_@;
+	my $i=0;
+	while(<$comm>){
+		my $line=$_;
+		chomp($line);
+		if ($line=~m/commento:/){
+			push(@{commenti_ref}, $line);#dovrebbe essere l'alternativa migliore xke CREA esplicitamente il nuovo elemento, e l'array inizia vuoto 
+			}
+		else @{commenti_ref}[$i].=$line;
+		#alternativa if($line!=~m/;/){
+			#${commenti_ref}[$i].=$line;
+		#}
+		#else{
+			#${commenti}[$i].=$line;
+			#$i=$i+1;
+		#}
+		if($line=~m/;/){
+			$i=$i+1;
+		}
+	close ($comm) or die "could not close";
+	return \commenti_ref;
+}
+
+sub find_comment{#cerca in @commenti il commento con i dati passati dal main, crea l'oggetto commento attraverso un hash x renderlo + maneggevole e lo ritorna
+
+}
+
+#FINE SUBROUTINES
+
 my $form_comm="<form action=\"script_commenti.cgi\" method=\"post\">  <!--modifica così che passi i dati da utente-->
 	<fieldset>
 		<legend>commento</legend>
@@ -146,8 +170,9 @@ if($idUR!=0 and $idV!=0){
 					</br>
 					testo:
 					<textarea name=\"testo\" rows=\"5\" col=\"30\"></br>
-					<input type=\"submit\" value=\"Salva\">
-					<input type=\"button\" value=\"elimina\"> <!--(???)occhio che sono entrambi di tipo submit non so se valgono giusti così-->
+					<input type=\"radio\" name=\"action\" value=\"salva\" checked> Male<br>
+				  	<input type=\"radio\" name=\"action\" value=\"elimina\"> Female<br>					
+					<input type=\"submit\" value=\"submit\">
 				</fieldset>
 			</form>";
 		}
