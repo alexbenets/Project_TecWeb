@@ -20,36 +20,14 @@ require "common_functions/database.cgi";
 require "common_functions/menu.cgi";
 
 #INIZIO SUBROUTINEs
-save_comm($presente, $c_rif){#deve salvare il commento sul file; due casi: A)il commento è nuovo => lo appendo alla fine del file
+sub save_comm {#deve salvare il commento sul file; due casi: A)il commento è nuovo => lo appendo alla fine del file
 					 #B)il commento è vecchio=>devo sostiruire quel pezzo di testo con una nuova stringa, da creare con quel che ho
-	($presente, $c_rif)=_@;
-	open (comm, "+<file_commenti.txt") or die "could not open file";#leggi e appendi al posto giusto
-	if($prensente!=NULL){#presente contiene null se commento non esiste, 1 altrimenti, c_rif è rif. al commento su cui operare 
-		while(<comm>){
-			my $line=_$;
-			if($line=~m/$c_rif->{idC}/){ #dovrebbe iniziare a stampare al punto giusto
-				foreach $key (keys %$c_rif){#stampa ogni campo dell'array
-				my $value = $c_rif{$key};
-				print comm "\n$key => $value\&";
-				}			
-			print ";";
-			}
-		}
-	} 
-	else{
-		seek comm,0,2;#vai alla fine del file
-		print"commento:";
-		foreach $key (keys %$c_rif){#stampa ogni campo dell'array
-			my $value = $c_rif{$key};
-			print comm "\n$key => $value\&";
-		}
-		print ";"; 
-	}		
-	close comm;							
+	my ($presente, $c_rif)=@_;
+						
 }
 
-del_comm($idC){#subroutine che si prende carico di eliminare il commento SUL FILE contenente idC passato; deve sostituire con stringa vuota tutto quel che è contenito tra Commento X e ; con $idC=parametro passato
-	$idC=_@;
+sub del_comm{#subroutine che si prende carico di eliminare il commento SUL FILE contenente idC passato; deve sostituire con stringa vuota tutto quel che è contenito tra Commento X e ; con $idC=parametro passato
+	my $idC=@_;
 	open (comm, "+<file_commenti.txt") or die "could not open file";#apri x lettura e scrittura senza blank del file
 	my $del=0;
 	while(<comm>){#dovrebbe cancellare, spero che non si limiti ad aprire un buco nel file
@@ -67,8 +45,8 @@ del_comm($idC){#subroutine che si prende carico di eliminare il commento SUL FIL
 	close comm;
 }
 
-sub yesorno($action, $idC){
-	($action, $idC)=_@;
+sub yesorno{
+	my ($action, $idC)=@_;
 	if($action=="yes"){
 		&del_comm;
 		}

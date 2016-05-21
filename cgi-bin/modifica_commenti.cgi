@@ -5,6 +5,16 @@ use strict;
 use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
+
+require "common_functions/print_header.cgi";
+#require "common_functions/print_search.cgi"; #inutile: non viene sfruttato in questa pagina.
+require "common_functions/print_content.cgi";
+require "common_functions/print_footer.cgi";
+require "common_functions/Session.cgi";
+require "common_functions/check_form.cgi";
+require "common_functions/database.cgi";
+require "common_functions/menu.cgi";
+
 #pagina per la creazione di nuovi commenti o la modifica/eliminazione
 #deve ricevere dei parametri dalla pagina di visualizzazione: idP dal quale ricavare idUR, idV ( e se serve idCommento, datacommento, titolo, contenuto, voto(se esiste, zero altrimenti))
 my %form;
@@ -19,6 +29,7 @@ my $idPrenotazione=int($form{"idP"});
 my $titolo="Area utente";
 my $idUR=gestione_sessione::getParam("id");  
 my $idC=0; #se esiste un commento eseguito da idUR si idV=> prendo dal database il valore, altrimenti il valore iniziale è zero e dovroò calcolare il primo valore libero x salvare
+my $idV=0;
 my $create=gestione_sessione::createSession();
 
 if(gestione_sessione::getParam("logged")!=1){
@@ -86,16 +97,20 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 
 #INIZIO SUBROUTINES
 sub build_comment(commenti_ref){#divide il testo del file in singoli blocchi ciascuno contenete un solo commento
-	open(my $comm; 'filecommenti.txt') or die "could not open file";
-	\@commenti_ref=_@;
+	open(my $comm, 'filecommenti.txt') or die "could not open file";
+	my $commenti_ref=@_;
+	my @commenti=\@{$commenti_ref};
 	my $i=0;
 	while(<$comm>){
 		my $line=$_;
 		chomp($line);
 		if ($line=~m/commento:/){
-			push(@{commenti_ref}, $line);#dovrebbe essere l'alternativa migliore xke CREA esplicitamente il nuovo elemento, e l'array inizia vuoto 
+			push(\@{@commenti}, $line);#dovrebbe essere l'alternativa migliore xke CREA esplicitamente il nuovo elemento, e l'array inizia vuoto 
 			}
-		else @{commenti_ref}[$i].=$line;
+		else 
+			{	
+				@commenti[$i].=$line;
+			}
 		#alternativa if($line!=~m/;/){
 			#${commenti_ref}[$i].=$line;
 		#}
@@ -107,7 +122,7 @@ sub build_comment(commenti_ref){#divide il testo del file in singoli blocchi cia
 			$i=$i+1;
 		}
 	close ($comm) or die "could not close";
-	return \commenti_ref;
+	return $commenti_ref;
 }
 
 sub find_comment{#cerca in @commenti il commento con i dati passati dal main, crea l'oggetto commento attraverso un hash x renderlo + maneggevole e lo ritorna
@@ -115,22 +130,21 @@ sub find_comment{#cerca in @commenti il commento con i dati passati dal main, cr
 }
 
 #FINE SUBROUTINES
-
 my $form_comm="<form action=\"script_commenti.cgi\" method=\"post\">  <!--modifica così che passi i dati da utente-->
 	<fieldset>
 		<legend>commento</legend>
-		<input type=\”hidden\” name=\”idC\” value=\”$idC\”> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
-		<input type=\”hidden\” name=\”idV\” value=\”$idV\”>
-		<input type=\”hidden\” name=\”idUR\” value=\”$idUR\”>
+		<input type=\"hidden\" name=\"idC\" value=\"$idC\"> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
+		<input type=\"hidden\" name=\"idV\" value=\"$idV\">
+		<input type=\"hidden\" name=\"idUR\" value=\"$idUR\">
 		Valutazione:
 		<select name=\"valutazione\">";
 
 my $form_vuota="<form>
 	<fieldset action=\"script_commenti.cgi\" method=\"post\">
 		<legend>nuovo commento</legend>
-		<input type=\”hidden\” name=\”idC\” value=\”0\”>
-		<input type=\”hidden\” name=\”idV\” value=\”$idV\”>
-		<input type=\”hidden\” name=\”idUR\” value=\”$idUR\”>
+		<input type=\"hidden\" name=\"idC\" value=\"0\">
+		<input type=\"hidden\" name=\"idV\" value=\"$idV\">
+		<input type=\"hidden\" name=\"idUR\" value=\"$idUR\">
 		Valutazione:
 		<select name=\"valutazione\">
 			<option value=\"0\" checked=\"checked\"></option>
@@ -150,23 +164,23 @@ my $form_vuota="<form>
 </form>";
 
 if($idUR!=0 and $idV!=0){
-	if($idCo!=0){
+	if($idC!=0){
 		#esiste un commento effettuato dall'utente su quel volo, uso $form_comm
-		$text.=$form_comm;
-		my i=0;
+		$testo.=$form_comm;
+		my $i=0;
 		my %C_attuale={};#commento che abbia volo e autore corretto !!!
-		for(i<6){
-			if(i==$C_attuale{"valutazione"}){
-				$text.="<option value=\"$i\" checked=\"checked\">$i</option>";
+		for(;$i<6; $i++){
+			if($i==$C_attuale{"valutazione"}){
+				$testo.="<option value=\"$i\" checked=\"checked\">$i</option>";
 			}
 			else{
-				$text.="<option value=\"$i\">$i</option>";
+				$testo.="<option value=\"$i\">$i</option>";
 			}
 		}
-		$text.="</select>
+		$testo.="</select>
 					</br>
 					<label for=\"titolo\">Titolo:</label>
-					<input type=\"text\" name=\"titolo\" id=\"titolo\">$C_attuale</input>
+					<input type=\"text\" name=\"titolo\" id=\"titolo\">".$C_attuale{"titolo"}."</input>
 					</br>
 					testo:
 					<textarea name=\"testo\" rows=\"5\" col=\"30\"></br>
@@ -177,9 +191,10 @@ if($idUR!=0 and $idV!=0){
 			</form>";
 		}
 	}
-	else
+	else{
 		#non esiste alcun commento dell'utente sul volo selezionato, uso $form_vuota
-		$text.=$form_vuota;
+		$testo.=$form_vuota;
+	}
 }
 
 
