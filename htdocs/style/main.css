@@ -71,7 +71,7 @@
 /*SEZIONE MENU'*/
 
 #menu {
-	/*margin-left: 30%;*/
+	margin-left: 30%;
 	margin-top: 2.5em;
 	height:3em;
 	/*background-color:#C0FFEE;*/
@@ -204,7 +204,7 @@
 	margin-left:1%;
 }
 
-#prenota form .casella_partenza select, select{
+#prenota form .casella_partenza select{
 	height: 2em;
 	min-width:67%;
 	max-width:99%;
@@ -247,7 +247,7 @@
 	max-width:99%;
 	background-color:#fff;
 	/*sezione text*/
-	color:#000000;
+	color:#778899;
 	font-size:1.1em;
 }
 #prenota form .casella_dataArrivo input[type="text"]{
@@ -256,7 +256,7 @@
 	max-width:99%;
 	background-color:#fff;
 	/*sezione text*/
-	color:#000000;
+	color:#778899;
 	font-size:1.1em;
 }
 /*fine casella _date*/
@@ -576,10 +576,7 @@
 }
 
 .volo_selected {
-	background-color:#C0FFEE;/*coffee power: activate!*/
-}
-.volo_prev_selected{
-	background-color:#FFEEDE;
+	background-color:#C0FFee;
 }
 .disabled {
 	background-color:#AAA;
@@ -606,6 +603,46 @@
 	font-weight:bold;
 }
 /*fine parte seleziona casella*/
+/* inizio parte MARIA sui commenti*/
+.commento{
+	border-style: solid;
+    border-width: 0.1em;
+	background-color:#DDEEFF;
+	margin: 0.5em 10em 0.5em 0.5em;
+	padding-bottom:1em;
+}
+.nomeA{ 
+	color:grey;
+	text-align:left;
+	font-weight:lighter;
+	float:left;
+	}
+.dataC{
+	color:grey;
+	text-align:right;
+	font-weight:lighter;
+}
+.titoloC{
+	font-weight: normal;
+	font-style: normal;
+	font-size: 100%;
+}
+
+.valutazioneC{
+	background-color:#FFF;
+	margin-top: 1em;
+    margin-bottom: 0em;
+    margin-right: 8em;
+    margin-left: 1em;
+}
+.testoC{
+	background-color:#FFF;
+	margin-top: 0em;
+    margin-bottom: 0em;
+    margin-right: 8em;
+    margin-left: 1em;
+}
+/*fine parte MARIA sui commenti*/
 /*FINE SEZIONE CERCA VOLI*/
 
 /*INIZIO TERZO SECONDO MENU'*/
