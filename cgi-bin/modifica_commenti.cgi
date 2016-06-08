@@ -50,10 +50,10 @@ print "
 	<head>
 		
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-		
-		<style type=\"text/css\" media=\"screen\">
+		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
+		<!--<style type=\"text/css\" media=\"screen\">
 			\@import url(\"style/main.css\");
-		</style>
+		</style>-->
 		
 		<title>Manipolazione Commento</title>
 		
