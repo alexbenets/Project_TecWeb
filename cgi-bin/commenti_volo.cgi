@@ -44,10 +44,10 @@ print "
 	<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"it\" lang=\"it\">
 	<head>
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-			<style type=\"text/css\" media=\"screen\">
+			<!--<style type=\"text/css\" media=\"screen\">
 				\@import url(\"style/main.css\"); <!--è corretto? altrimenti qui può venir usato <link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/> -->
-			</style>
-		
+			</style>-->
+		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
 		<title>Commenti sul volo</title>
 		
 		<meta name=\"title\" content=\"Compagnia Aerea A-ir - Commenti volo\"/>
