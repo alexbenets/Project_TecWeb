@@ -1,4 +1,3 @@
-#div main chiuso prima del dovuto!
 #!/usr/bin/perl
 
 #package commenti;
