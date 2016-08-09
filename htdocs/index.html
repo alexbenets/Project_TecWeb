@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it">
 	<head>
-		<link rel="stylesheet" href="../style/main.css" type="text/css" media="screen" charset="utf-8"/>
+		<link rel="stylesheet" href="style/main.css" type="text/css" media="screen" charset="utf-8"/>
 		<title>Home</title>
 	</head>
 	
@@ -22,8 +22,7 @@
 				</div><!-- chiudo banner-->
 			
 			<div id="menu">
-				<a href="cgi-bin/index.cgi"  >Home</a>
-				<a href="cgi-bin/admin_tratte.cgi" class="selected"  >admin tratte</a>
+				<a href="index.html"  >Home</a>
 				<a href="../compagnia.html"  >Compagnia</a>
 				<a href="../servizi.html"  >Servizi</a>
 				<a href="cgi-bin/login.cgi"  >Login</a>
@@ -37,9 +36,9 @@
 
 		<div id="main"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
 		<div id="prenota"><!-- div che contiene il box per la prenotazione-->
-				<form action="cgi-bin/../cgi-bin/cgi-bin/search.cgi" method="post">
+				<form action="cgi-bin/search.cgi" method="post">
 					<fieldset>
-					<legend>Dati del volo:</legend>
+					<!--<legend>Dati del volo:</legend>-->
 						<div class="casella_AR">
 							
 							<input type="radio" id="andata" name="AR"  value="andata"  /><label for="andata">solo andata</label>
@@ -50,26 +49,26 @@
 						</div>
 						<div class="clearer"></div><div class="casella_partenza">
 							<label for="partenza">Partenza:</label>
-							<select id="partenza" name="partenza" class="partenza"><optgroup label="Italia">
-<option>Venezia - Marco Polo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Verona - Catullo</option><option>Genova - Cristoforo Colombo</option></optgroup><optgroup label="Inghilterra">
-<option>Londra - London Heathrow</option></optgroup><optgroup label="Stati Uniti d'America">
-<option>NewYork - Fiorello La Guardia</option><option>NewYork - JFK</option></optgroup></select>
+							<select id="partenza" name="partenza" class="partenza"><optgroup label="Inghilterra">
+<option>Londra - London Heathrow</option></optgroup><optgroup label="Italia">
+<option>Genova - Cristoforo Colombo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Venezia - Marco Polo</option><option>Verona - Catullo</option></optgroup><optgroup label="Stati Uniti d'America">
+<option>New York - Fiorello La Guardia</option><option>New York - JFK</option></optgroup></select>
 						</div>
 						<div class="casella_arrivo">					
 							<label for="arrivo">Arrivo:</label>
-							<select id="arrivo" name="arrivo" class="arrivo"><optgroup label="Italia">
-<option>Venezia - Marco Polo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Verona - Catullo</option><option>Genova - Cristoforo Colombo</option></optgroup><optgroup label="Inghilterra">
-<option>Londra - London Heathrow</option></optgroup><optgroup label="Stati Uniti d'America">
-<option>NewYork - Fiorello La Guardia</option><option>NewYork - JFK</option></optgroup></select>
+							<select id="arrivo" name="arrivo" class="arrivo"><optgroup label="Inghilterra">
+<option>Londra - London Heathrow</option></optgroup><optgroup label="Italia">
+<option>Genova - Cristoforo Colombo</option><option>Roma - Ciampino</option><option>Roma - Fiumicino</option><option>Venezia - Marco Polo</option><option>Verona - Catullo</option></optgroup><optgroup label="Stati Uniti d'America">
+<option>New York - Fiorello La Guardia</option><option>New York - JFK</option></optgroup></select>
 						</div>
 						
 						<div class="casella_dataPartenza">
 							<label for="data_partenza">Data Partenza:</label>
-							<input type="text" name="data_partenza" id="data_partenza" value="3/2/2016" class=""></input>
+							<input type="text" name="data_partenza" id="data_partenza" value="10/8/2016" class=""></input>
 						</div>
 						<div class="casella_dataArrivo">
 							<label for="data_ritorno">Data Ritorno:</label>
-							<input type="text" name="data_ritorno" id="data_ritorno" value="4/2/2016" class=""></input>
+							<input type="text" name="data_ritorno" id="data_ritorno" value="11/8/2016" class=""></input>
 						</div>
 
 						<div class="casella_passeggeri">
