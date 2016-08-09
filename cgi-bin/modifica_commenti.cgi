@@ -1,3 +1,4 @@
+#div main chiuso prima del dovuto!
 #!/usr/bin/perl
 
 #package commenti;
@@ -6,7 +7,6 @@ use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
 use DateTime;  #utilizzato per validare la data inserita
-
 
 #require "common_functions/print_header.cgi";
 #require "common_functions/print_search.cgi"; #inutile: non viene sfruttato in questa pagina.
@@ -49,17 +49,17 @@ print "
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"it\" lang=\"it\">
 	<head>
 		
-		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
-		<!--<style type=\"text/css\" media=\"screen\">
+		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"utf-8\"/>
+		
+		<style type=\"text/css\" media=\"screen\">
 			\@import url(\"style/main.css\");
-		</style>-->
+		</style>
 		
 		<title>Manipolazione Commento</title>
 		
 		<meta name=\"title\" content=\"Compagnia Aerea A-ir - Salva Commenti\"/>
 		<meta name=\"description\" content=\"form per la manipolazione dei commenti effettuati dall'utente\"/>
-		<META name=\"robots\" CONTENT=\"noindex, nofollow\"> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto????-->
+		<meta name=\"robots\" content=\"noindex, nofollow\"/> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto???? ma validatore nn approva-->
 		<meta name=\"language\" content=\"italian it\"/>
 		<meta name=\"author\" content=\"MarAlFraMar\"/>
 		
@@ -101,7 +101,8 @@ print "
 			</div><!-- chiudo path-->
 		</div><!-- chiudo header-->
 		
-		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
+		<div id=\"main\"><!-- divisore che contiene tutto il contenuto statico e/o dinamico-->
+			<div id=\"contenuto\">
 			<div id=\"secondo_menu\">
 				<ul>
 					<li><a href=\"utente.cgi?dati=1\">Dati personali</a></li>
@@ -153,7 +154,7 @@ my $idC=1;
 my $idV=1;
 my $idUR=1;
 my $cittaP="uno";
-my $cittaP="due";
+my $cittaA="due";
 
 my %c1={
 	idC=> $idC,
@@ -167,22 +168,26 @@ my %c1={
 	valutazione=>"5",
 	testo=>"just LOVE perl, but keep calm and prorgram on"
 };
-
+my $today=Time::Piece->new();
 my $form_comm="";
 if(1){#se esiste 1 commento gia eseguito su quel volo qui dato x scontato, in azione dovremo eseguire 1 chiamata al database x saperlo
 	$form_comm="<form action=\"script_commenti.cgi\" method=\"post\">  <!--modifica così che passi i dati da utente-->
 	<fieldset>
 		<legend>commento sul volo da $c1{cittaP} a $c1{cittaA}</legend>
-		<input type=\"hidden\" name=\"idC\" value=\"$c1{idC}\"></input> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
-		<input type=\"hidden\" name=\"idV\" value=\"$c1{idV}\"></input>
-		<input type=\"hidden\" name=\"idUR\" value=\"$c1{idUR}\"></input>
-		<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaP}\"></input>
-		<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaA}\"></input>
-		<label for=\"valutazione\">Valutazione:</label>
-		<select name=\"valutazione\">";
-	for(my $i=0;$i<6; $i++){
+			<input type=\"hidden\" name=\"idC\" value=\"$c1{idC}\"></input> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
+			<input type=\"hidden\" name=\"idV\" value=\"$c1{idV}\"></input>
+			<input type=\"hidden\" name=\"idUR\" value=\"$c1{idUR}\"></input>
+			<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaP}\"></input>
+			<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaA}\"></input>
+			</br>
+				<label for=\"titolo\">Titolo:</label>
+					<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$c1{\"titolo\"}\"></input>#come assicurarsi che sia visibile la cosa giusta?
+			</br>
+			<label for=\"valutazione\">Valutazione:</label>
+				<select name=\"valutazione\">";
+	for(my $i=1;$i<5; $i++){
 		if($i==$c1{"valutazione"}){#potrei dover usare un match? ma è un semplice intero... sarebbe $i=~m/$commento{"valutazione"}/?
-				$form_comm.="<option value=\"$i\" checked=\"checked\">$i</option>";
+				$form_comm.="<option value=\"$i\" selected=\"selected\">$i</option>";
 			}
 			else{
 				$form_comm.="<option value=\"$i\">$i</option>";
@@ -190,15 +195,13 @@ if(1){#se esiste 1 commento gia eseguito su quel volo qui dato x scontato, in az
 		}
 	}
 	$form_comm.="</select>
-					</br>
-					<label for=\"titolo\">Titolo:</label>
-					<input type=\"text\" name=\"titolo\" id=\"titolo\">\"$commento{"titolo"}</input>#come assicurarsi che sia visibile la cosa giusta?
-					</br>
-					<label for=\"testo\">Testo:</label>
-					<textarea name=\"testo\" rows=\"5\" col=\"30\"></textarea></br>
+				</br>
+				</br>
+				<label for=\"testo\">Testo:</label>
+					<textarea name=\"testo\" rows=\"5\" cols=\"30\"></textarea></br>
 					<input type=\"submit\" value=\"submit\"></input>
-				</fieldset>
-			</form>";
+			</fieldset>
+		</form>";
 }
 else{
 	$form_comm="<form>
@@ -209,9 +212,13 @@ else{
 					<input type=\"hidden\" name=\"idUR\" value=\"$idUR\"></input>
 					<input type=\"hidden\" name=\"cittaP\" value=\"$cittaP\"></input>
 					<input type=\"hidden\" name=\"cittaA\" value=\"$cittaA\"></input>
+				</br>
+				<label for=\"titolo\">Titolo:</label>
+				<input type=\"text\" name=\"titolo\"></input></br>
+				</br>
 				<label for=\"valutazione\">Valutazione:</label>
 				<select name=\"valutazione\">
-					<option value=\"0\" checked=\"checked\"></option>
+					<option value=\"0\" selected=\"selected\"></option>
 					<option value=\"1\">1</option>
 					<option value=\"2\">2</option>
 					<option value=\"3\">3</option>
@@ -219,10 +226,8 @@ else{
 					<option value=\"5\">5</option>
 				</select>
 				</br>
-				<label for=\"titolo\">Titolo:</label>
-				<input type=\"text\" name=\"titolo\"></input></br>
 				<label for=\"testo\">Testo:</label>
-				<textarea name=\"testo\" rows=\"5\" col=\"30\"></textarea></br>
+				<textarea name=\"testo\" rows=\"5\" cols=\"30\"></textarea></br>
 				<input type=\"submit\" value=\"Salva\"></input>
 				</fieldset>
 			</form>";
@@ -231,13 +236,13 @@ print $form_comm;
 print "
 </div>
 	<div id=\"torna_su\">
-						<a href=\"#header\">Torna su</a>
-					</div>
-				</div><!-- chiudo contenitore_sezioni -->	
+		<a href=\"#header\">Torna su</a>
+	</div>
+</div><!-- chiudo contenitore_sezioni -->	
 				
-				<div class=\"clearer\"></div>
-			</div><!-- chiudo contenuto-->
-		</div><!-- chiudo main-->
+		<div class=\"clearer\"></div>
+		</div><!-- chiudo contenuto-->
+	</div><!-- chiudo main-->
 		
 		<div id=\"footer\">
 			<div id=\"sitemap\">
@@ -262,7 +267,7 @@ print "
     				</a>
 				</p>
 				<div class=\"clearer\"></div> <!-- chiudo i float -->
-			</div><!-- chiudo div validazione -->
+			</div><!-- chiudo divisore validazione -->
 		</div><!-- chiudo footer-->
 	</body>
 </html>";
@@ -278,11 +283,11 @@ print "
 #SE INVECE la form va ELIMINATA
 #chiedo conferma e chiudo
 
-$testo.= '</div>	
-		<div class="clearer"></div>';
+#$testo.= '</div>	
+#		<div class="clearer"></div>';
 
-print print_content::print($testo);
-print "		</div>"; #chiudo il div main
-print print_footer::print();
-print "	</body>
-</html>";
+#print print_content::print($testo);
+#print "		</div>"; #chiudo il div main
+#print print_footer::print();
+#print "	</body>
+#</html>";
