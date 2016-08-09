@@ -1,3 +1,4 @@
+#div main
 #!/usr/bin/perl
 package commenti;
 use strict;
@@ -54,16 +55,16 @@ print "
 	<head>
 		
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
-		<!--<style type=\"text/css\" media=\"screen\">
+		
+		<style type=\"text/css\" media=\"screen\">
 			\@import url(\"style/main.css\");
-		</style>-->
+		</style>
 		
 		<title>Commenti sul volo</title>
 		
 		<meta name=\"title\" content=\"Compagnia Aerea A-ir - Commenti untente\"/>
 		<meta name=\"description\" content=\"script per la manipolazione dei commenti effettuati dall'utente\"/>
-		<META name=\"robots\" CONTENT=\"noindex, nofollow\"> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto????-->
+		<meta name=\"robots\" content=\"noindex, nofollow\"/> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto????-->
 		<meta name=\"language\" content=\"italian it\"/>
 		<meta name=\"author\" content=\"MarAlFraMar\"/>
 		
@@ -106,6 +107,7 @@ print "
 		</div><!-- chiudo header-->
 		
 		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->
+		<div id=\"contenuto\">	
 			<div id=\"secondo_menu\">
 				<ul>
 					<li><a href=\"utente.cgi?dati=1\">Dati personali</a></li>
@@ -212,7 +214,7 @@ my $form_control="
 							<label for=\"titolo\">Titolo:</label>
 								<input type=\"text\" name=\"titolo\" id=\"titolo\">$titolo</input></br>
 							<label for=\"testo\">Testo:</label>
-								<textarea name=\"testo\" rows=\"5\" col=\"30\">$testo</input></br>
+								<textarea name=\"testo\" rows=\"5\" cols=\"30\">$testo</input></br>
 							<input type=\"hidden\" name=\"action\" value=\"salva\"></input>	
 							<input type=\"submit\" value=\"Salva\"></input>
 						</fieldset>
