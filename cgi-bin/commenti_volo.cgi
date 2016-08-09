@@ -1,3 +1,4 @@
+#problema div non chiuso da qualche parte
 #commenti volo.cgi
 #la pagina otterrà dalla precedente otterrà id volo; SE si dovessero visualizzare i commenti di + voli... basterebbe fare un ciclo, ma non so come passare tutti i voli
 #!/usr/bin/perl
@@ -44,15 +45,15 @@ print "
 	<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"it\" lang=\"it\">
 	<head>
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
-			<!--<style type=\"text/css\" media=\"screen\">
+			<style type=\"text/css\" media=\"screen\">
 				\@import url(\"style/main.css\"); <!--è corretto? altrimenti qui può venir usato <link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/> -->
-			</style>-->
-		<link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/>
+			</style>
+		
 		<title>Commenti sul volo</title>
 		
 		<meta name=\"title\" content=\"Compagnia Aerea A-ir - Commenti volo\"/>
 		<meta name=\"description\" content=\"commenti effettuati dai nostri clienti sul volo richiesto\"/>
-		<META name=\"robots\" CONTENT=\"noindex, nofollow\"> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto????-->
+		<meta name=\"robots\" content=\"noindex, nofollow\"/> <!--contiene info che non devono venir indicizzate da google quindi credo di dover usare questo giusto????-->
 		<meta name=\"language\" content=\"italian it\"/>
 		<meta name=\"author\" content=\"MarAlFraMar\"/>
 	</head>
@@ -98,6 +99,8 @@ print "
 					<span>commenti sul volo</span> <!--ANDRà MODIFICATO NELLE PAGINE SUCCESSIVE X INCLUDERLO-->
 				</div><!-- chiudo path-->
 			</div><!-- chiudo header-->
+			<div id=\"main\">
+			<div id=\"contenuto\">
 			<div id=\"contenitore_sezioni\"><!-- apro maxi contenitore per le sezioni -->
 				<div class=\"sezione\" id=\"S1\"><!-- inizio div che contiene titolo e sezione dell articolo -->
 					<h3>La compagnia The A-ir</h3>
@@ -158,18 +161,38 @@ my %c4={
 
 my $idV=1;
 my $numero_C=0;
-my %commenti=(c1=>\%c1, c2=>\%c2, c3=>\%c3, c4=>\%c4);#cimtiene TUTTi i commenti che abbiamo
+my %commenti={};#(c1=>\%c1, c2=>\%c2, c3=>\%c3, c4=>\%c4);#cimtiene TUTTi i commenti che abbiamo, NO ci mettiamo solo quelli utili
 my $testo="";
-while (($key, $value) = each(%commenti)){#trova i commenti del volo che cerchiamo, qui deciso arbitrariamente a 1 NB bisognerà passarlo con form nella forma finale, e stampa il commento;  
-     if($value{idV}==$idV){
-		$testo.="<div class=\"commento\">
+my $i=0;
+if($c1{diV}==$idV){
+	$i=$i+1;
+	$commenti(c1)=\%c1;
+}
+if($c2{diV}==$idV){
+	$i=$i+1;
+	$commenti(c2)=\%c2;
+}
+if($c3{diV}==$idV){
+	$i=$i+1;
+	$commenti(c3)=\%c3;
+}
+if($c4{diV}==$idV){
+	$i=$i+1;
+	$commenti(c4)=\%c4;
+}
+
+for (my $j=0;j<i; j++){
+		while (($key, $value) == each(%$commenti)){#trova i commenti del volo che cerchiamo, qui deciso arbitrariamente a 1 NB bisognerà passarlo con form nella forma finale, e stampa il commento;  
+			#if($key=="idV"&&$value==$idV){ #$value{idV}==$idV non più necessario
+			$testo.="<div class=\"commento\">
 					<p class=\"nomeA\">$value{nick}</p>
 					<p class=\"dataC\">$value{data}</p>
 					<h2 class=\"titoloC\">$value{titolo}</h2>
 					<p class=\"valutazioneC\">valutazione:$value{valutazione}</p> 
 					<pclass=\"testoC\">$value{testo}</p>
 				</div>";
-	 }
+			#}
+		}
 }
 
 print $testo;
@@ -210,3 +233,5 @@ print "<div id=\"torna_su\">
 		</div><!-- chiudo footer-->
 	</body>
 </html>";
+
+
