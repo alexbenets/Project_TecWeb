@@ -1,5 +1,3 @@
-#problema div non chiuso da qualche parte
-#commenti volo.cgi
 #la pagina otterrà dalla precedente otterrà id volo; SE si dovessero visualizzare i commenti di + voli... basterebbe fare un ciclo, ma non so come passare tutti i voli
 #!/usr/bin/perl
 
