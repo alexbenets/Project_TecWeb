@@ -1,6 +1,6 @@
-#la pagina otterrà dalla precedente otterrà id volo; SE si dovessero visualizzare i commenti di + voli... basterebbe fare un ciclo, ma non so come passare tutti i voli
 #!/usr/bin/perl
 
+#la pagina otterrà dalla precedente otterrà id volo; SE si dovessero visualizzare i commenti di + voli... basterebbe fare un ciclo, ma non so come passare tutti i voli
 
 package seleziona_voli_page;
 
@@ -44,7 +44,7 @@ print "
 	<head>
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
 			<style type=\"text/css\" media=\"screen\">
-				\@import url(\"style/main.css\"); <!--è corretto? altrimenti qui può venir usato <link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/> -->
+				\@import url(\"../style/main.css\"); <!--è corretto? altrimenti qui può venir usato <link rel=\"stylesheet\" href=\"../style/main.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\"/> -->
 			</style>
 		
 		<title>Commenti sul volo</title>
@@ -106,7 +106,7 @@ print "
 				</div><!-- chiudo sezione -->		
 ";
 
-my %c1={
+my $c1={
 	idC=>"1",
 	idV=>"1",
 	idUR=>"1",
@@ -116,17 +116,17 @@ my %c1={
 	valutazione=>"5",
 	testo=>"just LOVE perl, but keep calm and prorgram on"
 };
-my %c2={
+my $c2={
 	idC=>"2",
 	idV=>"1",
 	idUR=>"2",
 	nick=>"perlLoveerr",
 	data=>"14/3/16",
 	titolo=>"les't stay for EVER",
-	valutazione=>"3"
+	valutazione=>"3",
 	testo=>"let's run away together my love, you can stay in my hart forever"
 };
-my %c3={
+my $c3={
 	idC=>"3",
 	idV=>"1",
 	idUR=>"1",
@@ -136,7 +136,7 @@ my %c3={
 	valutazione=> "5",
 	testo=>"asd asd asd asd asd asd asd aswd asd asd asd wtfiU"
 };
-my %c4={
+my $c4={
 	idC=>"3",
 	idV=>"2",
 	idUR=>"1",
@@ -159,38 +159,23 @@ my %c4={
 
 my $idV=1;
 my $numero_C=0;
-my %commenti={};#(c1=>\%c1, c2=>\%c2, c3=>\%c3, c4=>\%c4);#cimtiene TUTTi i commenti che abbiamo, NO ci mettiamo solo quelli utili
+my @commenti;#={};#(c1=>\%c1, c2=>\%c2, c3=>\%c3, c4=>\%c4);#cimtiene TUTTi i commenti che abbiamo, NO ci mettiamo solo quelli utili
 my $testo="";
 my $i=0;
-if($c1{diV}==$idV){
-	$i=$i+1;
-	$commenti(c1)=\%c1;
-}
-if($c2{diV}==$idV){
-	$i=$i+1;
-	$commenti(c2)=\%c2;
-}
-if($c3{diV}==$idV){
-	$i=$i+1;
-	$commenti(c3)=\%c3;
-}
-if($c4{diV}==$idV){
-	$i=$i+1;
-	$commenti(c4)=\%c4;
-}
-
-for (my $j=0;j<i; j++){
-		while (($key, $value) == each(%$commenti)){#trova i commenti del volo che cerchiamo, qui deciso arbitrariamente a 1 NB bisognerà passarlo con form nella forma finale, e stampa il commento;  
-			#if($key=="idV"&&$value==$idV){ #$value{idV}==$idV non più necessario
-			$testo.="<div class=\"commento\">
-					<p class=\"nomeA\">$value{nick}</p>
-					<p class=\"dataC\">$value{data}</p>
-					<h2 class=\"titoloC\">$value{titolo}</h2>
-					<p class=\"valutazioneC\">valutazione:$value{valutazione}</p> 
-					<pclass=\"testoC\">$value{testo}</p>
-				</div>";
-			#}
-		}
+push(@commenti, $c1);
+push(@commenti, $c2);
+push(@commenti, $c3);
+push(@commenti, $c4);
+foreach my $commento (@commenti){
+		my %item=%{$commento};
+		$testo.="<div class=\"commento\">
+					<p class=\"nomeA\">".$item{"nick"}."</p>
+					<p class=\"dataC\">".$item{"data"}."</p>
+					<h2 class=\"titoloC\">".$item{"titolo"}."</h2>
+					<p class=\"valutazioneC\">valutazione:".$item{"valutazione"}."</p> 
+					<pclass=\"testoC\">".$item{"testo"}."</p>
+				</div>
+				";
 }
 
 print $testo;

@@ -5,8 +5,9 @@ use strict;
 use CGI::Carp qw(fatalsToBrowser);
 use CGI qw(:standard);
 use CGI;
-use DateTime;  #utilizzato per validare la data inserita
 
+use DateTime;  #utilizzato per validare la data inserita
+use Time::Piece;
 #require "common_functions/print_header.cgi";
 #require "common_functions/print_search.cgi"; #inutile: non viene sfruttato in questa pagina.
 #require "common_functions/print_content.cgi";
@@ -51,7 +52,7 @@ print "
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"utf-8\"/>
 		
 		<style type=\"text/css\" media=\"screen\">
-			\@import url(\"style/main.css\");
+			\@import url(\"../style/main.css\");
 		</style>
 		
 		<title>Manipolazione Commento</title>
@@ -155,7 +156,7 @@ my $idUR=1;
 my $cittaP="uno";
 my $cittaA="due";
 
-my %c1={
+my $c1={
 	idC=> $idC,
 	idV=>$idV,
 	idUR=>$idUR,
@@ -170,28 +171,28 @@ my %c1={
 my $today=Time::Piece->new();
 my $form_comm="";
 if(1){#se esiste 1 commento gia eseguito su quel volo qui dato x scontato, in azione dovremo eseguire 1 chiamata al database x saperlo
+	my %item=%{$c1};
 	$form_comm="<form action=\"script_commenti.cgi\" method=\"post\">  <!--modifica così che passi i dati da utente-->
 	<fieldset>
-		<legend>commento sul volo da $c1{cittaP} a $c1{cittaA}</legend>
-			<input type=\"hidden\" name=\"idC\" value=\"$c1{idC}\"></input> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
-			<input type=\"hidden\" name=\"idV\" value=\"$c1{idV}\"></input>
-			<input type=\"hidden\" name=\"idUR\" value=\"$c1{idUR}\"></input>
-			<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaP}\"></input>
-			<input type=\"hidden\" name=\"cittaP\" value=\"$c1{cittaA}\"></input>
+		<legend>commento sul volo da ".$item{cittaP}." a $item{cittaA}</legend>
+			<input type=\"hidden\" name=\"idC\" value=\"$item{idC}\"></input> <!--DUBBIO INFAME COSì CONTIENE I DATI CHE DEVE CONTENERE? -->
+			<input type=\"hidden\" name=\"idV\" value=\"$item{idV}\"></input>
+			<input type=\"hidden\" name=\"idUR\" value=\"$item{idUR}\"></input>
+			<input type=\"hidden\" name=\"cittaP\" value=\"$item{cittaP}\"></input>
+			<input type=\"hidden\" name=\"cittaP\" value=\"$item{cittaA}\"></input>
 			</br>
 				<label for=\"titolo\">Titolo:</label>
-					<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$c1{\"titolo\"}\"></input>#come assicurarsi che sia visibile la cosa giusta?
+					<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$item{titolo}\"></input>#come assicurarsi che sia visibile la cosa giusta?
 			</br>
 			<label for=\"valutazione\">Valutazione:</label>
 				<select name=\"valutazione\">";
-	for(my $i=1;$i<5; $i++){
-		if($i==$c1{"valutazione"}){#potrei dover usare un match? ma è un semplice intero... sarebbe $i=~m/$commento{"valutazione"}/?
+	for(my $i=1;$i<=5; $i++){
+		if($i==$item{valutazione}){#potrei dover usare un match? ma è un semplice intero... sarebbe $i=~m/$commento{"valutazione"}/?
 				$form_comm.="<option value=\"$i\" selected=\"selected\">$i</option>";
 			}
 			else{
 				$form_comm.="<option value=\"$i\">$i</option>";
 			}
-		}
 	}
 	$form_comm.="</select>
 				</br>
