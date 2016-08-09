@@ -56,7 +56,7 @@ print "
 		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>
 		
 		<style type=\"text/css\" media=\"screen\">
-			\@import url(\"style/main.css\");
+			\@import url(\"../style/main.css\");
 		</style>
 		
 		<title>Commenti sul volo</title>
@@ -189,16 +189,16 @@ my $testoC= $q->param('testo');
 
 my $form_control="
 				<h3>Il Commento sul volo $idV da $cittaP a $cittaA non è stato salvato perchè poco informativo</h3>
-				<p>per essere considerato valido il commento deve contenere almeno il campo "testo compilato"</p>	
-				<div class="commento">
+				<p>per essere considerato valido il commento deve contenere almeno il campo \"testo compilato\"</p>	
+				<div class=\"commento\">
 					<form action=\"script_commenti.cgi\" method=\"post\"> 
 						<fieldset>
 							<legend>commento</legend>
-							<input type=\"hidden\" name=\"idC\" value=\"$idC\"></input><!--$FORM{$idC}-->
-							<input type=\"hidden\" name=\"idV\" value=\"$idV\"></input><!--$FORM{$idV}-->
-							<input type=\"hidden\" name=\"idUR\" value=\"$idUR\"></input><!--$FORM{$idUR}-->
-							<input type=\"hidden\" name=\"cittaP\" value=\"$cittaP\"></input><!--$FORM{$cittaP}-->
-							<input type=\"hidden\" name=\"cittaA\" value=\"$cittaA\"></input><!--$FORM{$cittaA}-->
+							<input type=\"hidden\" name=\"idC\" value=\"$idC\"></input><
+							<input type=\"hidden\" name=\"idV\" value=\"$idV\"></input>
+							<input type=\"hidden\" name=\"idUR\" value=\"$idUR\"></input>
+							<input type=\"hidden\" name=\"cittaP\" value=\"$cittaP\"></input>
+							<input type=\"hidden\" name=\"cittaA\" value=\"$cittaA\"></input>
 							<label for=\"valutazione\">Valutazione:</label>
 							<select name=\"valutazione\">
 								<option value=\"0\" checked=\"checked\">non valutato</option>
@@ -213,7 +213,7 @@ my $form_control="
 							<label for=\"titolo\">Titolo:</label>
 								<input type=\"text\" name=\"titolo\" id=\"titolo\">$titolo</input></br>
 							<label for=\"testo\">Testo:</label>
-								<textarea name=\"testo\" rows=\"5\" cols=\"30\">$testo</input></br>
+								<textarea name=\"testo\" rows=\"5\" cols=\"30\">$testoC</input></br>
 							<input type=\"hidden\" name=\"action\" value=\"salva\"></input>	
 							<input type=\"submit\" value=\"Salva\"></input>
 						</fieldset>
@@ -222,7 +222,7 @@ my $form_control="
 				</div><!-- chiudo sezione -->
 					";
   
-if ($testo=~m\ \){#$testo==NULL
+if ($testoC=~m\ \){#$testoC==NULL
 	print $form_control;
 }
 else{
