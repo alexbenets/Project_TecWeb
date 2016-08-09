@@ -1,4 +1,3 @@
-#div main
 #!/usr/bin/perl
 package commenti;
 use strict;
