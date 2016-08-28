@@ -404,8 +404,8 @@
 		
 		
 		<tabCommento>
-			<commento idCo="1" idUR="2" idA="1" idV="1">
-				<abilitato>1</abilitato>
+			<commento idCo="1" idUR="2" idV="1"> <!--idA="1"-->
+				<!--<abilitato>1</abilitato>-->
 				<voto>5</voto> 
 				<testo>
 					<data>28/12/2013</data>
@@ -449,7 +449,7 @@
 			<servizioPrenotato idSP="1" idP="1" idS="1"/>
 		</tabServizioPrenotato>
 
-				
+<!--				
 		<tabNews>
 			<news idNe="1" idA="3">
 				<testo>
@@ -471,6 +471,6 @@
 				</testo>
 			</faq>
 		</tabFaq>
-
+-->
 	
 	</database>
