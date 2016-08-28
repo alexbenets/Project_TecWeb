@@ -2,8 +2,8 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 <!--targetNamespace="" xmlns=""	elementFormDefault="qualified!!!"> -->
-<!--NB esistono piÃ¹ elementi con lo stesso nome (in particonare idFK, data, nome) se Ã¨ un problema in validazione modifica non Ã¨ un 		problema
-tag amministratore superadmin (sarÃ  solo 1) x cancellare amministratore/ha potere assoluto, gli altro POSSONO SOLO TOCCARE LE TABELLE 		CON UN CAMPO AMMINISTRATORE (cosi superadmin fa da grande fratello)
+<!--NB esistono piÃ¹ elementi con lo stesso nome (in particonare idFK, data, nome) se Ã¨ un problema in validazione modifica non Ã¨ un problema
+tag amministratore superadmin (sarÃ  solo 1) x cancellare amministratore/ha potere assoluto, gli altro POSSONO SOLO TOCCARE LE TABELLE CON UN CAMPO AMMINISTRATORE (cosi superadmin fa da grande fratello)
 What I'm trying to say here is that metadata (data about data) should be stored as attributes, and the data itself should be stored as elements.(eh tough luck seems impossible when you have more then one foreign key)
 -->
 
@@ -197,10 +197,11 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:field xpath="@idUR"/>
 	</xsd:keyref>
 	<!-- amministratore moderatore -->
-	<xsd:keyref name="idFKA_Co" refer="idPKA">
+	<!--<xsd:keyref name="idFKA_Co" refer="idPKA">
 		<xsd:selector xpath="tabCommento/commento"/>
 		<xsd:field xpath="@idA"/>
 	</xsd:keyref>
+	-->
 	<!-- volo -->
 	<xsd:keyref name="idFKV_Co" refer="idPKV">
 		<xsd:selector xpath="tabCommento/commento"/>
@@ -234,29 +235,33 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<!-- 		      CHIAVI            -->
 	<!-- 		 	   NEWS             -->
 	<!-- chiave primaria -->
-	<xsd:key name="idPKNe">
+	<!--<xsd:key name="idPKNe">
 		<xsd:selector xpath="tabNews/news"/>
 		<xsd:field xpath="@idNe"/>
 	</xsd:key>
+	-->
 	<!-- chiavi esterne -->
 	<!-- amministratore autore-->
-	<xsd:keyref name="idFKA_Ne" refer="idPKA">
+	<!--<xsd:keyref name="idFKA_Ne" refer="idPKA">
 		<xsd:selector xpath="tabNews/news"/>
 		<xsd:field xpath="@idA"/>
 	</xsd:keyref>
+	-->
 	<!-- 		      CHIAVI            -->
 	<!-- 		 	   FAQ              -->
 	<!-- chiave primaria -->
-	<xsd:key name="idPKF">
+	<!--<xsd:key name="idPKF">
 		<xsd:selector xpath="tabFaq/faq"/>
 		<xsd:field xpath="@idF"/>
 	</xsd:key>
+	-->
 	<!-- chiavi esterne -->
 	<!-- amministratore autore-->
-	<xsd:keyref name="idFKA_F" refer="idPKA">
+	<!--<xsd:keyref name="idFKA_F" refer="idPKA">
 		<xsd:selector xpath="tabFaq/faq"/>
 		<xsd:field xpath="@idA"/>
 	</xsd:keyref>
+	-->
 </xsd:element>
 
 <!-- definizione Database -->
@@ -278,8 +283,8 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 		<xsd:element name="tabCommento" type="tTabCommento"/>
 		<xsd:element name="tabServizio" type="tTabServizio"/>
 		<xsd:element name="tabServizioPrenotato" type="tTabServizioPrenotato"/>			
-		<xsd:element name="tabNews" type="tTabNews"/>
-		<xsd:element name="tabFaq" type="tTabFaq"/>
+		<!--<xsd:element name="tabNews" type="tTabNews"/>
+		<xsd:element name="tabFaq" type="tTabFaq"/>-->
 	</xsd:sequence>	
 </xsd:complexType>
 
@@ -556,14 +561,14 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 <!-- definizione record commento -->
 <xsd:complexType name="tCommento">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
-		<xsd:element name="abilitato" type="xsd:boolean"/><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
+		<!--<xsd:element name="abilitato" type="xsd:boolean"/>--><!--false=commento inserito dall'utente ma non ancora approvato, true=commento approvato e visibile a tutti-->
 		<xsd:element name="voto" type="xsd:integer"/> 
 		<xsd:element name="testo" type="tTesto"/>
 	</xsd:sequence>	
 	<xsd:attribute name="idCo" type="tId"/>
 	<xsd:attribute name="idV" type="tId"/>
 	<xsd:attribute name="idUR" type="tId"/>
-	<xsd:attribute name="idA" type="tId"/>
+	<!--<xsd:attribute name="idA" type="tId"/>-->
 </xsd:complexType>
 
 
@@ -602,16 +607,16 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idS" type="tId"/>
 </xsd:complexType>
 
+<!--
+< !-- 		   NEWS          -- >
 
-<!-- 		   NEWS          -->
-
-<!-- descrizione tabella news-->
+< !-- descrizione tabella news-- >
 <xsd:complexType name="tTabNews">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
  		<xsd:element name="news" type="tNews"/>
  	</xsd:sequence>
 </xsd:complexType>
-<!-- definizione record News -->
+< !-- definizione record News -- >
 <xsd:complexType name="tNews">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="testo" type="tTesto"/>
@@ -623,15 +628,15 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 
 
 
-<!-- 		   FAQ           -->
+< !-- 		   FAQ           -- >
 
-<!-- descrizione tabella faq -->
+< !-- descrizione tabella faq -- >
 <xsd:complexType name="tTabFaq">
 	<xsd:sequence minOccurs="0" maxOccurs="unbounded">
 		<xsd:element name="faq" type="tFaq"/>
 	</xsd:sequence>
 </xsd:complexType>
-<!-- definizione record Faq -->
+< !-- definizione record Faq -- >
 <xsd:complexType name="tFaq">
 	<xsd:sequence minOccurs="1" maxOccurs="1">
 		<xsd:element name="argomento" type="xsd:string"/>
@@ -640,7 +645,7 @@ What I'm trying to say here is that metadata (data about data) should be stored 
 	<xsd:attribute name="idF" type="tId"/>
 	<xsd:attribute name="idA" type="tId"/>	
 </xsd:complexType>
-
+-->
 			
 <!-- definizione tipo testo -->
 <xsd:complexType name="tTesto">
