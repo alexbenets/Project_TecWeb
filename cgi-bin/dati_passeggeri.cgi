@@ -68,7 +68,7 @@ for(my $i=1; $i<=$passeggeri; $i++){
 		$errore|=2;
 	}
 	
-	my $cf="Codice fiscale";
+	my $cf="MRRGTT95H62L736A"; # la stringa conteneva Codice fiscale prima
 	if (defined ($form{"CF$i"})){
 		$cf=$form{"CF$i"};
 		gestione_sessione::setParam("CF$i", $cf);
