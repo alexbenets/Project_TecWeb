@@ -266,7 +266,8 @@ my $testo='<div id="cerca_voli"><!-- sezione cerca voli -->
 					<li class="volo_prev_selected">Volo da confermare</li>
 				</ul>
 				<h2 id="titolo_tabellaAndata">Andata &quot;'.$select_partenza.' &gt; '.$select_arrivo.'&quot;</h2>
-
+							<button class="button"id="indietro"> &lt;&lt; </button>
+							<button class="button"id="avanti"> &gt;&gt; </button>	
 					<table id="tabella_voliAndata" summary="In questa tabella vengono riportati i voli per il viaggio di ritorno">
 						<caption class="intestazione_tabella">I voli in dettaglio per l\'andata del '.$data_partenza.'</caption>
 							<thead>
@@ -402,7 +403,7 @@ $testo.='
 
 $testo.='					</table>';
 if($max_altezza==0){
-	$testo.='<p>Non ci sono voli disponibili per questa tratta
+	$testo.='<p class="importante">Non ci sono voli disponibili per questa tratta
 			<a href="index.cgi">torna alla home page</a>
 			</p>';
 }
@@ -425,7 +426,8 @@ for(my $dd=-3; $dd<=3; $dd++){
 
 		
 $testo.='					<h2 id="titolo_tabellaRitorno">Ritorno: &quot;'.$select_arrivo.' &gt; '.$select_partenza.'&quot;</h2>
-
+							<button class="button"id="indietro"> &lt;&lt; </button>
+							<button class="button"id="avanti"> &gt;&gt; </button>	
 					<table id="tabella_voliRitorno" summary="In questa tabella vengono riportati i voli per il viaggio di ritorno">
 						<caption class="intestazione_tabella">I voli in dettaglio per il ritorno del '.$data_ritorno.'</caption>
 							<thead>
