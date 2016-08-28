@@ -68,7 +68,7 @@ for(my $i=1; $i<=$passeggeri; $i++){
 		$errore|=2;
 	}
 	
-	my $cf="MRRGTT95H62L736A"; # la stringa conteneva Codice fiscale prima
+	my $cf="GTT95H62L736A"; # la stringa conteneva Codice fiscale prima
 	if (defined ($form{"CF$i"})){
 		$cf=$form{"CF$i"};
 		gestione_sessione::setParam("CF$i", $cf);
@@ -83,7 +83,7 @@ for(my $i=1; $i<=$passeggeri; $i++){
 		$errori++;
 		$errore|=4;
 	}
-	my $nascita="32/02/1900";
+	my $nascita="gg/MM/AAAA"; #prima la stringa cont4eneva 32/02/1900
 	if (defined ($form{"nascita$i"})){
 		$nascita=$form{"nascita$i"};
 		gestione_sessione::setParam("nascita$i", $nascita);
