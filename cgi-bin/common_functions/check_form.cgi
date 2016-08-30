@@ -33,10 +33,15 @@ sub regexp_data{
 	if(!defined $data){
 		return 0;
 	}
-	$data =~/^([\d]{1,2})([\/-:\.\\]{1})+([\d]{1,2})([\/-:\.\\]{1})+([\d]{4})$/;
+	$data =~/^([\d]{1,2})([\/-:\.\\ ])([\d]{1,2})([\/-:\.\\ ])+([\d]{4})$/;
 	my $giorno=$1;
-	
+	if (int($giorno)<10){
+		$giorno='0'.$giorno;
+	}
 	my $mese=$3;
+	if (int($mese)<10){
+		$mese='0'.$mese;
+	}
 	
 	my $anno=$5;
 	my @arr=($giorno, $mese, $anno);

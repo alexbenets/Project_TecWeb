@@ -87,6 +87,7 @@ print '<div id="secondo_menu">
 						<li><a href="utente.cgi?commenti=1">I tuoi commenti</a></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->';
+			
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
@@ -420,27 +421,29 @@ if ($modifica_commenti==2){
 if ($modifica_commenti==3){
 #sub modificaCommento {
 #	my ($id, $titolo, $valutazione, $testo, $idUR)=@_;
-	my $idC=int($form{"idC"});
-	my $titolo=($form{"titolo"});
-	my $valutazione=($form{"valutazione"});
-	my $testo=($form{"testo"});
+	my $id_commento=int($form{"idC"});
+	my $titolo_commento=($form{"titolo"});
+	my $valutazione_commento=($form{"valutazione"});
+	my $testo_commento=($form{"testo"});
 	my $titolo_volo=($form{"titolo_volo"});
-	my $salvato=database::modificaCommento($idC, $titolo, $valutazione, $testo, gestione_sessione::getParam("id"));
-	
 	
 	$testo='<div id="contenitore_sezioni">';
-	if ($salvato==1){
+	if (int($id_commento > 0)){
+	
+	my $commento_salvato=int(database::modificaCommento($id_commento, $titolo_commento, $valutazione_commento, $testo_commento, gestione_sessione::getParam("id")));
+	
+	if ($commento_salvato>0){
 		$testo.="<div class=\"commento sezione\">";
 		$testo.='<p>Hai modificato con successo il commento.</p>';
+		$testo.='<a href="utente.cgi">Torna alla tua area utente</a>';
 		$testo.='</div>';	
 	}else{
-		$testo.="
-			<div class=\"commento sezione\">
-			<h3>Attenzione: alcuni campi non sono stati compilati!</h3>
+		$testo.="<div class=\"commento sezione\">
+					<h3 class=\"errore\">ATTENZIONE: devono essere compilati tutti i campi!</h3>
 					<form action=\"utente.cgi\" method=\"post\"> 
 						<fieldset>
 							<legend>commento</legend>
-							<input type=\"hidden\" name=\"idC\" value=\"$idC\"></input>
+							<input type=\"hidden\" name=\"idC\" value=\"$id_commento\"></input>
 							<input type=\"hidden\" name=\"commenti\" value=\"3\"></input>
 							<input type=\"hidden\" name=\"titolo_volo\" value=\"$titolo_volo\"></input>
 							<h3>$titolo_volo</h3>
@@ -449,7 +452,7 @@ if ($modifica_commenti==3){
 								<select id=\"valutazione\" name=\"valutazione\">";
 								for(my $i_temp=1; $i_temp<=5; $i_temp++){
 									$testo.="<option value=\"$i_temp\"";
-									if ($i_temp==int($valutazione)){
+									if ($i_temp==int($valutazione_commento)){
 										$testo.=" selected=\"selected\"";
 									}
 									$testo.=">$i_temp</option>";
@@ -461,12 +464,23 @@ if ($modifica_commenti==3){
 							<div class=\"clearer\"></div>
 							<div>
 								<label for=\"titolo\">Titolo:</label>
-								<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$titolo\"></input>
+								<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$titolo_commento\" ";
+								if (length($titolo_commento)<1){
+									$testo.='class="errore"';
+								}
+								$testo.="></input>";
+							
+								
+							$testo.="
 							</div>
 							<div class=\"clearer\"></div>
 							<div>
 								<label for=\"testo\">Testo:</label>
-								<textarea name=\"testo\" id=\"testo\" rows=\"5\" cols=\"30\">$testo</textarea>
+								<textarea name=\"testo\" id=\"testo\" rows=\"5\" cols=\"30\" ";
+								if (length($testo_commento)<1){
+									$testo.='class="errore"';
+								}
+								$testo.=">$testo_commento</textarea>
 							</div>
 							<div class=\"clearer\"></div>
 							<input type=\"hidden\" name=\"action\" value=\"salva\"></input>	
@@ -479,7 +493,11 @@ if ($modifica_commenti==3){
 						</fieldset>
 					</form>
 				</div> <!-- chiudo commento -->
-					";	
+					";
+	}
+	}else
+	{
+		$testo.='<h3>Attenzione: il commento non &egrave; stato trovato.</h3>';
 	}
 	$testo.='</div><!-- chiudo contenitore sezioni -->
 			<div class="clearer"></div>';

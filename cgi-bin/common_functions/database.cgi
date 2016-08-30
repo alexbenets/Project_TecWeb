@@ -1231,16 +1231,15 @@ sub readCommenti {
 
 sub modificaCommento {
 	my ($id, $titolo, $valutazione, $testo, $idUR)=@_;
-	print (int($valutazione) <1);
-	if(int($id)==0){
-		if( ($titolo eq "") | 
+	if(		(int($id)<1)|
+			(length($titolo)<1) | 
 			(int($valutazione) <1) | 
 			(int($valutazione) >5) | 
-			($testo eq "") | 
+			(length($testo)<1) | 
 			(int($idUR) <1 )){
 				return -1;
 		}
-	}
+	print $titolo.' '.length($titolo);
 	#verificare se id volo e id ur sono corretti:
 	# se esistono tabUtenteRegistrato/UtenteRegistrato/@idUR=$idUR 
 	# <tabCommento>
@@ -1290,7 +1289,6 @@ sub modificaCommento {
 	$nodo_data->setData($oggi);
 	
 	my $nodo_titolo=$nodo_testo->findnodes('titolo/text()')->[0];
-	
 	$nodo_titolo->setData($titolo);
 	
 	my $nodo_contenuto=$nodo_testo->findnodes('contenuto/text()')->[0];
@@ -1303,7 +1301,7 @@ sub modificaCommento {
 sub addCommento {
 	my ($titolo, $valutazione, $testo, $idV, $idUR)=@_;
 	
-	if( ($titolo eq "") | 
+	if( 	($titolo eq "") | 
 			(int($valutazione) <1) | 
 			(int($valutazione) >5) | 
 			($testo eq "") | 
