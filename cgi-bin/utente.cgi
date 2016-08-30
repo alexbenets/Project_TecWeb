@@ -27,8 +27,10 @@ foreach my $p (param()) {
     #print "$p = $form{$p}<br>\n";
 }
 
+#variabili globali per indicare quale funzione desidero
 my $modifica_dati_utente=int($form{"dati"});
 my $modifica_prenotazioni=int($form{"prenotazioni"});
+my $modifica_commenti=int($form{"commenti"});
 
 my $titolo="Area utente";
 
@@ -82,6 +84,7 @@ print '<div id="secondo_menu">
 					<ul>
 						<li><a href="utente.cgi?dati=1">Dati personali</a></li>
 						<li><a href="utente.cgi?prenotazioni=1">Prenotazioni</a></li>
+						<li><a href="utente.cgi?commenti=1">I tuoi commenti</a></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
@@ -276,7 +279,7 @@ if($modifica_dati_utente==1){
 }
 
 if($modifica_prenotazioni==1){
-	print "prenotazioni";	
+	#print "prenotazioni";	
 	$testo='<div id="contenitore_sezioni">';
 	my @prenotazioni=@{database::getPrenotazioni(gestione_sessione::getParam("id"))};
 	for (my $i=(scalar(@prenotazioni)-1); $i>=0; $i--)
@@ -312,6 +315,173 @@ if($modifica_prenotazioni==1){
 	}
 	$testo.='</div><!-- chiudo contenitore sezioni -->
 				
+			<div class="clearer"></div>';
+}
+
+#elenco i miei commenti
+if ($modifica_commenti==1){
+	my $puntatore_commenti=database::readCommenti(gestione_sessione::getParam("id"),0);
+	if($puntatore_commenti!=0){
+		
+	$testo='<div id="contenitore_sezioni">';
+		my @commenti_utente=@{$puntatore_commenti};
+		for (my $i=0; $i<scalar(@commenti_utente); $i++){
+			my @commento_array=@{$commenti_utente[$i]};
+			my $id_commento= @commento_array[0];#id commento
+			my $valutazione_commento= @commento_array[1];#valutazione
+			my $titolo_commento= @commento_array[2];#titolo
+			my $testo_commento= @commento_array[3];#testo
+			my $titolo_volo= @commento_array[4];#testo
+			$testo.="
+			<div class=\"sezione\"><!-- apro maxi contenitore per le sezioni -->";
+			$testo.='<a href="utente.cgi?commenti=2&amp;idC='.$id_commento.'">
+					<object>
+						<fieldset>
+							<h3>'.$titolo_volo.'</h3>
+							<p>Voto: '.$valutazione_commento.'</p>
+							<p>Titolo: '.$titolo_commento.'</p>
+							<p>test: '.$testo_commento.'</p>
+						</fieldset>
+					</object>
+				</a>';
+			$testo.='</div><!-- chiudo sezione -->
+				
+			<div class="clearer"></div>';
+		}
+		$testo.='</div><!-- chiudo contenitore sezioni -->
+			<div class="clearer"></div>';
+	}
+}
+
+#modifico un commento
+if ($modifica_commenti==2){
+	$testo='<div id="contenitore_sezioni">';
+	my $idC=int($form{"idC"});
+	my $commento=database::readCommenti(gestione_sessione::getParam("id"),$idC)->[0];
+	if (defined $commento){
+		my @commento_array=@{$commento};
+		my $id_commento= @commento_array[0];#id commento
+		my $valutazione_commento= @commento_array[1];#valutazione
+		my $titolo_commento= @commento_array[2];#titolo
+		my $testo_commento= @commento_array[3];#testo
+		my $titolo_volo= @commento_array[4];#testo
+		$testo.="<div class=\"commento sezione\">
+					<form action=\"utente.cgi\" method=\"post\"> 
+						<fieldset>
+							<legend>commento</legend>
+							<input type=\"hidden\" name=\"idC\" value=\"$id_commento\"></input>
+							<input type=\"hidden\" name=\"commenti\" value=\"3\"></input>
+							<input type=\"hidden\" name=\"titolo_volo\" value=\"$titolo_volo\"></input>
+							<h3>$titolo_volo</h3>
+							<div>
+								<label for=\"valutazione\">Valutazione:</label>
+								<select id=\"valutazione\" name=\"valutazione\">";
+								for(my $i_temp=1; $i_temp<=5; $i_temp++){
+									$testo.="<option value=\"$i_temp\"";
+									if ($i_temp==int($valutazione_commento)){
+										$testo.=" selected=\"selected\"";
+									}
+									$testo.=">$i_temp</option>";
+								}
+								$testo.="
+								</select>
+							</div>
+							
+							<div class=\"clearer\"></div>
+							<div>
+								<label for=\"titolo\">Titolo:</label>
+								<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$titolo_commento\"></input>
+							</div>
+							<div class=\"clearer\"></div>
+							<div>
+								<label for=\"testo\">Testo:</label>
+								<textarea name=\"testo\" id=\"testo\" rows=\"5\" cols=\"30\">$testo_commento</textarea>
+							</div>
+							<div class=\"clearer\"></div>
+							<input type=\"hidden\" name=\"action\" value=\"salva\"></input>	
+							<div>
+								<button type=\"submit\" id=\"salva\" name=\"salva\" value=\"salva\">
+										<span>Salva</span>
+									</button>
+							</div>
+							<div class=\"clearer\"></div>
+						</fieldset>
+					</form>
+				</div> <!-- chiudo commento -->
+					";
+	}else{
+		$testo.='<h3>Attenzione: il commento non &egrave; stato trovato.</h3>';
+	}
+	
+	$testo.='</div><!-- chiudo contenitore sezioni -->
+			<div class="clearer"></div>';
+}
+
+if ($modifica_commenti==3){
+#sub modificaCommento {
+#	my ($id, $titolo, $valutazione, $testo, $idUR)=@_;
+	my $idC=int($form{"idC"});
+	my $titolo=($form{"titolo"});
+	my $valutazione=($form{"valutazione"});
+	my $testo=($form{"testo"});
+	my $titolo_volo=($form{"titolo_volo"});
+	my $salvato=database::modificaCommento($idC, $titolo, $valutazione, $testo, gestione_sessione::getParam("id"));
+	
+	
+	$testo='<div id="contenitore_sezioni">';
+	if ($salvato==1){
+		$testo.="<div class=\"commento sezione\">";
+		$testo.='<p>Hai modificato con successo il commento.</p>';
+		$testo.='</div>';	
+	}else{
+		$testo.="
+			<div class=\"commento sezione\">
+			<h3>Attenzione: alcuni campi non sono stati compilati!</h3>
+					<form action=\"utente.cgi\" method=\"post\"> 
+						<fieldset>
+							<legend>commento</legend>
+							<input type=\"hidden\" name=\"idC\" value=\"$idC\"></input>
+							<input type=\"hidden\" name=\"commenti\" value=\"3\"></input>
+							<input type=\"hidden\" name=\"titolo_volo\" value=\"$titolo_volo\"></input>
+							<h3>$titolo_volo</h3>
+							<div>
+								<label for=\"valutazione\">Valutazione:</label>
+								<select id=\"valutazione\" name=\"valutazione\">";
+								for(my $i_temp=1; $i_temp<=5; $i_temp++){
+									$testo.="<option value=\"$i_temp\"";
+									if ($i_temp==int($valutazione)){
+										$testo.=" selected=\"selected\"";
+									}
+									$testo.=">$i_temp</option>";
+								}
+								$testo.="
+								</select>
+							</div>
+							
+							<div class=\"clearer\"></div>
+							<div>
+								<label for=\"titolo\">Titolo:</label>
+								<input type=\"text\" name=\"titolo\" id=\"titolo\" value=\"$titolo\"></input>
+							</div>
+							<div class=\"clearer\"></div>
+							<div>
+								<label for=\"testo\">Testo:</label>
+								<textarea name=\"testo\" id=\"testo\" rows=\"5\" cols=\"30\">$testo</textarea>
+							</div>
+							<div class=\"clearer\"></div>
+							<input type=\"hidden\" name=\"action\" value=\"salva\"></input>	
+							<div>
+								<button type=\"submit\" id=\"salva\" name=\"salva\" value=\"salva\">
+										<span>Salva</span>
+									</button>
+							</div>
+							<div class=\"clearer\"></div>
+						</fieldset>
+					</form>
+				</div> <!-- chiudo commento -->
+					";	
+	}
+	$testo.='</div><!-- chiudo contenitore sezioni -->
 			<div class="clearer"></div>';
 }
 print print_content::print($testo);

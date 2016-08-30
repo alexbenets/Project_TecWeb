@@ -1186,16 +1186,57 @@ sub removeServizio {
 	return set( $db->toString(1));
 }
 
-##todo: verifica iniziale non verifica un tubo.
+#sezione commenti
+sub readCommenti {
+	my ($idU, $idCO)=@_;
+	my @contenitore_commenti;
+	#commento: ID Valutazione Titolo Testo Volo
+	my $path2='';
+	if ($idCO > 0){
+		$path2=' and @idCo='.$idCO;
+	}
+	my $tab_commenti_utente=get('/database/tabCommento/commento[@idUR='.$idU.$path2.']');
+	foreach my $commento_node ($tab_commenti_utente->get_nodelist){
+		my @commento_temp;
+		push(@commento_temp, $commento_node->getAttribute('idCo'));
+		push(@commento_temp, $commento_node->find('voto/text()'));
+		push(@commento_temp, $commento_node->find('testo/titolo/text()'));
+		push(@commento_temp, $commento_node->find('testo/contenuto/text()'));
+		
+		my $id_volo=$commento_node->getAttribute('idV');
+		
+		my $nodo_volo=get('/database/tabVolo/volo[@idV='.$id_volo.']')->[0];
+		
+		
+		my $testo_volo='';
+		my $id_tratta=$nodo_volo->getAttribute('idT');
+		
+		my $id_aereoporto_partenza=get('/database/tabTratta/tratta[@idT='.$id_tratta.']/@idApP');
+		my $id_aereoporto_arrivo=get('/database/tabTratta/tratta[@idT='.$id_tratta.']/@idApA');
+		
+		my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[@idAp='.$id_aereoporto_partenza.']')->[0];
+		my $nome_citta_partenza=get('/database/tabCitta/citta[@idC='.$aereoporto_partenza->getAttribute('idC').']/nome');
+		my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[@idAp='.$id_aereoporto_arrivo.']')->[0];
+		my $nome_citta_arrivo=get('/database/tabCitta/citta[@idC='.$aereoporto_arrivo->getAttribute('idC').']/nome');
+		
+		my $orario=$nodo_volo->find('oraPartenza/text()');
+		$testo_volo.=$nome_citta_partenza.' - '.$aereoporto_partenza->find('nome').' &rarr; '.$nome_citta_arrivo.' - '.$aereoporto_arrivo->find('nome').' ['.$orario.']';
+		
+		push(@commento_temp, $testo_volo);
+		
+		push(@contenitore_commenti, \@commento_temp);
+	}
+	return \@contenitore_commenti;
+}
+
 sub modificaCommento {
-	my ($id, $titolo, $valutazione, $testo, $idV, $idUR)=@_;
+	my ($id, $titolo, $valutazione, $testo, $idUR)=@_;
 	print (int($valutazione) <1);
 	if(int($id)==0){
 		if( ($titolo eq "") | 
 			(int($valutazione) <1) | 
 			(int($valutazione) >5) | 
 			($testo eq "") | 
-			(int($idV) <1) | 
 			(int($idUR) <1 )){
 				return -1;
 		}
@@ -1211,7 +1252,7 @@ sub modificaCommento {
 	#				<titolo></titolo>
 	#				<contenuto>dfdsf</contenuto>
 	
-	my $id_commento=int(get('/database/tabCommento/commento[@idCo='.$id.']'));
+	my $id_commento=int(get('/database/tabCommento/commento[@idCo='.$id.' and @idUR='.$idUR.']/@idCo'));
 	if ($id_commento==0){
 		#commento non esiste
 		return -1;
@@ -1291,9 +1332,9 @@ sub addCommento {
 	my $tab_commenti=$db->findnodes('/database/tabCommento')->[0];
 	my $nodo=XML::LibXML::Element->new("commento");
 	$nodo->setAttribute("idCo", $id_commento);
-	$nodo->setAttribute("idUr", $idUR);
+	$nodo->setAttribute("idUR", $idUR);
 	$nodo->setAttribute("idA", '1');
-	$nodo->setAttribute("idV", $id_commento);
+	$nodo->setAttribute("idV", $idV);
 			
 	my $nodo_abilitato=XML::LibXML::Element->new("abilitato");
 	my $n_ab=XML::LibXML::Text->new('1');

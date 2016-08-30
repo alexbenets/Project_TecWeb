@@ -402,16 +402,16 @@
 		
 		
 		<tabCommento>
-			<commento idCo="1" idUR="1" idA="2" idV="1">
+			<commento idCo="1" idUR="5" idA="2" idV="1">
 				<abilitato>1</abilitato>
 				<voto>5</voto> 
 				<testo>
-					<data>28/12/2013</data>
-					<titolo>wes</titolo>
-					<contenuto>asjb</contenuto>
+					<data>30/08/2016</data>
+					<titolo>ottimo volo</titolo>
+					<contenuto>12121</contenuto>
 				</testo>
 			</commento>
-		<commento idCo="2" idUr="1" idA="1" idV="2"><abilitato>1</abilitato><voto>1</voto><testo><data>28/08/2016</data></testo></commento></tabCommento>
+		<commento idCo="2" idUR="5" idA="1" idV="2"><abilitato>1</abilitato><voto>1</voto><testo><data>28/08/2016</data></testo></commento></tabCommento>
 
 		
 		<tabServizio>
