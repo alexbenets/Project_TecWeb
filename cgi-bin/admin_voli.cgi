@@ -110,20 +110,7 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 
-my @tratte=@{database::getTratta()};
-my @voli=@{database::getVoli_totali()};
-print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-print '<div id="secondo_menu">
-					<ul>
-						
-						<li><a href="admin_nazioni.cgi" >Gestione Nazioni</a></li>
-						<li><a href="admin_citta.cgi">Gestione Citt&agrave;</a></li>
-						<li><a href="admin_aereoporti.cgi" >Gestione Aereoporti</a></li>
-						<li><a href="admin_tratte.cgi">Gestione Tratte</a></li>
-						<li><a href="admin_voli.cgi" class="selected">Gestione Voli</a></li>
-						<li><a href="admin_servizi.cgi">Gestione Servizi</a></li>
-					</ul>
-				</div><!-- chiudo secondo menu -->';
+
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->

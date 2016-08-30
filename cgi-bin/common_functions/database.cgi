@@ -98,6 +98,7 @@ sub aggiornaUtente{
 my $prenotazioni;
 my $id_ur_prenotazione;
 my @nodi_prenotazione;
+
 sub getPrenotazioni{
 	my ($id, $id_P)=@_;
 	my $miss_id=0;
@@ -130,16 +131,18 @@ sub getPrenotazioni{
 		#		<dataPartenza>2016-03-12</dataPartenza>
 		#		<numeroBagagli>1</numeroBagagli>
 		my $id=$prenotazione->getAttribute("idP");
-		my $idU=$prenotazione->getAttribute("idU");
+		#my $idU=$prenotazione->getAttribute("idU");
 		
-		my @id_utenti=split /,/ , $idU;
+		#my @id_utenti=split /,/ , $idU;
 		#ora ottengo un array contenente tutti gli utenti di quella prenotazione
+		my $nodo_passeggeri=$tratta=get('/database/tabPasseggeriPrenotazione/passeggeriPrenotazione[@idP='.$id.']');
 		my @utenti;
-		foreach my $ut (@id_utenti){
-			my $tmp=getUtente($ut);
+		my $posti_occupati =1;
+		foreach my $ut ($nodo_passeggeri->get_nodelist){
+			my $tmp=getUtente($ut->getAttribute('idU'));
 			push @utenti, $tmp;
+			$posti_occupati=$posti_occupati+1;
 		}
-		my $posti_occupati = (scalar(@id_utenti)+1);
 		
 		my $miss=0;
 		
@@ -298,15 +301,27 @@ sub prenota{
 	$nodo->setAttribute("idV",$id_volo);
 	
 	my $string_passeggeri;
-	#mi genero la stringa contenuta in nel parametro idU di prenotazione: contiene i vari id utente inerenti alla prenotazione.
+	#aggiungo i nodi per la prenotazione di piu' utenti.
+	my $nodo_tabPasseggeriPrenotazione=$db->findnodes('/database/tabPasseggeriPrenotazione')->[0];
+	
+	my $max_id_passeggeriPrenotazione=int(get('/database/nodo_tabPasseggeriPrenotazione/passeggeriPrenotazione/@idPP[ not (.</database/nodo_tabPasseggeriPrenotazione/passeggeriPrenotazione/@idPP)]'))+1;
 	for (my $i=0; $i<scalar(@passeggeri_id); $i++){
-		$string_passeggeri.=@passeggeri_id[$i];
-		if($i<(scalar(@passeggeri_id)-1)){
-			$string_passeggeri.=",";
-		}
+		
+		my $nodo_passeggeriPrenotazione_temp=XML::LibXML::Element->new("passeggeriPrenotazione");
+		$nodo_passeggeriPrenotazione_temp->setAttribute("idPP",$max_id_passeggeriPrenotazione);
+		$nodo_passeggeriPrenotazione_temp->setAttribute("idP",$id_prenotazione);
+		$nodo_passeggeriPrenotazione_temp->setAttribute("idU",$passeggeri_id[$i]);
+		$max_id_passeggeriPrenotazione=$max_id_passeggeriPrenotazione+1;
+		
+		$nodo_tabPasseggeriPrenotazione->appendChild($nodo_passeggeriPrenotazione_temp);
+		#<passeggeriPrenotazione idPP="1" idU="2" idP="1"/>
+		#$string_passeggeri.=@passeggeri_id[$i];
+		#if($i<(scalar(@passeggeri_id)-1)){
+		#	$string_passeggeri.=",";
+		#}
 	}
 	
-	$nodo->setAttribute("idU",$string_passeggeri);
+	#$nodo->setAttribute("idU",$string_passeggeri);
 	
 	$tab_prenotazioni->addChild($nodo);
 	
@@ -1170,4 +1185,159 @@ sub removeServizio {
 	#print $db->toString(1);
 	return set( $db->toString(1));
 }
+
+##todo: verifica iniziale non verifica un tubo.
+sub modificaCommento {
+	my ($id, $titolo, $valutazione, $testo, $idV, $idUR)=@_;
+	print (int($valutazione) <1);
+	if(int($id)==0){
+		if( ($titolo eq "") | 
+			(int($valutazione) <1) | 
+			(int($valutazione) >5) | 
+			($testo eq "") | 
+			(int($idV) <1) | 
+			(int($idUR) <1 )){
+				return -1;
+		}
+	}
+	#verificare se id volo e id ur sono corretti:
+	# se esistono tabUtenteRegistrato/UtenteRegistrato/@idUR=$idUR 
+	# <tabCommento>
+	#		<commento idCo='' idUR='' idA='' idV=''>
+	#			<abilitato>1</abilitato>
+	#			<voto>$valutazione</voto>
+	#			<testo>
+	#				<data>32/02/293939</data> <!-- data del commento-->
+	#				<titolo></titolo>
+	#				<contenuto>dfdsf</contenuto>
+	
+	my $id_commento=int(get('/database/tabCommento/commento[@idCo='.$id.']'));
+	if ($id_commento==0){
+		#commento non esiste
+		return -1;
+	}
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+			
+	my $tab_commento=$db->findnodes('/database/tabCommento/commento[@idCo='.$id.']')->[0];
+	
+	my $nodo_abilitato=$tab_commento->findnodes('abilitato/text()')->[0];
+	$nodo_abilitato->setData('1');
+		
+	my $nodo_voto=$tab_commento->findnodes('voto/text()')->[0];
+	$nodo_voto->setData($valutazione);
+		
+	my $nodo_testo=$tab_commento->findnodes('testo')->[0];	
+	
+	my $nodo_data=$nodo_testo->findnodes('data/text()')->[0];
+	
+	my $today = Time::Piece->new();
+	my $giorno=$today->mday;
+	
+	if (int($giorno)<10){
+		$giorno='0'.$giorno;
+	}
+	my $mese=$today->mon;
+	
+	if (int($mese)<10){
+		$mese='0'.$mese;
+	}
+	my $anno=$today->year;
+	
+	my $oggi=$giorno."/".$mese."/".$anno;
+	
+	$nodo_data->setData($oggi);
+	
+	my $nodo_titolo=$nodo_testo->findnodes('titolo/text()')->[0];
+	
+	$nodo_titolo->setData($titolo);
+	
+	my $nodo_contenuto=$nodo_testo->findnodes('contenuto/text()')->[0];
+	$nodo_contenuto->setData($testo);
+	
+	#print $tab_commento->toString(1);
+	return set($db->toString(1));
+}
+
+sub addCommento {
+	my ($titolo, $valutazione, $testo, $idV, $idUR)=@_;
+	
+	if( ($titolo eq "") | 
+			(int($valutazione) <1) | 
+			(int($valutazione) >5) | 
+			($testo eq "") | 
+			(int($idV) <1) | 
+			(int($idUR) <1 ))
+		{
+				return -1;
+		}
+	#my $id_volo=int(get('/database/tabCommento/commento/@idCo[ not (.</database/tabCommento/commento/@idCo)]'))+1;
+	#<commento idCo="1" idUR="1" idA="2" idV="1">
+	#			<abilitato>1</abilitato>
+	#			<voto>5</voto> 
+	#			<testo>
+	#				<data>28/12/2013</data>
+	#				<titolo>wes</titolo>
+	#				<contenuto>asjb</contenuto>
+	#			</testo>
+	#		</commento>
+	#
+	
+	my $id_commento=int(get('/database/tabCommento/commento/@idCo[ not (.</database/tabCommento/commento/@idCo)]'))+1;
+			
+	my $parser = XML::LibXML->new();
+	my $db = $parser->parse_file($filename) or die;
+			
+	my $tab_commenti=$db->findnodes('/database/tabCommento')->[0];
+	my $nodo=XML::LibXML::Element->new("commento");
+	$nodo->setAttribute("idCo", $id_commento);
+	$nodo->setAttribute("idUr", $idUR);
+	$nodo->setAttribute("idA", '1');
+	$nodo->setAttribute("idV", $id_commento);
+			
+	my $nodo_abilitato=XML::LibXML::Element->new("abilitato");
+	my $n_ab=XML::LibXML::Text->new('1');
+	$nodo_abilitato->appendChild($n_ab);
+	$nodo->appendChild($nodo_abilitato);
+	
+	my $nodo_voto=XML::LibXML::Element->new("voto");
+	my $n_vo=XML::LibXML::Text->new($valutazione);
+	$nodo_voto->appendChild($n_vo);
+	$nodo->appendChild($nodo_voto);
+	
+	my $nodo_testo=XML::LibXML::Element->new("testo");
+	
+	my $nodo_data=XML::LibXML::Element->new("data");
+	my $today = Time::Piece->new();
+	my $giorno=$today->mday;
+	
+	if (int($giorno)<10){
+		$giorno='0'.$giorno;
+	}
+	my $mese=$today->mon;
+	
+	if (int($mese)<10){
+		$mese='0'.$mese;
+	}
+	my $anno=$today->year;
+	
+	my $oggi=$giorno."/".$mese."/".$anno;
+	
+	my $n_da=XML::LibXML::Text->new($oggi);
+	
+	$nodo_data->appendChild($n_da);
+	
+	$nodo_testo->appendChild($nodo_data);
+	
+	$nodo->appendChild($nodo_testo);
+	
+	
+			
+			
+	$tab_commenti->addChild($nodo);
+	#print $tab_commenti->toString(1);
+	return set($db->toString(1));
+
+}
+
 1;

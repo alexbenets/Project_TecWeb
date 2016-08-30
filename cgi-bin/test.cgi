@@ -21,9 +21,18 @@ require "common_functions/menu.cgi";
 require "common_functions/aggiorna_index.cgi";
 
 print CGI::header();#imposto il cookie di sessione
+
+
+
 #my ($nome, $cognome, $cf, $nascita, $email, $password)=@_;
 #my ($nome_andata, $nome_ritorno, $passeggeri, $data)=@_;
 #my ($tratta, $orario_partenza, $prezzo, $attivo,$id)=@_;
+#$id, $titolo, $valutazione, $testo, $idV, $idUR
+
+#print database::addCommento("titolo", 1, "testo", 1, 1);
+
+#print database::modificaCommento(1,"titolo",0,"testo",1, 1);
+
 #print database::addServizio("Bus navetta","Bus navetta per la stazione dei treni pi&ugrave; vicina", "10", 2);
 #my @lista=@{database::listAereoporti("Milano")};
 #print scalar(@lista);
@@ -42,9 +51,9 @@ print CGI::header();#imposto il cookie di sessione
 
 
 #aggiorna_index::aggiorna();
-my $nome_completo="New York - Fiorello La Guardia";
-$nome_completo =~/([a-zA-Z. ]+)([ \- ]+)([a-zA-Z. ]+)/;
-print $3;
+#my $nome_completo="New York - Fiorello La Guardia";
+#$nome_completo =~/([a-zA-Z. ]+)([ \- ]+)([a-zA-Z. ]+)/;
+#print $3;
 #print print_search::print();
 #print $casella;
 #my @tmp=@{check_form::regexp_data("1/2/2016")};

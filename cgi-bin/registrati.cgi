@@ -95,8 +95,8 @@ print CGI::header(-cookie=>$session_cookie);#imposto il cookie di sessione
 if($errore==0){#se il campo non è ancora stato compilato...
 	$nome="Nome";
 	$cognome="Cognome";
-	$codice_fiscale="MRRGTT95H62L736A";
-	$nascita="gg/MM/AAAA";
+	$codice_fiscale="CODICE FISCALE";
+	$nascita="32/02/1920";
 	$email="info\@example.org";
 	$password="password";
 }
