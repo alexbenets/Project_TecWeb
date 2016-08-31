@@ -163,8 +163,7 @@ my @servizi=@{getServizi()};
 
 
 #variabili generali
-
-my $prezzo_biglietti=(int($andata_prezzo)+int($ritorno_prezzo)) * int($num_passeggeri+1);
+my $prezzo_biglietti=(int($andata_prezzo)+int($ritorno_prezzo)) * (int($num_passeggeri)+1);
 my $prezzo_servizi=0;
 print print_header::print();
 

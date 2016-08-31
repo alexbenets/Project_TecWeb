@@ -33,7 +33,7 @@ sub regexp_data{
 	if(!defined $data){
 		return 0;
 	}
-	$data =~/^([\d]{1,2})([\/-:\.\\ ]+)([\d]{1,2})([\/-:\.\\ ]+)+([\d]{4})$/;
+	$data =~/^([\d]{1,2})([\/-:\.\\ -]+)([\d]{1,2})([\/-:\.\\ -]+)+([\d]{4})$/;
 	my $giorno=$1;
 	if (int($giorno)<10){
 		$giorno='0'.$giorno;

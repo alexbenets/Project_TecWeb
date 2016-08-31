@@ -1239,7 +1239,7 @@ sub modificaCommento {
 			(int($idUR) <1 )){
 				return -1;
 		}
-	print $titolo.' '.length($titolo);
+	#print $titolo.' '.length($titolo);
 	#verificare se id volo e id ur sono corretti:
 	# se esistono tabUtenteRegistrato/UtenteRegistrato/@idUR=$idUR 
 	# <tabCommento>

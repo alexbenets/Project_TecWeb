@@ -130,10 +130,13 @@ for(my $i=0; $i<scalar(@servizi_temp); $i++){
 }
 $id_volo_partenza=~/T([\d]+)V([\d]+)/;
 my @gma=@{check_form::regexp_data($giorno_partenza)};
-if(int(@gma[1])<10){
+if((int(@gma[2])<10) and (length(@gma[2])<2)){
+	@gma[2]="0".@gma[2];
+}
+if((int(@gma[1])<10) and (length(@gma[1])<2)){
 	@gma[1]="0".@gma[1];
 }
-if(int(@gma[0])<10){
+if((int(@gma[0])<10) and (length(@gma[0])<2)){
 	@gma[0]="0".@gma[0];
 }
 my $id_prenotazione_partenza=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
@@ -141,10 +144,14 @@ my $id_prenotazione_ritorno=0;
 if($andata==0){
 	$id_volo_ritorno=~/T([\d]+)V([\d]+)/;
 	@gma=@{check_form::regexp_data($giorno_ritorno)};
-	if(int(@gma[1])<10){
+	
+	if((int(@gma[2])<10) and (length(@gma[2])<2)){
+		@gma[2]="0".@gma[2];
+	}
+	if((int(@gma[1])<10) and (length(@gma[1])<2)){
 		@gma[1]="0".@gma[1];
 	}
-	if(int(@gma[0])<10){
+	if((int(@gma[0])<10) and (length(@gma[0])<2)){
 		@gma[0]="0".@gma[0];
 	}
 	$id_prenotazione_ritorno=database::prenota(gestione_sessione::getParam("id"), "@gma[2]-@gma[1]-@gma[0]",$2, \@passeggeri,\@servizi,$bagagli);
