@@ -22,7 +22,7 @@ sub set_tratte {
 	
 }
 
-sub print { 
+sub set_date { 
 	my ($errori, $andata, $partenza, $arrivo, $data_partenza, $data_ritorno, $passeggeri, $vuoto)=@_;
 	#vuoto:bypass per evitare di stampare errori nella pagina index.cgi
 	if(!defined $data_partenza | $data_partenza==0){
@@ -43,13 +43,15 @@ sub print {
 	if($vuoto==1){
 		$errori=0;
 	}
-my $path="";
-if($errori==128){#valore che mi indica l'aggiornamento dell'index.
-	$path="cgi-bin/"
-}
 my $testo= "
-		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->
-				<form action=\"".$path."search.cgi\" method=\"post\">
+		<div id=\"prenota\"><!-- div che contiene il box per la prenotazione-->";
+my $url_search='';
+if($errori==128){#valore che mi indica l'aggiornamento dell'index.
+	$url_search='cgi-bin/search.cgi';
+}else{
+	$url_search='search.cgi';
+}
+$testo.="			<form action=\"$url_search\" method=\"post\">		
 					<fieldset>
 					<!--<legend>Dati del volo:</legend>-->
 						";

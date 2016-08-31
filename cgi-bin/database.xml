@@ -129,7 +129,7 @@
 			<nazione idN="3">
 				<nome>Inghilterra</nome>
 			</nazione>
-		</tabNazione>
+		<nazione idN="4"><nome>Belgio</nome></nazione></tabNazione>
 	
 		
 		<tabTratta>
@@ -413,11 +413,11 @@
 			</commento>
 			<commento idCo="2" idUR="5" idA="1" idV="2">
 				<abilitato>1</abilitato>
-				<voto>5</voto> 
+				<voto>1</voto> 
 				<testo>
-					<data>30/08/2016</data>
-					<titolo>titolo</titolo>
-					<contenuto>12121</contenuto>
+					<data>31/08/2016</data>
+					<titolo>pessima esperienza</titolo>
+					<contenuto>ritardo, aereo rotto... Ad un certo punto siamo dovuti scendere a metà tragitto per spingerlo!</contenuto>
 				</testo>
 			</commento>
 		</tabCommento>

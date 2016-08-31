@@ -101,11 +101,13 @@ $giorno=$gma->[0];
 $mese=$gma->[1];
 $anno=$gma->[2];
 if(defined($giorno) & defined($mese)){
-	$ritorno = DateTime->new( 
+	if (int($giorno)>0 & int($mese)>0 & int($anno)>0){
+		$ritorno = DateTime->new( 
 					year       => $anno,
       				month      => $mese,
       				day        => $giorno
       				);
+    }
 }	
 if(($partenza>=$ritorno)&($andata==0)){
 	$errori|=3;
@@ -160,7 +162,7 @@ print_header::setPath(\@path_temp);
 
 
 print print_header::print();
-print print_search::print($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
+print print_search::set_date($errori, $andata, $select_partenza, $select_arrivo, $data_partenza, $data_ritorno, $select_passeggeri);
 
 print "<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 

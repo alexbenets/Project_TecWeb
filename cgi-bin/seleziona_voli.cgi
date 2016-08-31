@@ -43,9 +43,9 @@ sub compareDate{
     if($gma==0){
     	return 0;
     }
-	$giorno=($gma->[0]);
-	$mese=($gma->[1]);
-	$anno=($gma->[2]);
+	$giorno=int($gma->[0]);
+	$mese=int($gma->[1]);
+	$anno=int($gma->[2]);
 	
 	if(($giorno+$mese+$anno==0) | 
 		($giorno==0) |
@@ -53,7 +53,6 @@ sub compareDate{
 		($anno==0)){
 		return 0; #non posso confrontare
 	}
-	
 	my $dt2 = DateTime->new( 
 					year       => $anno,
       				month      => $mese,

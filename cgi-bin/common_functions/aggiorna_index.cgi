@@ -58,7 +58,7 @@ print_header::setPath(\@path_temp);
 
 $ritorno .= print_header::print();
 $ritorno .= "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
-$ritorno .= print_search::print(128);
+$ritorno .= print_search::set_date(128);
 my $testo='
 				<div id="presentazione">
 					

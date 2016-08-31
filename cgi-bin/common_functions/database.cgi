@@ -1256,7 +1256,7 @@ sub modificaCommento {
 		#commento non esiste
 		return -1;
 	}
-	my $parser = XML::LibXML->new();
+	my $parser = XML::LibXML->new('1.0','UTF-8');
 	my $db = $parser->parse_file($filename) or die;
 			
 	my $tab_commento=$db->findnodes('/database/tabCommento/commento[@idCo='.$id.']')->[0];
@@ -1324,7 +1324,7 @@ sub addCommento {
 	
 	my $id_commento=int(get('/database/tabCommento/commento/@idCo[ not (.</database/tabCommento/commento/@idCo)]'))+1;
 			
-	my $parser = XML::LibXML->new();
+	my $parser = XML::LibXML->new('1.0','UTF-8');
 	my $db = $parser->parse_file($filename) or die;
 			
 	my $tab_commenti=$db->findnodes('/database/tabCommento')->[0];

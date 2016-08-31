@@ -82,9 +82,21 @@ print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print '<div id="secondo_menu">
 					<ul>
-						<li><a href="utente.cgi?dati=1">Dati personali</a></li>
-						<li><a href="utente.cgi?prenotazioni=1">Prenotazioni</a></li>
-						<li><a href="utente.cgi?commenti=1">I tuoi commenti</a></li>
+						<li><a href="utente.cgi?dati=1"';
+						if ($modifica_dati_utente>0){
+							print ' class="selected"';
+						}
+						print'>Dati personali</a></li>
+						<li><a href="utente.cgi?prenotazioni=1"';
+						if ($modifica_prenotazioni>0){
+							print ' class="selected"';
+						}
+						print'>Prenotazioni</a></li>
+						<li><a href="utente.cgi?commenti=1"';
+						if ($modifica_commenti>0){
+							print ' class="selected"';
+						}
+						print'>I tuoi commenti</a></li>
 					</ul>
 				</div><!-- chiudo secondo menu -->';
 			

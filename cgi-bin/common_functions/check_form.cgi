@@ -33,7 +33,7 @@ sub regexp_data{
 	if(!defined $data){
 		return 0;
 	}
-	$data =~/^([\d]{1,2})([\/-:\.\\ ])([\d]{1,2})([\/-:\.\\ ])+([\d]{4})$/;
+	$data =~/^([\d]{1,2})([\/-:\.\\ ]+)([\d]{1,2})([\/-:\.\\ ]+)+([\d]{4})$/;
 	my $giorno=$1;
 	if (int($giorno)<10){
 		$giorno='0'.$giorno;
@@ -190,6 +190,14 @@ sub valida_codice_fiscale {
 		return 1;#è corretto
 	}
 	return 0;#non è corretto
+}
+
+
+sub converti_caratteri {
+	my ($testo)=@_;
+	my $testo_convertito='';
+	
+	return $testo_convertito;	
 }
 
 1;
