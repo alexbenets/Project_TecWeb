@@ -1089,18 +1089,18 @@ sub getVoli_totali{
 		my $tratta;
 		foreach my $tmp ($tratte->get_nodelist){
 			$tratta=$tmp;
+			my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApP').']/nome/text()');
+			my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApA').']/nome/text()');
+			my $prezzo=$volo->find('prezzo');
+			my @v_t=(
+				$id_volo,
+				$orario,
+				$aereoporto_partenza,
+				$aereoporto_arrivo,
+				$prezzo
+			);
+			push @voli, \@v_t;
 		}
-		my $aereoporto_partenza=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApP').']/nome/text()');
-		my $aereoporto_arrivo=get('/database/tabAereoporto/aereoporto[@idAp='.$tratta->getAttribute('idApA').']/nome/text()');
-		my $prezzo=$volo->find('prezzo');
-		my @v_t=(
-			$id_volo,
-			$orario,
-			$aereoporto_partenza,
-			$aereoporto_arrivo,
-			$prezzo
-		);
-		push @voli, \@v_t;
 	}
 	return \@voli;
 }

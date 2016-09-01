@@ -110,13 +110,46 @@ print_header::setPath(\@path_temp);
 
 print print_header::print();
 
+my $modifica_volo=int($form{"modifica_volo"});
+my $aggiungi_volo=int($form{"nuovo_volo"});
 
+
+my @voli=@{database::getVoli_totali()};
+my @tratte=@{database::getTratta()};
+print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
+print '<div id="secondo_menu">
+					<ul>
+						<li><a href="admin_nazioni.cgi" >Gestione Nazioni</a></li>
+						<li><a href="admin_citta.cgi">Gestione Citt&agrave;</a></li>
+						<li><a href="admin_aereoporti.cgi">Gestione Aereoporti</a></li>
+						<li><a href="admin_tratte.cgi">Gestione Tratte</a></li>
+						<li><a href="admin_voli.cgi" class="selected">Gestione Voli</a></li>
+						<li><a href="admin_servizi.cgi">Gestione Servizi</a></li>
+					</ul>
+				</div><!-- chiudo secondo menu -->';
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare i voli presenti nel database. (ricordati di selezionare &quot;Attivo&quot; affinch&eacute; il volo risulti disponibile!)</p>
+						<h3>Benvenuto!</h3>';
+if($modifica_volo==0 and $aggiungi_volo==0){
+	$testo.='			<p>Per favore, scegli quale azione desideri effettuare.</p>
 					</div><!-- chiudo sezione -->
+					<div class="sezione">
+						<a href="admin_voli.cgi?modifica_volo=1">Modifica un volo</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->
+					<div class="sezione">
+						<a href="admin_voli.cgi?nuovo_volo=1">Aggiungi un volo</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->';
+}else
+{	$testo.='
+						<p>In questa pagina puoi modificare i voli presenti nel database. (ricordati di selezionare &quot;Attivo&quot; affinch&eacute; il volo risulti disponibile!)</p>
+					</div><!-- chiudo sezione -->';
+	if($modifica_volo==1){
+		$testo.='				
 					<div class="sezione">
 						<form action="admin_voli.cgi" method="post">
 							<fieldset>
@@ -125,8 +158,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 									<label for="volo1">Volo:</label>
 									<select id="volo1" name="volo">
 										<option>-</option>';
-										foreach my $volo (@voli){
-											my @v=@{$volo};
+										foreach my $volo_temp (@voli){
+											my @v=@{$volo_temp};
 											$testo.= "<option>@v[0]: ora partenza: @v[1], partenza: @v[2] arrivo: @v[3], @v[4]&euro;</option>";
 									}
 								$testo.='	</select>
@@ -169,7 +202,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+	}
+	if($aggiungi_volo==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_voli.cgi" method="post">
 							<fieldset>
@@ -214,7 +250,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+		}
+}
+$testo.='
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

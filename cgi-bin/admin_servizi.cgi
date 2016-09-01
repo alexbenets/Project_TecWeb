@@ -99,6 +99,9 @@ my @path=("Gestione servizi", "admin_servizi.cgi");
 push @path_temp, \@path;
 print_header::setPath(\@path_temp);
 
+my $modifica_servizio=int($form{"modifica_servizio"});
+my $aggiungi_servizio=int($form{"aggiungi_servizio"});
+
 print print_header::print();
 print "		<div id=\"main\"><!-- div che contiene tutto il contenuto statico e/o dinamico-->"; #mega div
 print '<div id="secondo_menu">
@@ -114,9 +117,27 @@ print '<div id="secondo_menu">
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare i servizi presenti nel database.</p>
+						<h3>Benvenuto!</h3>';
+if($modifica_servizio==0 and $aggiungi_servizio==0){
+		$testo.='	
+			<p>Per favore, scegli quale azione desideri effettuare.</p>
 					</div><!-- chiudo sezione -->
+					<div class="sezione">
+						<a href="admin_servizi.cgi?modifica_servizio=1">Modifica un servizio</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->
+					<div class="sezione">
+						<a href="admin_servizi.cgi?aggiungi_servizio=1">Aggiungi un servizio</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->';
+}else{
+	$testo.='
+						<p>In questa pagina puoi modificare i servizi presenti nel database.</p>
+					</div><!-- chiudo sezione -->';
+	if($modifica_servizio==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_servizi.cgi" method="post">
 							<fieldset>
@@ -158,7 +179,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+		}
+		if($aggiungi_servizio==1){
+			$testo.='
 					<div class="sezione">
 						<form action="admin_servizi.cgi" method="post">
 							<fieldset>
@@ -187,7 +211,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+			}
+	}
+	$testo.='
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

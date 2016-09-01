@@ -40,6 +40,10 @@ if((gestione_sessione::getParam("logged")!=1) or (gestione_sessione::getParam("a
 
 my $errore="";
 
+my $modifica_tratta=int($form{"modifica_tratta"});
+my $nuova_tratta=int($form{"nuova_tratta"});
+
+
 my $tratta=$form{"tratta"};
 my $aereoporto_partenza=$form{"aereoportoP"};
 my $aereoporto_arrivo=$form{"aereoportoA"};
@@ -115,10 +119,28 @@ print '<div id="secondo_menu">
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare le tratte presenti nel database.</p>
+						<h3>Benvenuto!</h3>';
+						
+if($modifica_tratta==0 and $nuova_tratta==0){
+	$testo.='<p>Per favore, scegli quale azione desideri effettuare.</p>
 					</div><!-- chiudo sezione -->
 					<div class="sezione">
+						<a href="admin_tratte.cgi?modifica_tratta=1">Modifica una tratta</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->
+					<div class="sezione">
+						<a href="admin_tratte.cgi?nuova_tratta=1">Aggiungi una tratta</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->';
+}
+else{
+	$testo.='			<p>In questa pagina puoi modificare le tratte presenti nel database.</p>
+					</div><!-- chiudo sezione -->';
+	if($modifica_tratta==1){
+	
+		$testo.='			<div class="sezione">
 						<form action="admin_tratte.cgi" method="post">
 							<fieldset>
 								<h3>Modifica una tratta</h3>'.$errore.'
@@ -176,8 +198,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
-					<div class="sezione">
+					<!-- fine sezione -->';
+	}
+	if($nuova_tratta==1){
+		$testo.='	<div class="sezione">
 						<form action="admin_tratte.cgi" method="post">
 							<fieldset>
 								<h3>Aggiungi una tratta</h3>
@@ -222,7 +246,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+		}
+}
+$testo.='
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

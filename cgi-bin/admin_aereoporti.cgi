@@ -38,9 +38,13 @@ if((gestione_sessione::getParam("logged")!=1) or (gestione_sessione::getParam("a
 	exit;
 }
 
+my $modifica_aereoporto=int($form{"modifica_aereoporto"});
+my $nuovo_aereoporto=int($form{"nuovo_aereoporto"});
+
+
 my $errore="";
 
-my $aereoporto=$form{"aereoporto"};
+my $aereoporto=$form{"nuovo_nome"};
 my $citta=$form{"citta"};
 my $nuovo_nome=$form{"nuovo_nome"};
 if ((!($form{"salva"} eq "") and ($conferma==1))){
@@ -114,15 +118,33 @@ print '<div id="secondo_menu">
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare gli aereoporti presenti nel database.</p>
+						<h3>Benvenuto!</h3>';
+if($modifica_aereoporto==0 and $nuovo_aereoporto==0){
+		$testo.='	<p>Per favore, scegli quale azione desideri effettuare.</p>
 					</div><!-- chiudo sezione -->
+					<div class="sezione">
+						<a href="admin_aereoporti.cgi?modifica_aereoporto=1">Modifica un aereoporto</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->
+					<div class="sezione">
+						<a href="admin_aereoporti.cgi?nuovo_aereoporto=1">Aggiungi un aereoporto</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->';
+					
+}else{
+$testo.='
+						<p>In questa pagina puoi modificare gli aereoporti presenti nel database.</p>
+					</div><!-- chiudo sezione -->';
+	if($modifica_aereoporto==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_aereoporti.cgi" method="post">
 							<fieldset>
 								<h3>Modifica un aereoporto</h3>'.$errore.'
 								<div>
-									<label for="citta">nuova citt&agrave;:</label>
+									<label for="citta">Citt&agrave; d\'appartenenza:</label>
 									<select id="citta" name="citta">
 										<option>-</option>';
 								my @citta=@{database::listCitta()};
@@ -134,7 +156,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								$testo.='	</select>
 								</div>
 								<div>
-									<label for="aereoporto1">Aereoporto:</label>
+									<label for="aereoporto1">Aereoporto da modificare:</label>
 									<select id="aereoporto1" name="aereoporto">
 										<option>-</option>';
 								my @aereoporti=@{database::listAereoporti()};
@@ -146,8 +168,8 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								$testo.='	</select>
 								</div>
 								<div>
-									<label for="nuovo_nome">Nuovo nome:</label>
-									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Italia"></input>
+									<label for="nuovo_nome">Nome dell\'aereoporto:</label>
+									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Linate"></input>
 								</div>
 								<div>
 									<button type="submit" id="salva" name="salva" value="salva">
@@ -158,13 +180,16 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+	}
+	if($nuovo_aereoporto==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_aereoporti.cgi" method="post">
 							<fieldset>
 								<h3>Aggiungi un aereoporto</h3>
 								<div>
-									<label for="citta2">Citta:</label>
+									<label for="citta2">Citt&agrave; d\'appartenenza:</label>
 									<select id="citta2" name="citta">
 										<option>-</option>';
 								my @citta=@{database::listCitta()};
@@ -177,7 +202,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								</div>
 								<div>
 									<label for="nuovo_nome1">Nuovo nome:</label>
-									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Italia"></input>
+									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Linate"></input>
 								</div>
 								<div>
 									<button type="submit" id="salva2" name="salva" value="salva">
@@ -188,7 +213,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+		}
+}
+$testo.='
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

@@ -40,6 +40,9 @@ if((gestione_sessione::getParam("logged")!=1) or (gestione_sessione::getParam("a
 
 my $errore="";
 
+my $nuova_citta=int($form{"nuova_citta"});
+my $modifica_citta=int($form{"modifica_citta"});
+
 my $nazione=$form{"nazione"};
 my $citta=$form{"citta"};
 my $nuovo_nome=$form{"nuovo_nome"};
@@ -113,9 +116,26 @@ print '<div id="secondo_menu">
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
+						<h3>Benvenuto!</h3>';
+if ($nuova_citta==0 and $modifica_citta==0){
+				$testo.='<p>Per favore, scegli quale azione desideri effettuare</p>
+						</div><!-- chiudo sezione -->
+					<div class="sezione">
+						<a href="admin_citta.cgi?modifica_citta=1">Modifica una nazione esistente</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->	
+					<div class="sezione">
+						<a href="admin_citta.cgi?nuova_citta=1">Aggiungi una nuova nazione</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->	';
+}else{
+			$testo.='
 						<p>In questa pagina puoi modificare le citt&agrave; presenti nel database.</p>
-					</div><!-- chiudo sezione -->
+					</div><!-- chiudo sezione -->';
+	if($modifica_citta==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_citta.cgi" method="post">
 							<fieldset>
@@ -133,7 +153,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								$testo.='	</select>
 								</div>
 								<div>
-									<label for="nazione1">nuova Nazione:</label>
+									<label for="nazione1">Nazione d\'appartenenza:</label>
 									<select id="nazione1" name="nazione">
 										<option>-</option>';
 								my @citta=@{database::listStati()};
@@ -157,13 +177,16 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+			}
+		if($nuova_citta==1){
+		$testo.='
 					<div class="sezione">
 						<form action="admin_citta.cgi" method="post">
 							<fieldset>
 								<h3>Aggiungi una citt&agrave;</h3>
 								<div>
-									<label for="nazione2">Nazione:</label>
+									<label for="nazione2">Nazione d\'appartenenza:</label>
 									<select id="nazione2" name="nazione">
 										<option>-</option>';
 								my @citta=@{database::listStati()};
@@ -175,7 +198,7 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 								$testo.='	</select>
 								</div>
 								<div>
-									<label for="nuovo_nome1">Nuovo nome:</label>
+									<label for="nuovo_nome1">Nome della citt&agrave;:</label>
 									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Milano"></input>
 								</div>
 								<div>
@@ -187,7 +210,10 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 						</form>
 					</div>
 					<div class="clearer"></div>
-					<!-- fine sezione -->
+					<!-- fine sezione -->';
+			}
+		}
+			$testo.='
 					<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>

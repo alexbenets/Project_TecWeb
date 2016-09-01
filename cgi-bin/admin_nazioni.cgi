@@ -32,6 +32,9 @@ my $modifica_prenotazioni=int($form{"prenotazioni"});
 
 my $titolo="Area Amministrativa";
 
+my $modifica_nazione=int($form{"modifica_nazione"});
+my $nuova_nazione=int($form{"nuova_nazione"});
+
 
 my $create=gestione_sessione::createSession();
 
@@ -117,9 +120,28 @@ print '<div id="secondo_menu">
 my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
 					
 					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare le nazioni presenti nel database.</p>
+						<h3>Benvenuto!</h3>';
+if ($nuova_nazione==0 and $modifica_nazione==0){
+	$testo.='
+							<p>Per favore, scegli quale azione desideri effettuare</p>
 					</div><!-- chiudo sezione -->
+					<div class="sezione">
+						<a href="admin_nazioni.cgi?modifica_nazione=1">Modifica una nazione esistente</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->	
+					<div class="sezione">
+						<a href="admin_nazioni.cgi?nuova_nazione=1">Aggiungi una nuova nazione</a>
+					</div>
+					<div class="clearer"></div>
+					<!-- fine sezione -->	
+	';
+}else{
+			$testo.='						<p>In questa pagina puoi modificare le nazioni presenti nel database.</p>
+					</div><!-- chiudo sezione -->';
+					
+if ($modifica_nazione==1){
+	$testo.='
 					<div class="sezione">
 						<form action="admin_nazioni.cgi" method="post">
 							<fieldset>
@@ -150,7 +172,11 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					</div>
 					<div class="clearer"></div>
 					<!-- fine sezione -->
-					<div class="sezione">
+				';
+	}
+	if($nuova_nazione==1){
+	
+	$testo.='				<div class="sezione">
 						<form action="admin_nazioni.cgi" method="post">
 							<fieldset>
 								<h3>Aggiungi una nazione</h3>
@@ -168,13 +194,15 @@ my $testo='<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezio
 					</div>
 					<div class="clearer"></div>
 					<!-- fine sezione -->
-					<div id="torna_su">
+					';
+	}
+}
+$testo.='			<div id="torna_su">
 						<a href="#header">Torna su</a>
 					</div>
 			</div><!-- chiudo contenitore_sezioni -->	
 			<div class="clearer"></div>
 				';
-
 print print_content::print($testo);
 print "		</div>"; #chiudo il div main
 print print_footer::print();
