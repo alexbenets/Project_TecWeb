@@ -566,7 +566,7 @@ $testo.='
 
 $testo.='					</table>';
 if($max_altezza==0){
-	$testo.='<p>Non ci sono voli disponibili per questa tratta
+	$testo.='<p class="importante">Non ci sono voli disponibili per questa tratta
 			<a href="index.cgi">torna alla home page</a>
 			</p>';
 }
