@@ -4,7 +4,7 @@
 	
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		
-		<style type="text/css" media="screen">
+		<style type="text/css" rel="stylesheet" type="text/css" media="screen">
 			@import url("style/main.css");
 		</style>
 		
@@ -31,7 +31,7 @@
 
 			<div id="menu"> <!--in che livello siamo? è giusto sia sotto compagnia?-->
 				<a href="index.html">Home</a>
-				<a href="compagnia.html" class="selected" >Compagnia</a> 
+				<a href="compagnia.html" class="selected" >Compagnia</a> <!
 				<a href="gestisci.html" >Gestisci</a>
 				<a href="servizi.html" >Servizi</a>
 				<a href="login.html" >Login</a>
@@ -142,7 +142,7 @@
               			<p>
               			Nel 1996 con il regolamento dell'Unione Europea denominato &quot;Open 
               			Sky&quot; sull'apertura del mercato aereo le prospettiva per A-Ir 
-              			su fa ancora più rosea. I passeggeri sono 2,950,000.
+              			su fa ancora più rosea. I passeggeri sono 2,950,000.<br>
               			</p>
               			<p>
               			Nel 1997 A-Ir lancia la sue prime rotte europee da Stansted a 
@@ -220,4 +220,4 @@
 			</div><!-- chiudo div validazione -->
 		</div><!-- chiudo footer-->
 	</body>
-</html>
+</html>S
