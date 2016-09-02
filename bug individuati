@@ -25,3 +25,4 @@ NB
 ->su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
 ->se login non risce e cambi pagina(qualsiasi tranne home) al posto di login sul menù c'e area utente
 ->su login è evidenziato "home" invece che "login" (sul menu)
+->non è impiegato in alcun modo commenti_volo!
