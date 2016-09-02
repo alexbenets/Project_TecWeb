@@ -659,6 +659,40 @@
 	font-weight:bold;
 }
 /*fine parte seleziona casella*/
+
+/*maria, seleziona_voli*/
+p.importante{
+	background-color:#C0FFee;
+	position:absolute;
+	top:22em;
+	left:7em;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.button{
+	background-color: #00cc99;
+    border: none;
+    color: white;
+    padding: 0.7em 1.7em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.4em;
+    margin: .04em 0.2em;
+}
+
+#indietro.button{
+	float: left;
+}
+
+#avanti.button{
+	float: right;
+}
+
+
+/*fine*/
+
 /* inizio parte MARIA sui commenti*/
 .commento{
 	border-style: solid;
