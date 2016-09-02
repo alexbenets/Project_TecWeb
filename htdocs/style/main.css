@@ -33,37 +33,48 @@
 	height: 188px;
 	background-repeat: no-repeat;
 }
+
+#logo2{
+	float: right;
+	display: block;
+	padding-top:0.5em;
+	padding-right:0.5em;
+	margin-right: 0.3em;
+	background-position: right;
+	background-image: url(../images/aereo.png);
+	width: 258px;
+	height: 188px;
+	background-repeat: no-repeat;
+}
+
 /*fine sezione logo*/
 #banner {
 	/*background-color:#dddddd;*/
 	height: 10em;
 }
 #banner h1 {
-	padding-top: 0.2em;
-	padding-left: 9em;
-	/*text-align:center;*/
-	font-size: 4em;
+	padding-top: 0em;
+	text-align: center;
+	font-size: 5em;
 	/*color:#00a000;*/
-	color: #000000;
-	
+	color: #000000;	
 }
 #banner h1 span{
 	font-size: 0.5em;
 }
 #banner h2 {
-	padding-top:0.5em;
-	padding-left:15.5em;
-	/*text-align: center;*/
-	font-size: 2em;
+	padding-top:0.2em;
+	text-align: center;
+	font-size: 1.5em;
 	/*color:#a00000;*/
 	color: #000000;
 }
 #description{
 	margin-top: 1em;
+	text-align: center;
 }
 #description span{
 	margin-top: 200em;
-	padding-left: 14.3em;
 	font-size: 1em;
 }
 /*FINE SEZIONE HEADER*/
@@ -71,11 +82,28 @@
 /*SEZIONE MENU'*/
 
 #menu {
-	margin-left: 30%;
-	margin-top: 2.5em;
-	height:3em;
+	margin: 0 auto;
+	width: 500px;
 	/*background-color:#C0FFEE;*/
-	padding:0.1em 0.3em 0.4em 0.3em;
+	padding-top: 1.5em;
+	padding-left: 1.5em;
+	display: block;
+	text-align: center;
+}
+/*#menu {
+	margin: 30%;
+	margin-top: 2.5em;
+	margin-bottom: 2.5em;
+	height:3em;
+	background-color:#C0FFEE;
+	padding-left: 1.5em;
+	border: 1px solid #000;
+	display: block;
+	text-align: center;
+}*/
+#menu ul{
+	margin: 0;
+	list-style-type: none;
 }
 #menu a {
 	/*sezione per il pseudo contenitore*/
@@ -125,11 +153,39 @@
 #path a {
 	text-decoration:none;
 	color:#000;
+	border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #8e3000;
+    color: #8e3000;
 }
 #path a:hover {
 	text-decoration:underline;
 	color:#810808;
 }
+
+/*
+#contents-right a:visited, #footer a:visited, #layout a:visited {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #8e3000;
+    color: #8e3000;
+}
+#contents-right a, #header a, #footer a, #layout a, #accessibility a:visited, #layout a:visited, #path a:visited, #webmaster a, #webmaster a:visited {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #A8C0CF;
+    padding-bottom:0.1em;
+    color: #003366;
+}
+#contents-right a:hover, #header a:hover, #footer a:hover, #webmaster a:hover {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #003366;
+    padding-bottom:0.1em;
+    color: #003366;
+}
+*/
+
 /*FINE SEZIONE DOVE SEI*/
 
 /*INIZIO SEZIONE CONTENUTO PRINCIPALE*/
@@ -562,39 +618,6 @@
 /*fine tabella cerca voli*/
 
 /*parte seleziona casella*/
-
-/*maria, seleziona_voli*/
-p.importante{
-	background-color:#C0FFee;
-	position:absolute;
-	top:22em;
-	left:7em;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-
-.button{
-	background-color: #00cc99;
-    border: none;
-    color: white;
-    padding: 0.7em 1.7em;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1.4em;
-    margin: .04em 0.2em;
-}
-
-#indietro.button{
-	float: left;
-}
-
-#avanti.button{
-	float: right;
-}
-
-
-/*fine*/
 
 #tabella_voliAndata a {
 	text-decoration:none;
