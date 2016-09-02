@@ -1,0 +1,27 @@
+prenotazione
+	->se sbaglio a mettere i dati di 1 persona su dati_passeggeri.cgi si limita a creare una nuova persona
+	->se ho pernotato 1 dato volo e effettuo 1 nuova prenotazione non diminuisce i posti disponibili x quel volo (seleziona_voli.cgi)
+	->talvolta se si seleziona il volo di andata e poi quello di ritorno su seleziona_voli ti tiene comunque sulla pagina come 
+	    se nn avessi selezionato l'andata
+	->talvolta dopo aver selezionato il volo di andata su seleziona_voli.cgi la pagina che si ricarica 
+	    ha parte della tabella di andata con le caselle vuote 
+	->se viene inserito 1 nuovo servizio da un amministratore la pagina servizi_aggiuntivi.cgi lo mostra malamente, 
+	    con ogni dato (nome, prezzo e descrizione) quasi sulla stessa riga
+	->se faccio 1 prenotazione non loggata e poi mi registro non salva la prenotazione, 
+	    se invece si usa login procede senza errori e mostra la pagina di riassunto della prenotazione
+	->ci possono essere + passeggeri con lo stesso codice fiscale(?! apparentemente)
+
+amministrazione
+	->se inserisco/o modifico qualcosa (volo/tratta/servizio x esempio) nn ho nessunda conferma della modifica, tranne sull'xml 
+
+loggato
+	->sulla pagina compagnia.html e sulla pagina servizi.html il menù cambia da home/area utente/compagnia/servizi/amministrazione/logout 
+	    a home/compagnia/servizi/area utente
+	->dopo essere andati su compagnia tornando a home il menù è home/compagnia/servizi/login! 
+	    NB-> premendo login mi porta su area_utente
+	->forse da dati errati rispetto a quale utente appartenga 1 prenotazione
+
+NB
+->su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
+->se login non risce e cambi pagina(qualsiasi tranne home) al posto di login sul menù c'e area utente
+->su login è evidenziato "home" invece che "login" (sul menu)
