@@ -1,28 +1,61 @@
-prenotazione
-	->se sbaglio a mettere i dati di 1 persona su dati_passeggeri.cgi si limita a creare una nuova persona -> ovvio! Come posso sapere se hai sbagliato il nome?
-	->se ho pernotato 1 dato volo e effettuo 1 nuova prenotazione non diminuisce i posti disponibili x quel volo (seleziona_voli.cgi) -> verificare!
-	->talvolta se si seleziona il volo di andata e poi quello di ritorno su seleziona_voli ti tiene comunque sulla pagina come 
-	    se nn avessi selezionato l'andata -> si, devo controllare.
-	->talvolta dopo aver selezionato il volo di andata su seleziona_voli.cgi la pagina che si ricarica 
-	    ha parte della tabella di andata con le caselle vuote  -> non è un bug: si tratta di una funzionalità: se selezioni un volo di andata, non puoi prenotare un ritorno il giorno prima o stesso! Inoltre, se non ci sono voli, ovviamente non ci sono caselle da visualizzare!
-	->se viene inserito 1 nuovo servizio da un amministratore la pagina servizi_aggiuntivi.cgi lo mostra malamente, 
-	    con ogni dato (nome, prezzo e descrizione) quasi sulla stessa riga -> risolto
-	->se faccio 1 prenotazione non loggata e poi mi registro non salva la prenotazione, 
-	    se invece si usa login procede senza errori e mostra la pagina di riassunto della prenotazione -> potete ripetere l'esperimento?
-	->ci possono essere + passeggeri con lo stesso codice fiscale(?! apparentemente) nel nostro caso no, come da descrizione, il C.F. non è altro che la chiave primaria. Eventualmente salto il controllo e salvo comunque.
+bug nuovi trovati con AL ieri:
+pagina index (home):
+-la prima volta che esegui una ricerca se usi il pattern dd/M/YYYY per la data da errore:
+	Software error:
+	Can't use string ("0") as an ARRAY ref while "strict refs" in use at /mnt/NAS/www/cgi-bin/seleziona_voli.cgi line 252.
+	For help, please send mail to the webmaster (webmaster@localhost), giving this error message and the time and date of the error.
+Per averequesto errore basta cancellare cronologia e andare all'indirizzo iniziale.(succede solo con la prima ricerca per quanto abbiamo visto)
 
-amministrazione
-	->se inserisco/o modifico qualcosa (volo/tratta/servizio x esempio) nn ho nessunda conferma della modifica, tranne sull'xml -> ok
+seleziona_voli.cgi:
+-dopo aver selezionato il volo di andata capita che arbitrariamente alcune caselle della prima tabella (voli di andata) che erano piene quando si arriva sulla pagina diventino improvvisamente vuote, talvolta anche la casella stessa che hai scelto
+	che compare come 1 rettangolo vuoto del colore della classe "volo selezionato"
+-alrtre volte (non so se è xke non percepisce la selezione correttamente) se selezioni (clicchi): 1) il volo di andata 2) il volo di ritorno
+	-> ricarica la pagina seleziona voli, senza evidenziare il volo di andata selezionato con il colore del "volo scelto", 
+	ma solo il volo di ritorno i invece di proseguire
+	cioè devi riselezionare il volo di andata, anche più volte prima di poter proseguire
+-il numero di posti disponibili su un dato volo doveva variare in base alle prenotazioni fatte mentre restare fisso
 
-loggato
-	->sulla pagina compagnia.html e sulla pagina servizi.html il menù cambia da home/area utente/compagnia/servizi/amministrazione/logout 
-	    a home/compagnia/servizi/area utente -> per forza: si tratta di pagine statiche!
-	->dopo essere andati su compagnia tornando a home il menù è home/compagnia/servizi/login! 
-	    NB-> premendo login mi porta su area_utente -> bisogna modificare la pagina statica!
-	->forse da dati errati rispetto a quale utente appartenga 1 prenotazione ? in che senso?
+dati_passeggeri.cgi:
+-se si sbaglia a inserire i dati di 1 persona già creata la pagina si limita a creare una nuova persona 
+->ci possono essere diversi passeggeri con lo stesso codice fiscale
+-in questa pagina e nelle pagine che prensentano form simili (registrati.cgi ecc)
+	bisogna togliere le scritte che danno come come valori iniziali della form i nomi dei campi stessi come nome=nome, codice fiscale= codice fiscale
+	e usare su data di nascita il pattern accettato "gg/MM/AAAA" al posto di una data improbabile 
+-su queste form se si prova a lasciare un codice fiscale in bianco questo non è segnato come errore, data di nascita si
+-se sul campo codice fiscale si lascia 1 spazio finale questo codice è visto come errato:"CGNNMO60T12A001I " non accettato, "CGNNMO60T12A001I" non dà problemi
 
-NB
-->su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
-->se login non risce e cambi pagina(qualsiasi tranne home) al posto di login sul menù c'e area utente -> di norma, non dovresti nemmeno andare su altre pagine.
-->su login è evidenziato "home" invece che "login" (sul menu)
-->non è impiegato in alcun modo commenti_volo! -> aspetto che Alessandro implementi la sezione di aggiunta di un commento
+registrazione.cgi:
+-se si effettua 1 prenotazione senza loggarsi, e quando ti chiede di fare login crei un nuovo account invece di usarne uno preesistente
+	vieni registrato ma non viene salvata la prenotazione che stavi facendo, ma ti riporta alla pagina home da loggato 
+	e se vai sulle prenotazioni effettuate dall'utente non ne risultano
+-se usi login con un account preesitente l'operazione va a buon fine, forse anzi ci sono TROPPE schermate che la riassumono:
+	->1 prima di loggarsi 
+	-> poi fai login
+	-> poi ti viene 1 pagina con il riassunto, dove puoi modificare date e altri parametri 
+		(utile se si vuole fare una modifica all'ultimo minuto MA ripetitiva visto che è 
+		seguita da una terza pagina quasi uguale, quella del punto successivo)con un pulsante "conferma"
+	-> poi ti viene una pagina con riassunto non modificabile e link in basso x tornare alla home
+
+amministrazione.cgi & tutte le pagine collegate: 
+-in gestione città bisogna scrivere "modifica citta" invece che "modifica nazione", idem per le altre pagine
+-in "gestione città" bisogna mettere a posto il layout, il testo della form è grande e va a capo
+-"gestione aereoporti" è l'unica pagina che alla creazione di un nuovo elemento ti chieda se vuoi davvero salvare le modifiche fatte, 
+	le altre ti rimandano direttamente alla relativa pagina "base" dove puoi scegliere se modificare o creanre un altro nuovo elemento 
+-se inserisci 1 nuovo servizio questo viene visualizzato in modo molto dubbio sulla pagina servizi_aggiuntivi.cgi della prenotazione
+-i nuovi elementi che erano stati inseriti ieri sono spariti stamattina dopo un refresh della pagina
+
+bug vari (non appartententi ad una singola pagina ma al sito):
+-su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
+-se login fallisce e si cambia pagina(qualsiasi tranne home) al posto di "login" sul menù compare "area utente", 
+	che se cliccata riporta alla pagina login.cgi 
+-su login.cgi la casella del menù che è evidenziata è "home" invece che "login"
+-al momento commenti_volo.cgi (pagina per visualizzare i commenti del volo sul quale vuoi effettuare una prenotazione) non è impiegata in nessun modo
+	anche se al momento non è disponibile nessun commento dovrebbe almeno passare per una pagina 
+	con un messaggio come "non sono disponibili commenti per questo volo", subito dopo "seleziona_voli.cgi"
+	NOTA questo bug è marginale finchè non scegliamo di impiegare davvero i commenti che per ora sono stati un po' messi da parte
+bug vari per l'utente loggato
+-dopo aver effettuato il login sulla pagina compagnia.html e sulla pagina servizi.html il menù cambia da 
+"home/area utente/compagnia/servizi/(amministrazione/)logout" a "home/compagnia/servizi/area utente" 
+-sempre dopo il login se si torna a "home" dopo essere andati sulla pagina "compagnia" menù è home/compagnia/servizi/login 
+	NOTA premendo login mi porta su area_utente
+
