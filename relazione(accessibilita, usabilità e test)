@@ -1,0 +1,102 @@
+ACCESSIBILITÀ 
+
+Il sito è stato costruito in modo da seguire il più possibile le linee guida WAI e WCAG in termini di accessibilità. Gli obbiettivi del sito hanno tuttavia reso difficile questo adattamento in quanto il sito p stato progettato soprattutto per permettere agli utenti di prenotare voli e servizi per i propri viaggi, ciò ha decretato la necessità di riassumere tali attività nel modo più semplice e comprensibile possibile e ha richiesto l'adozione di una tabella che riassuma i voli disponibili per le date e destinazioni d'interesse per l'utente perché questi possa operare una scelta consapevole. Tale tabella pur presentando i tag html (caption, th, tfoot) per renderla il più accessibile possibile, può comunque presentare un ostacolo per un utente non vedente o in altro modo disabile in quanto il gruppo ha deciso di non usare elementi html 5 e dunque non è stato possibile aggiungere l'attributo “tagindex” ai div che contengono le singole caselle (XXX primo tagindex non è un attributo applicabile a div su xhtml e in secondo luogo non si può rinunciare a div perché permette all'utente di selezionare una casella cliccando su un punto a caso della stessa, il tagindex non lo abbiamo  utilizzato da nessuna parte).
+
+Il sito mantiene la completa separazione tra struttura, implementata tramite il markup xhtml, contenuto, diviso tra le pagine statiche e il documento xhtml, e il comportamento, controllato dagli script perl. Inoltre segue le raccomandazioni WCAG per un sito P.U.R.O.: 
+abbiamo reso 'Percepibile' il sito impiegando sempre un layout semplice e usando solo tag xhtml, tutte le immagini presenti nel sito essendo prettamente decorative non sono state dotate di descrizione (XXX nome del tag e forse dovremmo usarlo almeno per il logo?); 
+per rendere il sito “Operabile” abbiamo distinto chiaramente le sezioni delle pagine per aiutare l'utente a capire dove si trovano gli strumenti, infatti da una parte nella pagina home (XXX) presentiamo tutti i servizi principali disponibili agli utenti quali il menù e la form per la ricerca dei voli, le informazioni di base sulla compagnia e sul sito, dall'altra nelle pagine statiche forniamo menù secondari (XXX che condividono con il menù quante più caratteristiche possibile pur essendo in una posizione diversa) per aiutare l'utente nella sua ricerca di informazioni sulla compagnia;   
+l'uso di markup xhtml css perl (XXX cercano di ) rendono il sito semplice e “Robusto”;
+per “l'Usabilità” abbiamo fatto attenzione a permettere all'utente di sapere sempre la sua posizione all'interno del sito grazie all'impiego di css che evidenzi la voce del menù sul quale ci si trova e all'utilizzo di un path che segue subito il menù e presente all'utente il percorso fatto.
+
+Tutte le raccomandazioni di priorità 1 e 2 del WAI sono state essenzialmente seguite e sono stati usati gli strumenti forniti da colorweel e visceck (http://gmazzocato.altervista.org/it/colorwheel/wheel.php e http://www.vischeck.com/); tuttavia javascript non è stato impiegato e tutti i contenuti dinamici sono dipendenti solo da perl, mentre la possibilità di permettere ad un utente amministratore di modificare a piacimento i dati presenti nel documento xml riguardanti il contenuto del sito (escluse le informazioni sui passeggeri) ha reso impossibile l'impiego dell'attributo leng dove necessario in quanto il documento xml accetta contenuto ma non markup html e dunque non può tener conto della lingua per esempio in cui è espresso il nome di un aeroporto greco o americano.
+
+
+USABILITÀ
+
+Concentrandoci ulteriormente sull'usabilità del sito le pagine e in particolre il menù cercano sempre, attraverso più strumenti, di comunicare all'utente le informazioni più importanti come esemplificato dalle 6 W:
+Where: il path e il menù permettono sempre all'utente di sapere dove si trova all'interno del sito. 
+Who: la pagina compagnia (un link alla quale è subito visibile sul menù principale del sito) avvicina l'utente alla compagnia Air di nostra invenzione. 
+When: nella pagina home la form per la ricerca di un volo presenta sempre la prima data disponibile (cioè il giorno seguente) e la tabella sulla pagina seleziona voli offre una maggiore libertà di scelta sulla data del viaggio.
+How: registrandosi presso il nostro sito l'utente ha la possibilità di prenotare con facilità il suo volo, tenerne memoria o cancellare una prenotazione alla quale non è più interessato.
+What: come accennato sopra l'obbiettivo principale del sito è permettere all'utente di prenotare un volo e gestire successivamente la sua prenotazione; inoltre permette ad un amministratore di operare modifiche sulle tratte offerte dalla compagnia. 
+
+ Navbar: Viene sempre evidenziata la voce della pagina in cui siamo all’interno
+della barra di navigazione. 
+
+Link: Ogni link è stato sottolineato e presenta la classica colorazione blu. 
+
+
+TEST  
+
+L'attività di verifica è avvenuta in due fasi distinte: innanzitutto, si è proceduto con un'analisi funzionale per assicurarci che tutte le pagine del sito funzionassero come ci si aspettava e superassero correttamente i rispettivi test di validazione:
+per le pagine XHTML: W3C Markup Validation Service;
+per i fogli di stile CSS: W3C CSS Validation Service;
+per gli schemi XML: Validator for XML Schema;
+per i documenti XML: Validator for XML
+
+Successivamente abbiamo provveduto a testare il sito su diverse combinazioni di sistemi operativi
+1. (Windows, Ubuntu)  e  browser
+2. (grafici  e  testuali),  provando  ad  identificare  eventuali  problemi  nell'esperienza  di
+navigazione del sito, al variare della dimensione della pagina, del carattere, ...; di seguito verranno riportati i problemi riscontrati ed evidenziate le soluzioni adottate (ove disponibili).
+
+pagina index (home):
+-la prima volta che esegui una ricerca se usi il pattern dd/M/YYYY per la data da errore:
+	Software error:
+	Can't use string ("0") as an ARRAY ref while "strict refs" in use at /mnt/NAS/www/cgi-bin/seleziona_voli.cgi line 252.
+	For help, please send mail to the webmaster (webmaster@localhost), giving this error message and the time and date of the error.
+Per averequesto errore basta cancellare cronologia e andare all'indirizzo iniziale.(succede solo con la prima ricerca per quanto abbiamo visto)
+-se si inserisce una nuova tratta (con nuova citta e aereoporto) questa non è sempre visibile su form per la scelta del volo 
+
+seleziona_voli.cgi:
+-dopo aver selezionato il volo di andata capita che arbitrariamente alcune caselle della prima tabella (voli di andata) che erano piene quando si arriva sulla pagina diventino improvvisamente vuote, talvolta anche la casella stessa che hai scelto
+	che compare come 1 rettangolo vuoto del colore della classe "volo selezionato"
+-alrtre volte (non so se è xke non percepisce la selezione correttamente) se selezioni (clicchi): 1) il volo di andata 2) il volo di ritorno
+	-> ricarica la pagina seleziona voli, senza evidenziare il volo di andata selezionato con il colore del "volo scelto", 
+	ma solo il volo di ritorno i invece di proseguire
+	cioè devi riselezionare il volo di andata, anche più volte prima di poter proseguire
+-il numero di posti disponibili su un dato volo doveva variare in base alle prenotazioni fatte mentre restare fisso
+
+dati_passeggeri.cgi:
+-se si sbaglia a inserire i dati di 1 persona già creata la pagina si limita a creare una nuova persona 
+->ci possono essere diversi passeggeri con lo stesso codice fiscale
+-in questa pagina e nelle pagine che prensentano form simili (registrati.cgi ecc)
+	bisogna togliere le scritte che danno come come valori iniziali della form i nomi dei campi stessi come nome=nome, codice fiscale= codice fiscale
+	e usare su data di nascita il pattern accettato "gg/MM/AAAA" al posto di una data improbabile 
+-su queste form se si prova a lasciare un codice fiscale in bianco questo non è segnato come errore, data di nascita si
+-se sul campo codice fiscale si lascia 1 spazio finale questo codice è visto come errato:"CGNNMO60T12A001I " non accettato, "CGNNMO60T12A001I" non dà problemi
+
+registrazione.cgi:
+-se si effettua 1 prenotazione senza loggarsi, e quando ti chiede di fare login crei un nuovo account invece di usarne uno preesistente
+	vieni registrato ma non viene salvata la prenotazione che stavi facendo, ma ti riporta alla pagina home da loggato 
+	e se vai sulle prenotazioni effettuate dall'utente non ne risultano
+-se usi login con un account preesitente l'operazione va a buon fine, forse anzi ci sono TROPPE schermate che la riassumono:
+	->1 prima di loggarsi 
+	-> poi fai login
+	-> poi ti viene 1 pagina con il riassunto, dove puoi modificare date e altri parametri 
+		(utile se si vuole fare una modifica all'ultimo minuto MA ripetitiva visto che è 
+		seguita da una terza pagina quasi uguale, quella del punto successivo)con un pulsante "conferma"
+	-> poi ti viene una pagina con riassunto non modificabile e link in basso x tornare alla home
+
+amministrazione.cgi & tutte le pagine collegate: 
+-in gestione città bisogna scrivere "modifica citta" invece che "modifica nazione", idem per le altre pagine
+-in "gestione città" bisogna mettere a posto il layout, il testo della form è grande e va a capo
+-"gestione aereoporti" è l'unica pagina che alla creazione di un nuovo elemento ti chieda se vuoi davvero salvare le modifiche fatte, 
+	le altre ti rimandano direttamente alla relativa pagina "base" dove puoi scegliere se modificare o creanre un altro nuovo elemento 
+-se inserisci 1 nuovo servizio questo viene visualizzato in modo molto dubbio sulla pagina servizi_aggiuntivi.cgi della prenotazione
+-i nuovi elementi che erano stati inseriti ieri sono spariti stamattina dopo un refresh della pagina
+
+bug vari (non appartententi ad una singola pagina ma al sito):
+-su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
+-se login fallisce e si cambia pagina(qualsiasi tranne home) al posto di "login" sul menù compare "area utente", 
+	che se cliccata riporta alla pagina login.cgi 
+-su login.cgi la casella del menù che è evidenziata è "home" invece che "login"
+-al momento commenti_volo.cgi (pagina per visualizzare i commenti del volo sul quale vuoi effettuare una prenotazione) non è impiegata in nessun modo
+	anche se al momento non è disponibile nessun commento dovrebbe almeno passare per una pagina 
+	con un messaggio come "non sono disponibili commenti per questo volo", subito dopo "seleziona_voli.cgi"
+	NOTA questo bug è marginale finchè non scegliamo di impiegare davvero i commenti che per ora sono stati un po' messi da parte
+bug vari per l'utente loggato
+-dopo aver effettuato il login sulla pagina compagnia.html e sulla pagina servizi.html il menù cambia da 
+"home/area utente/compagnia/servizi/(amministrazione/)logout" a "home/compagnia/servizi/area utente" 
+-sempre dopo il login se si torna a "home" dopo essere andati sulla pagina "compagnia" menù è home/compagnia/servizi/login 
+	NOTA premendo login mi porta su area_utente
+
