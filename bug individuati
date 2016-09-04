@@ -5,6 +5,7 @@ pagina index (home):
 	Can't use string ("0") as an ARRAY ref while "strict refs" in use at /mnt/NAS/www/cgi-bin/seleziona_voli.cgi line 252.
 	For help, please send mail to the webmaster (webmaster@localhost), giving this error message and the time and date of the error.
 Per averequesto errore basta cancellare cronologia e andare all'indirizzo iniziale.(succede solo con la prima ricerca per quanto abbiamo visto)
+-se si inserisce una nuova tratta (con nuova citta e aereoporto) questa non è sempre visibile su form per la scelta del volo 
 
 seleziona_voli.cgi:
 -dopo aver selezionato il volo di andata capita che arbitrariamente alcune caselle della prima tabella (voli di andata) che erano piene quando si arriva sulla pagina diventino improvvisamente vuote, talvolta anche la casella stessa che hai scelto
