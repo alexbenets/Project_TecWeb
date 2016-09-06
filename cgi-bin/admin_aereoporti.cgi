@@ -170,6 +170,7 @@ $testo.='
 								<div>
 									<label for="nuovo_nome">Nome dell\'aereoporto:</label>
 									<input type="text" id="nuovo_nome" name="nuovo_nome" value="Linate"></input>
+									<input type="hidden" name="conferma" value="1"/>
 								</div>
 								<div>
 									<button type="submit" id="salva" name="salva" value="salva">
@@ -203,6 +204,7 @@ $testo.='
 								<div>
 									<label for="nuovo_nome1">Nuovo nome:</label>
 									<input type="text" id="nuovo_nome1" name="nuovo_nome" value="Linate"></input>
+									<input type="hidden" name="conferma" value="1"/>
 								</div>
 								<div>
 									<button type="submit" id="salva2" name="salva" value="salva">
@@ -223,36 +225,7 @@ $testo.='
 			</div><!-- chiudo contenitore_sezioni -->	
 			<div class="clearer"></div>
 				';
-if(defined($form{"salva"}) and $conferma==0){
-	$testo='
-		<div id="contenitore_sezioni"><!-- apro maxi contenitore per le sezioni -->
-					
-					<div class="sezione" id="S1"><!-- inizio div che contiene titolo e sezione dell\'articolo -->
-						<h3>Benvenuto!</h3>
-						<p>In questa pagina puoi modificare gli aereoporti presenti nel database.</p>
-					</div><!-- chiudo sezione -->
-					<div class="clearer"></div>
-					<div class="sezione">
-						<h3>Vuoi salvare l\'aereoporto?</h3>
-						
-						<form action="admin_aereoporti.cgi" method="post">
-							
-						<fieldset>
-							<p>Nome: '.$aereoporto.'</p>
-							<p>Citt&agrave; '.$citta.'</p>
-							<input type="hidden" name="aereoporto" value="'.$aereoporto.'"/>
-							<input type="hidden" name="citta" value="'.$citta.'"/>
-							<input type="hidden" name="nuovo_nome" value="'.$nuovo_nome.'"/>
-							<input type="hidden" name="conferma" value="1"/>
-							<button type="submit" id="salva2" name="salva" value="salva">
-										<span>SALVA</span>
-							</button>
-						</fieldset>
-					</div>
-		</div>
-		<div class="clearer"></div>
-	';
-}
+
 print print_content::print($testo);
 print "		</div>"; #chiudo il div main
 print print_footer::print();

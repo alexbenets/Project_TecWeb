@@ -511,13 +511,8 @@ sub getVoli{
 	#visto che ho già definito la funzione di recupero data in check_form, la riciclo qui.
 	my @gma=@{check_form::regexp_data($data)};
 	my $giorno=@gma[0];
-	if(int($giorno)<10){
-		$giorno="0$giorno";
-	}
+	
 	my $mese=@gma[1];
-	if(int($mese)<10){
-		$mese="0$mese";
-	}
 	my $anno=@gma[2];
 	
 	if($miss==1){
@@ -556,14 +551,16 @@ sub getVoli{
 		#non modifico posti_disponibili, in quanto è una variabile che è paragonabile ad una costante
 		#per il tipo di aereo.
 		my $posti_disponibili_volo=$posti_disponibili_getVoli;
-		
 		foreach my $prenotazione ($prenotazioni->get_nodelist){
 			#ora mi ricavo il numero di passeggeri + il prenotante.
-			my $idU=$prenotazione->getAttribute("idU");
-			my @id_utenti=split /,/ , $idU;
-			#ora ottengo un array contenente tutti gli utenti di quella prenotazione
-			#print "<p>".(scalar(@id_utenti)+1)."</p>";
-			$posti_disponibili_volo -= (scalar(@id_utenti)+1);
+			my $idPrenotazione=$prenotazione->getAttribute("idP");
+			
+			#tabPasseggeriPrenotazione
+			my $nodo_passeggeri_prenotati=get('/database/tabPasseggeriPrenotazione/passeggeriPrenotazione[@idP="'.$idPrenotazione.'"]');
+			foreach my $n_temp ($nodo_passeggeri_prenotati->get_nodelist){
+				$posti_disponibili_volo -= 1;
+			}
+			$posti_disponibili_volo-=1;
 			#visto che non mi interessa sapere chi c'è in quel volo, allora sottraggo semplicemente la grandezza del vettore + 1, in quanto è presente pure il passeggero prenotante
 		}
 		#print "<p>$posti_disponibili - $passeggeri</p>";
@@ -862,6 +859,7 @@ sub listAereoporti{
 }
 sub addTratta{
 	my ($partenza, $arrivo, $durata, $id)=@_;
+	
 	if(int($id)==0){
 		#aggiungo da zero
 			if(int($durata)<1){

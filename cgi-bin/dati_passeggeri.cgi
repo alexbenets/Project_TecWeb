@@ -83,7 +83,7 @@ for(my $i=1; $i<=$passeggeri; $i++){
 		$errori++;
 		$errore|=4;
 	}
-	my $nascita="32/02/1900";
+	my $nascita="GG/MM/AAAA";
 	if (defined ($form{"nascita$i"})){
 		$nascita=$form{"nascita$i"};
 		gestione_sessione::setParam("nascita$i", $nascita);

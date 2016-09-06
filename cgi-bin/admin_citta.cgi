@@ -121,12 +121,12 @@ if ($nuova_citta==0 and $modifica_citta==0){
 				$testo.='<p>Per favore, scegli quale azione desideri effettuare</p>
 						</div><!-- chiudo sezione -->
 					<div class="sezione">
-						<a href="admin_citta.cgi?modifica_citta=1">Modifica una nazione esistente</a>
+						<a href="admin_citta.cgi?modifica_citta=1">Modifica una citt&agrave; esistente</a>
 					</div>
 					<div class="clearer"></div>
 					<!-- fine sezione -->	
 					<div class="sezione">
-						<a href="admin_citta.cgi?nuova_citta=1">Aggiungi una nuova nazione</a>
+						<a href="admin_citta.cgi?nuova_citta=1">Aggiungi una nuova citt&agrave;</a>
 					</div>
 					<div class="clearer"></div>
 					<!-- fine sezione -->	';

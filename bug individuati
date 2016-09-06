@@ -15,13 +15,15 @@ seleziona_voli.cgi:
 	ma solo il volo di ritorno i invece di proseguire
 	cioè devi riselezionare il volo di andata, anche più volte prima di poter proseguire
 -il numero di posti disponibili su un dato volo doveva variare in base alle prenotazioni fatte mentre restare fisso
-
+	risolto
 dati_passeggeri.cgi:
 -se si sbaglia a inserire i dati di 1 persona già creata la pagina si limita a creare una nuova persona 
 ->ci possono essere diversi passeggeri con lo stesso codice fiscale
+-> CF è ID, come dalle specifiche
 -in questa pagina e nelle pagine che prensentano form simili (registrati.cgi ecc)
 	bisogna togliere le scritte che danno come come valori iniziali della form i nomi dei campi stessi come nome=nome, codice fiscale= codice fiscale
 	e usare su data di nascita il pattern accettato "gg/MM/AAAA" al posto di una data improbabile 
+	-> 
 -su queste form se si prova a lasciare un codice fiscale in bianco questo non è segnato come errore, data di nascita si
 -se sul campo codice fiscale si lascia 1 spazio finale questo codice è visto come errato:"CGNNMO60T12A001I " non accettato, "CGNNMO60T12A001I" non dà problemi
 
@@ -39,24 +41,35 @@ registrazione.cgi:
 
 amministrazione.cgi & tutte le pagine collegate: 
 -in gestione città bisogna scrivere "modifica citta" invece che "modifica nazione", idem per le altre pagine
+ Fatto
 -in "gestione città" bisogna mettere a posto il layout, il testo della form è grande e va a capo
+Fatto
 -"gestione aereoporti" è l'unica pagina che alla creazione di un nuovo elemento ti chieda se vuoi davvero salvare le modifiche fatte, 
 	le altre ti rimandano direttamente alla relativa pagina "base" dove puoi scegliere se modificare o creanre un altro nuovo elemento 
+	Fatto, ora è come le altre
 -se inserisci 1 nuovo servizio questo viene visualizzato in modo molto dubbio sulla pagina servizi_aggiuntivi.cgi della prenotazione
+ in che senso?
 -i nuovi elementi che erano stati inseriti ieri sono spariti stamattina dopo un refresh della pagina
+ si chiama cache del browser.
 
 bug vari (non appartententi ad una singola pagina ma al sito):
--su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi
+-su xml_finale "assistenza speciale" compare 2 volte nella tabella servizi --> dipende quante volte lo si ha inserito.
 -se login fallisce e si cambia pagina(qualsiasi tranne home) al posto di "login" sul menù compare "area utente", 
-	che se cliccata riporta alla pagina login.cgi 
--su login.cgi la casella del menù che è evidenziata è "home" invece che "login"
+	che se cliccata riporta alla pagina login.cgi -> mai visto
+-su login.cgi la casella del menù che è evidenziata è "home" invece che "login" -> mai visto
 -al momento commenti_volo.cgi (pagina per visualizzare i commenti del volo sul quale vuoi effettuare una prenotazione) non è impiegata in nessun modo
 	anche se al momento non è disponibile nessun commento dovrebbe almeno passare per una pagina 
 	con un messaggio come "non sono disponibili commenti per questo volo", subito dopo "seleziona_voli.cgi"
 	NOTA questo bug è marginale finchè non scegliamo di impiegare davvero i commenti che per ora sono stati un po' messi da parte
 bug vari per l'utente loggato
+	
+	PAGINA RIMOSSA PERCHè INCORPORATA IN UTENTE.CGI
+
 -dopo aver effettuato il login sulla pagina compagnia.html e sulla pagina servizi.html il menù cambia da 
 "home/area utente/compagnia/servizi/(amministrazione/)logout" a "home/compagnia/servizi/area utente" 
+	MARIA, LE PAGINE STATICHE NON VARIANO!
 -sempre dopo il login se si torna a "home" dopo essere andati sulla pagina "compagnia" menù è home/compagnia/servizi/login 
 	NOTA premendo login mi porta su area_utente
+	
+	MARIA, SONO PAGINE STATICHE!!!
 

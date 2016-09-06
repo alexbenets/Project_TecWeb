@@ -14,6 +14,21 @@ our $VERSION   = 1.00;         # Version number
 use DateTime;  #utilizzato per validare la data inserita
 use Time::Piece;
 
+sub converti_caratteri {
+	my ($testo)=@_;
+	$testo =~ s/è/&egrave;/ig;
+	$testo =~ s/é/&eacute;/ig;
+	$testo =~ s/à/&agrave;/ig;
+	$testo =~ s/ù/&ugrave;/ig;
+	$testo =~ s/À/&Agrave;/ig;
+	$testo =~ s/È/&Egrave;/ig;
+	$testo =~ s/É/&Eacute;/ig;
+	$testo =~ s/É/&Eacute;/ig;
+
+	return $testo;
+	
+}
+
 #estraggo i numeri dal select per selezionare i passeggeri
 #se non ci sono passeggeri, allora $1 non sarà definito e, quindi, riporto 0.
 sub leggi_numeri {
@@ -42,7 +57,6 @@ sub regexp_data{
 	if (int($mese)<10){
 		$mese='0'.$mese;
 	}
-	
 	my $anno=$5;
 	my @arr=($giorno, $mese, $anno);
 	return \@arr;
@@ -51,6 +65,10 @@ sub regexp_data{
 #controlla la data di nascita dei passeggeri, se sono neonati o matusalemme, non possono viaggiare.
 sub controlla_data_passeggero {
 	my ($data)=@_;
+	
+	if (length($data)<2){
+		return 0;
+	}
 	my $gma=regexp_data($data);
 	my $giorno=$gma->[0];
 	my $mese=$gma->[1];
@@ -59,6 +77,9 @@ sub controlla_data_passeggero {
 		return 0;
 		#la funzione Time::Piece fallisce se l'anno è inferiore al 1900.
 		#questo controllo iniziale evita l'errore.
+	}
+	if (int($mese)<0 | int($mese)>12){
+		return 0;
 	}
 	eval {
 		my $dt1 =  DateTime->new( year => $anno, month => $mese, day => $giorno);
@@ -186,7 +207,7 @@ sub valida_codice_fiscale {
 	my ($codice_fiscale)=@_;
 	$codice_fiscale =~/^([a-zA-Z]{6}[\d]{2}[a-zA-Z]{1}[\d]{2}[a-zA-Z]{1}[\d]{3}[a-zA-Z]{1})$/;
 	#print "$1 $2 $3 $4 $5 $6 $7";
-	if( "$1$2$3$4$5$6$7" eq $codice_fiscale){
+	if( ("$1$2$3$4$5$6$7" eq $codice_fiscale) and length($codice_fiscale)>1){
 		return 1;#è corretto
 	}
 	return 0;#non è corretto
